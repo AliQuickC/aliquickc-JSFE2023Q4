@@ -1,4 +1,14 @@
 import './sass/main.sass';
-import './modules/app';
+import reducer from './modules/reducer';
+import createStore from './redux/store';
+import App from './components/app';
 
-console.log('working!');
+const initialState = {
+  userData: {},
+};
+
+const store = createStore(reducer, initialState);
+console.log('store: ', store.getState());
+
+const app = new App(store);
+app.run();

@@ -1,5 +1,5 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -13,21 +13,23 @@ const isDev = !isProd;
 // в зависимости от режима сборки, добавляет/удаляет хэш к имени файла
 const filename = (ext) => (isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`);
 
+/* eslint-disable no-console */
 console.log('IS PROD', isProd);
 console.log('IS DEV', isDev);
+/* eslint-enable no-console */
 
-const devServer = (isDev) =>
-  !isDev
+const devServer = (mode) =>
+  !mode
     ? {}
     : {
-        devServer: {
-          open: true,
-          hot: true,
-          liveReload: true,
-          port: 3000,
-          static: ['./src', './public'],
-        },
-      };
+      devServer: {
+        open: true,
+        hot: true,
+        liveReload: true,
+        port: 3000,
+        static: ['./src', './public'],
+      },
+    };
 
 module.exports = {
   context: path.resolve(__dirname, 'src'), // контекст работы webpack
@@ -91,7 +93,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin(), // чистит папку build, перед новой сборкой
     new HTMLWebpackPlugin({
-      template: "./index.html" // шаблон для генерации html файла
+      template: './index.html', // шаблон для генерации html файла
     }),
     new CopyPlugin({
       patterns: [
@@ -99,13 +101,7 @@ module.exports = {
           from: '**/*',
           // context: path.resolve(dirname, './src'),
           globOptions: {
-            ignore: [
-              '**/*.js',
-              '**/*.ts',
-              '**/*.scss',
-              '**/*.sass',
-              '**/*.html',
-            ],
+            ignore: ['**/*.js', '**/*.ts', '**/*.scss', '**/*.sass', '**/*.html'],
           },
           noErrorOnMissing: true,
           force: true,

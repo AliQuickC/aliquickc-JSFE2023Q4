@@ -1,0 +1,21 @@
+.gallows
+  grid-column: 1 / 2
+  grid-row: 1 / 3
+  display: flex
+  justify-content: center
+  align-items: center
+  @media(max-width: 960px)
+    grid-row: 1 / 2
+  &__picture
+    width: 368px
+    height: 581px
+    background: url("../assets/gallows/gallows.png") no-repeat,
+    url("../assets/gallows/head.png") no-repeat 252px 149px,
+    url("../assets/gallows/torso.png") no-repeat 300px 250px,
+    url("../assets/gallows/hand-one.png") no-repeat 237px 270px,
+    url("../assets/gallows/hand-two.png") no-repeat 300px 270px,
+    url("../assets/gallows/leg-one.png") no-repeat 237px 378px,
+    url("../assets/gallows/leg-two.png") no-repeat 300px 378px
+    @media(max-width: 960px)
+      transform: scale(0.6)
+

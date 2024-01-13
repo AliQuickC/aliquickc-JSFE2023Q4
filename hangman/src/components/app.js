@@ -1,11 +1,19 @@
-class App {
+import Gallows from './gallows';
+import Quiz from './quiz';
+import Keyboard from './keyboard';
+
+export default class App {
   constructor(props) {
     this.container = document.body;
     this.store = props;
     this.init();
   }
 
-  init() {}
+  init() {
+    this.gallows = new Gallows(this.store, 'div', 'gallows');
+    this.quiz = new Quiz(this.store, 'div', 'quiz');
+    this.keyboard = new Keyboard(this.store, 'div', 'keyboard');
+  }
 
   destroy() {}
 
@@ -17,18 +25,16 @@ class App {
     return `
     <main class="app">
       <div class="app__container container">
-        <div class="gallows">
-          <div class="gallows__picture gallows-picture"></div>
-        </div>
-        <div class="quiz"></div>
-        <div class="keyboard"></div>
       </div>
     </main>`;
   }
 
   render() {
     this.container.innerHTML = this.toHTML();
+    const componentContainer = this.container.querySelector('.app__container');
+    componentContainer.append(this.gallows.render());
+    componentContainer.append(this.quiz.render());
+    componentContainer.append(this.keyboard.render());
     return this.container;
   }
 }
-export default App;

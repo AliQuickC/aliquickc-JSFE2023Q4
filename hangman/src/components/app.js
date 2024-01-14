@@ -38,6 +38,7 @@ export default class App {
     componentContainer.append(this.gallows.render());
     componentContainer.append(this.quiz.render());
     componentContainer.append(this.keyboard.render());
+
     return this.container;
   };
 }

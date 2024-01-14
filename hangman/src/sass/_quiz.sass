@@ -1,0 +1,46 @@
+.quiz
+  display: flex
+  gap: 24px
+  justify-content: flex-end
+  align-items: center
+  flex-direction: column
+  grid-area: quiz
+  @media(max-width: 960px)
+    justify-content: flex-start
+    gap: 12px
+  &__secret-word
+    margin-bottom: 40px
+    font-size: 48px
+    letter-spacing: 24px
+    @media(max-width: 1140px)
+      font-size: 32px
+    @media(max-width: 960px)
+      margin-bottom: 16px
+      letter-spacing: 18px
+    @media(max-width: 540px)
+      font-size: 24px
+      letter-spacing: 12px
+  &__question
+    display: flex
+    gap: 10px
+    flex-wrap: wrap
+    justify-content: center
+    font-size: 24px
+    @media(max-width: 960px)
+      font-size: 18px
+    @media(max-width: 540px)
+      font-size: 18px
+    & output
+      text-align: center
+  &__incorrect
+    display: flex
+    gap: 10px
+    flex-wrap: wrap
+    justify-content: center
+    font-size: 24px
+    @media(max-width: 960px)
+      font-size: 18px
+    &-counter
+      font-weight: bold
+      color: red
+

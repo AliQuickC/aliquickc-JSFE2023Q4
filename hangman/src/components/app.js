@@ -25,13 +25,14 @@ export default class App {
     return `
     <main class="app">
       <div class="app__container container">
+        <div class="app__wrap"></div>
       </div>
     </main>`;
   }
 
   render() {
     this.container.innerHTML = this.toHTML();
-    const componentContainer = this.container.querySelector('.app__container');
+    const componentContainer = this.container.querySelector('.app__wrap');
     componentContainer.append(this.gallows.render());
     componentContainer.append(this.quiz.render());
     componentContainer.append(this.keyboard.render());

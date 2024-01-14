@@ -12,24 +12,22 @@
     margin-left: auto
     margin-right: auto
     padding: 40px
-    display: grid
-    gap: 40px
-    grid-template-columns: 1fr 1fr
-    grid-template-rows: 1fr 1fr
+    display: flex
+    justify-content: center
+    align-items: center
     // background: url("../assets/bg-2.png")
     background: url("../assets/bg-1.jpg")
     @media(max-width: 1440px)
-      height: 100%
+      min-height: 100%
+    @media(max-width: 960px)
+      display: block
+    @media(max-width: 540px)
+      padding: 20px
+      padding-bottom: 40px
+  &__wrap
+    display: grid
+    gap: 40px
+    grid-template-areas: "gallows quiz" "gallows keyboard"
     @media(max-width: 960px)
       gap: 20px
-      grid-template-columns: 1fr
-      grid-template-rows: 1fr 1fr 1fr
-
-.quiz
-  grid-column: 2 / 3
-  grid-row: 1 / 2
-  background-color: #2552cd
-
-  @media(max-width: 960px)
-    grid-column: 1 / 2
-    grid-row: 2 / 3
+      grid-template-areas: "gallows" "quiz" "keyboard"

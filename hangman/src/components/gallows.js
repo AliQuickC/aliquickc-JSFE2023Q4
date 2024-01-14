@@ -30,9 +30,9 @@ export default class Gallows extends Component {
     picture.style.background = mistakesStyles.slice(0, mistakes + 1).join('');
   };
 
-  render() {
+  render = () => {
     this.container.innerHTML = this.toHTML();
     this.showMistakes();
     return this.container;
-  }
+  };
 }

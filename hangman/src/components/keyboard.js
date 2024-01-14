@@ -13,6 +13,7 @@ export default class Keyboard extends Component {
         const key = event.target.closest('[data-char]');
         if (key) {
           key.disabled = true;
+          this.store.dispatch({type: 'INPUT_CHAR', char: key.dataset.char});
           /* eslint-disable-next-line no-underscore-dangle */
           this._triggerEvent('onbutton', {key: key.dataset.char});
         }
@@ -72,8 +73,8 @@ export default class Keyboard extends Component {
     return keyElems.join('');
   }
 
-  render() {
+  render = () => {
     this.container.innerHTML = this.toHTML();
     return this.container;
-  }
+  };
 }

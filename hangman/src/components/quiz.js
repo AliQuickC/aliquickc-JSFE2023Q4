@@ -12,14 +12,14 @@ export default class Quiz extends Component {
   destroy() {}
 
   toHTML() {
-    const {numberOfMistakes, currentQuestion, guessingLetters} = this.store.getState().userData;
+    const {numberOfMistakes, currentQuestion, guessingChars} = this.store.getState().userData;
     const riddle = this.store.getState().riddles[currentQuestion];
     let word = Array(riddle.word.length).fill('_');
-    guessingLetters.forEach(element => {
-      word[element] = riddle.word[element].toUpperCase();
+    word.forEach((element, index) => {
+      if (guessingChars[index]) word[index] = riddle.word[index].toUpperCase();
     });
     word = word.join('');
-    console.log('questions: ', riddle.word);
+    // console.log('questions: ', riddle.word);
 
     return `
     <div class="quiz__secret-word">${word}</div>
@@ -33,8 +33,8 @@ export default class Quiz extends Component {
       `;
   }
 
-  render() {
+  render = () => {
     this.container.innerHTML = this.toHTML();
     return this.container;
-  }
+  };
 }

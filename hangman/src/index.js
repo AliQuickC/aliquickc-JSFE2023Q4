@@ -36,14 +36,15 @@ const initialState = {
   ],
   userData: {
     currentQuestion: 20,
-    numberOfMistakes: 1,
-    guessingLetters: [1, 3],
     questionsUsed: [],
+    numberOfMistakes: 1,
+    guessingChars: [],
+    UsedChars: [],
   },
 };
 
-
 const store = createStore(reducer, initialState);
 
+store.dispatch({type: 'INIT_NEW_GAME'});
 const app = new App(store);
 app.run();

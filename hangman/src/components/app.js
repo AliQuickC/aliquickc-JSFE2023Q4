@@ -10,9 +10,11 @@ export default class App {
   }
 
   init() {
-    this.gallows = new Gallows(this.store, 'div', 'gallows');
     this.quiz = new Quiz(this.store, 'div', 'quiz');
     this.keyboard = new Keyboard(this.store, 'div', 'keyboard');
+    this.gallows = new Gallows(this.store, 'div', 'gallows');
+    this.keyboard.addEventListener('onbutton', this.quiz.render);
+    this.keyboard.addEventListener('onbutton', this.gallows.render);
   }
 
   destroy() {}
@@ -30,12 +32,12 @@ export default class App {
     </main>`;
   }
 
-  render() {
+  render = () => {
     this.container.innerHTML = this.toHTML();
     const componentContainer = this.container.querySelector('.app__wrap');
     componentContainer.append(this.gallows.render());
     componentContainer.append(this.quiz.render());
     componentContainer.append(this.keyboard.render());
     return this.container;
-  }
+  };
 }

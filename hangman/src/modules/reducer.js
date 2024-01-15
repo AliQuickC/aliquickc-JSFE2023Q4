@@ -9,8 +9,8 @@ export default function reducer(stateData, action) {
   let guessingChars = [];
   switch (action.type) {
     case 'INIT_NEW_GAME':
-      if (state.userData.questionsUsed < state.riddles.length) {
-        while (state.userData.questionsUsed < state.riddles.length) {
+      if (state.userData.questionsUsed.length < state.riddles.length) {
+        while (state.userData.questionsUsed.length < state.riddles.length) {
           newQuestionNum = randomInteger(0, state.riddles.length - 1);
           if (state.userData.questionsUsed.indexOf(newQuestionNum) === -1) break;
         }
@@ -27,8 +27,6 @@ export default function reducer(stateData, action) {
         isFinishGame: false,
         gameFinishRezult: '',
       };
-      /* eslint-disable-next-line no-console */
-      console.log('riddles: ', state.riddles[newQuestionNum]);
       return state;
     case 'INPUT_CHAR':
       if (state.userData.UsedChars.indexOf(action.char.toUpperCase()) === -1 && !state.userData.isFinishGame) {

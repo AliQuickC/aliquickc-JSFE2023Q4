@@ -11,6 +11,7 @@ export default class Modal extends Component {
   init() {
     this.container.onclick = (event) => {
       if (event.target && event.target.closest('#modal-close-button')) {
+        this.closeModal();
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('startgame');
       }
@@ -44,6 +45,11 @@ export default class Modal extends Component {
     this.render();
     this.container.showModal();
     this.container.classList.add('open');
+  };
+
+  closeModal = () => {
+    this.container.close();
+    this.container.classList.remove('open');
   };
 
   render = () => {

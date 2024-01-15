@@ -19,13 +19,26 @@ export default class App {
     this.keyboard.addEventListener('onbutton', this.quiz.render);
     this.keyboard.addEventListener('onbutton', this.gallows.render);
     this.keyboard.addEventListener('endgame', this.modal.openModal);
+    this.modal.addEventListener('startgame', this.startGame);
   }
 
   destroy() {}
 
-  run() {
+  startGame = () => {
+    this.store.dispatch({type: 'INIT_NEW_GAME'});
     this.render();
-  }
+
+    const state = this.store.getState();
+
+    /* eslint-disable-next-line no-console */
+    console.log(
+      `
+    -= с клавиатуры, Буквы вводятся при включённой русской раскладке =-
+
+    Вопрос/ответ: `,
+      state.riddles[state.userData.currentQuestion]
+    );
+  };
 
   toHTML() {
     return `

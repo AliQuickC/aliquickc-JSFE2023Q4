@@ -19,7 +19,7 @@ const initialState = {
     {question: 'прочная ткань', word: 'Мешковина'},
     {question: 'техническое изделие', word: 'Процессор'},
     {question: 'повреждение', word: 'Прокол'},
-    {question: 'форма текста', word: 'Абзац'},
+    {question: 'отступ в начале строки', word: 'Абзац'},
     {question: 'группа животных перевозящих грузы', word: 'Караван'},
     {question: 'единица измерения', word: 'Фунт'},
     {question: 'устройство для рассеивания тепла', word: 'Радиатор'},
@@ -47,6 +47,5 @@ const initialState = {
 
 const store = createStore(reducer, initialState);
 
-store.dispatch({type: 'INIT_NEW_GAME'});
 const app = new App(store);
-app.run();
+app.startGame();

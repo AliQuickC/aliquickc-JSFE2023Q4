@@ -48,10 +48,7 @@ export default class Keyboard extends Component {
       if (event.target) {
         const key = event.target.closest('[data-char]');
         if (key) {
-          key.disabled = true;
-          this.store.dispatch({type: 'INPUT_CHAR', char: key.dataset.char});
-          /* eslint-disable-next-line no-underscore-dangle */
-          this._triggerEvent('onbutton');
+          this.charInput(key, key.dataset.char);
         }
       }
     };
@@ -60,17 +57,25 @@ export default class Keyboard extends Component {
   }
 
   physicalKeyboardInput = (event) => {
-    if (
-      this.CHARS.indexOf(event.key.toLowerCase()) !== -1 &&
-      this.store.getState().userData.UsedChars.indexOf(event.key.toUpperCase() !== -1)
-    ) {
+    if (this.CHARS.indexOf(event.key.toLowerCase()) !== -1 && !this.store.getState().userData.isFinishGame) {
       const key = this.container.querySelector(`[data-char="${event.key.toLowerCase()}"]`);
-      key.disabled = true;
-      this.store.dispatch({type: 'INPUT_CHAR', char: event.key});
-      /* eslint-disable-next-line no-underscore-dangle */
-      this._triggerEvent('onbutton');
+      this.charInput(key, event.key);
     }
   };
+
+  charInput(elem, char) {
+    const key = elem;
+    key.disabled = true;
+    this.store.dispatch({type: 'INPUT_CHAR', char});
+
+    /* eslint-disable-next-line no-underscore-dangle */
+    this._triggerEvent('onbutton');
+
+    if (this.store.getState().userData.isFinishGame) {
+      /* eslint-disable-next-line no-underscore-dangle */
+      this._triggerEvent('endgame');
+    }
+  }
 
   enabledAllButtons = () => {
     const buttons = this.container.querySelectorAll('[data-char]');

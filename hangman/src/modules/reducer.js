@@ -24,15 +24,14 @@ export default function reducer(stateData, action) {
         numberOfMistakes: 0,
         guessingChars: Array(state.riddles[newQuestionNum].word.length).fill(false),
         UsedChars: [],
+        isFinishGame: false,
+        gameFinishRezult: '',
       };
       /* eslint-disable-next-line no-console */
       console.log('riddles: ', state.riddles[newQuestionNum]);
       return state;
     case 'INPUT_CHAR':
-      if (
-        state.userData.UsedChars.indexOf(action.char.toUpperCase()) === -1 &&
-        state.userData.numberOfMistakes < MAX_MISTAKES
-      ) {
+      if (state.userData.UsedChars.indexOf(action.char.toUpperCase()) === -1 && !state.userData.isFinishGame) {
         wordArr = state.riddles[state.userData.currentQuestion].word.toUpperCase().split('');
 
         guessingChars = [...state.userData.guessingChars];
@@ -42,15 +41,21 @@ export default function reducer(stateData, action) {
               guessingChars[index] = true;
             }
           });
-          // game end ???
-          /* eslint-disable-next-line no-console */
-          if (guessingChars.every((item) => item)) console.log('Слово угадано !');
-        } else {
-          if (state.userData.numberOfMistakes + 1 === MAX_MISTAKES) {
-            // game end
-            /* eslint-disable-next-line no-console */
-            console.log('Поражение !');
+          if (guessingChars.every((item) => item)) {
+            state.userData = {
+              ...state.userData,
+              isFinishGame: true,
+              gameFinishRezult: 'guessed',
+            };
           }
+        } else if (state.userData.numberOfMistakes + 1 === MAX_MISTAKES) {
+          state.userData = {
+            ...state.userData,
+            numberOfMistakes: state.userData.numberOfMistakes + 1,
+            isFinishGame: true,
+            gameFinishRezult: 'execution',
+          };
+        } else {
           state.userData = {...state.userData, numberOfMistakes: state.userData.numberOfMistakes + 1};
         }
 

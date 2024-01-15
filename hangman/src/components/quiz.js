@@ -19,7 +19,6 @@ export default class Quiz extends Component {
       if (guessingChars[index]) word[index] = riddle.word[index].toUpperCase();
     });
     word = word.join('');
-    // console.log('questions: ', riddle.word);
 
     return `
     <div class="quiz__secret-word">${word}</div>

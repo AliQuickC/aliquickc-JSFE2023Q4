@@ -40,6 +40,8 @@ const initialState = {
     numberOfMistakes: 1,
     guessingChars: [],
     UsedChars: [],
+    isFinishGame: false,
+    gameFinishRezult: '', // 'guessed' | 'execution'
   },
 };
 

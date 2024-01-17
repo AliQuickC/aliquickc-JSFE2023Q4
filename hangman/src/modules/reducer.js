@@ -15,12 +15,16 @@ export default function reducer(stateData, action) {
           if (state.userData.questionsUsed.indexOf(newQuestionNum) === -1) break;
         }
       } else {
+        newQuestionNum = randomInteger(0, state.riddles.length - 1);
         /* eslint-disable-next-line no-console */
         console.log('вопросы закончились!');
       }
       state.userData = {
         currentQuestion: newQuestionNum,
-        questionsUsed: [...state.userData.questionsUsed, newQuestionNum],
+        questionsUsed:
+          state.userData.questionsUsed.length === state.riddles.length
+            ? [newQuestionNum]
+            : [...state.userData.questionsUsed, newQuestionNum],
         numberOfMistakes: 0,
         guessingChars: Array(state.riddles[newQuestionNum].word.length).fill(false),
         UsedChars: [],

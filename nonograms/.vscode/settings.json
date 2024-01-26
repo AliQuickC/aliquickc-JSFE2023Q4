@@ -1,0 +1,6 @@
+{
+  "liveServer.settings.port": 5501,
+  "prettier.requireConfig": true,
+  "prettier.singleQuote": true,
+  "prettier.useTabs": false
+}

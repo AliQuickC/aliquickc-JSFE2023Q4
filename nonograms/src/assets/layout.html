@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" href="./assets/favicon/favicon.png" type="image/png" />
+
+    <title>Nonograms</title>
+  </head>
+
+  <body>
+
+    <main class="app">
+      <div class="app__container container">
+        <div class="app__wrap">
+          <div class="field">
+
+            <div class="field__top-clues top-clues">
+              <div class="top-clues__column">
+                11
+              </div>
+              <div class="top-clues__column">
+                1<br>4<br>2
+              </div>
+              <div class="top-clues__column">
+                1<br>5<br>6
+              </div>
+              <div class="top-clues__column">3<br>1<br>1<br>1<br>2</div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+              <div class="top-clues__column"></div>
+
+            </div>
+
+            <div class="field__left-clues left-clues">
+              <div class="left-clues__row">43</div>
+              <div class="left-clues__row">512</div>
+              <div class="left-clues__row">2122</div>
+              <div class="left-clues__row">32217368275</div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+              <div class="left-clues__row"></div>
+            </div>
+
+            <div class="field__frame frame">
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell">×</div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell" style="background-color: #000;"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell" style="background-color: #000;"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell">×</div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+                            <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+              <div class="frame__row">
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+                <div class="frame__cell"></div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+  </body>
+</html>

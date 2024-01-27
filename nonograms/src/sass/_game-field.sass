@@ -1,0 +1,74 @@
+.field
+  --cell-size: 40px
+  display: grid
+  grid-template-areas: ". top-clues" "left-clues frame"
+  overflow-x: auto
+  padding: 3px
+  background-color: #fff
+  & *
+    box-sizing: content-box
+  &__left-clues
+    grid-area: left-clues
+  &__top-clues
+    grid-area: top-clues
+  &__frame
+    grid-area: frame
+
+.top-clues
+  display: flex
+  flex-direction: row
+  background-color: #DADADA
+  &__column
+    display: flex
+    justify-content: center
+    align-items: flex-end
+    min-height: var(--cell-size)
+    width: var(--cell-size)
+    padding-top: 4px
+    padding-bottom: 4px
+    border-top: 2px solid #000
+    border-left: 1px solid #000
+    &:nth-child(5n+1)
+      border-left: 2px solid #000
+    &:last-child
+      border-right: 2px solid #000
+
+.left-clues
+  background-color: #DADADA
+  border-left: 2px solid #000
+  &__row
+    display: flex
+    justify-content: flex-end
+    align-items: center
+    padding-left: 4px
+    padding-right: 4px
+    min-width: var(--cell-size)
+    height: var(--cell-size)
+    border-top: 1px solid #000
+    &:nth-child(5n+1)
+      border-top: 2px solid #000
+    &:last-child
+      border-bottom: 2px solid #000
+
+.frame
+  background-color: #fff
+  &__row
+    display: flex
+    flex-direction: row
+    border-top: 1px solid #000
+    &:nth-child(5n+1)
+      border-top: 2px solid #000
+    &:last-child
+      border-bottom: 2px solid #000
+  &__cell
+    width: var(--cell-size)
+    height: var(--cell-size)
+    border-left: 1px solid #000
+    display: flex
+    justify-content: center
+    align-items: center
+    font-size: var(--cell-size)
+    &:nth-child(5n+1)
+      border-left: 2px solid #000
+    &:last-child
+      border-right: 2px solid #000

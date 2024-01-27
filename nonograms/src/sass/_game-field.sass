@@ -22,7 +22,7 @@
     display: flex
     justify-content: center
     align-items: flex-end
-    min-height: var(--cell-size)
+    min-height: calc(var(--cell-size) - 8px)
     width: var(--cell-size)
     padding-top: 4px
     padding-bottom: 4px
@@ -42,7 +42,7 @@
     align-items: center
     padding-left: 4px
     padding-right: 4px
-    min-width: var(--cell-size)
+    min-width: calc(var(--cell-size) - 8px)
     height: var(--cell-size)
     border-top: 1px solid #000
     &:nth-child(5n+1)

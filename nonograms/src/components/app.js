@@ -1,3 +1,4 @@
+import InfoPanel from './info-panel';
 import Field from './field';
 
 export default class App {
@@ -7,9 +8,7 @@ export default class App {
     this.init();
   }
 
-  init() {
-    this.field = new Field(this.store, 'div', 'field');
-  }
+  init() {}
 
   destroy() {}
 
@@ -30,8 +29,23 @@ export default class App {
   }
 
   render = () => {
+    if (this.panel) {
+      this.panel.destroy();
+      this.panel.removeEventListener('startgame', this.startGame);
+    }
+    if (this.field) {
+      this.field.destroy();
+      this.field.removeEventListener('endgame', this.panel.render);
+    }
+
+    this.panel = new InfoPanel(this.store, 'div', 'panel');
+    this.field = new Field(this.store, 'div', 'field');
+    this.field.addEventListener('endgame', this.panel.render);
+    this.panel.addEventListener('startgame', this.startGame);
+
     this.container.innerHTML = this.toHTML();
     const componentContainer = this.container.querySelector('.app__wrap');
+    componentContainer.append(this.panel.render());
     componentContainer.append(this.field.render());
 
     return this.container;

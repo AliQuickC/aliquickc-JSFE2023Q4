@@ -11,7 +11,7 @@
     "clear": "rd /s /q build",
     "lint": "eslint . --ext .js",
     "lintfix": "eslint . --ext .js --fix",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build-prod",
     "deploy": "npm run build-prod && npx gh-pages -d build -e nonograms"
   },
   "homepage": "https://rolling-scopes-school.github.io/aliquickc-JSFE2023Q4/nonograms/",

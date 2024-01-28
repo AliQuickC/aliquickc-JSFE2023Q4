@@ -10,6 +10,7 @@ export default class Field extends Component {
 
   init() {
     this.container.onclick = (event) => {
+      if (this.store.getState().userData.isWin) return;
       if (event.target && event.target.closest('[data-type="cell"]')) {
         const elem = event.target.closest('[data-type="cell"]');
         const id = elem.getAttribute('data-cell-id').split(':');
@@ -30,6 +31,9 @@ export default class Field extends Component {
           elem.classList.remove('frame__cell_black');
           elem.textContent = '';
         }
+
+        /* eslint-disable-next-line no-underscore-dangle */
+        if (this.store.getState().userData.isWin) this._triggerEvent('endgame');
       }
     };
 
@@ -42,7 +46,9 @@ export default class Field extends Component {
     };
   }
 
-  destroy() {}
+  destroy() {
+    this.container.remove();
+  }
 
   getTopClues() {
     const size = this.store.getState().userData.fieldSize;
@@ -110,13 +116,11 @@ export default class Field extends Component {
     }
 
     return `
+            <img class="field__mimipic" src="./assets/templates/5x5/01.jpg" alt="mimipic">
             ${this.getTopClues()}
             ${this.getLeftClues()}
-
-
             <div class="field__frame frame">
-
-            ${rows}
+              ${rows}
             </div>
     `;
   }

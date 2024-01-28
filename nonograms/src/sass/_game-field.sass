@@ -1,12 +1,17 @@
 .field
   --cell-size: 40px
   display: grid
-  grid-template-areas: ". top-clues" "left-clues frame"
+  grid-template-areas: "mimi-picture top-clues" "left-clues frame"
   overflow-x: auto
   padding: 3px
   background-color: #fff
   & *
     box-sizing: content-box
+  &__mimipic
+    grid-area: mimi-picture
+    justify-self: center
+    align-self: center
+    width: var(--cell-size)
   &__left-clues
     grid-area: left-clues
   &__top-clues

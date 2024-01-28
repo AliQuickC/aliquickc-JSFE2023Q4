@@ -21,6 +21,13 @@ export default function reducer(stateData, action) {
 
       state.userData = {
         ...state.userData,
+        userMatrix: [
+          [null, null, null, null, null],
+          [null, null, null, null, null],
+          [null, null, null, null, null],
+          [null, null, null, null, null],
+          [null, null, null, null, null],
+        ],
         fieldSize: state.userData.gameMatrix.length,
         topClues,
         leftClues,

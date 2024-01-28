@@ -13,10 +13,15 @@ export default class Field extends Component {
 
   getTopClues() {
     const size = this.store.getState().userData.fieldSize;
+    const {topClues} = this.store.getState().userData;
     let columns = '';
 
     for (let index = 0; index < size; index += 1) {
-      columns += '<div class="top-clues__column"></div>';
+      const clues = topClues[index]
+        .map((item) => `<span>${item}</span>`)
+        .reverse()
+        .join('');
+      columns += `<div class="top-clues__column">${clues}</div>`;
     }
 
     return `<div class="field__top-clues top-clues">
@@ -26,10 +31,15 @@ export default class Field extends Component {
 
   getLeftClues() {
     const size = this.store.getState().userData.fieldSize;
+    const {leftClues} = this.store.getState().userData;
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
-      rows += '<div class="left-clues__row"></div>';
+      const clues = leftClues[index]
+        .map((item) => `${item} `)
+        .reverse()
+        .join('');
+      rows += `<div class="left-clues__row">${clues}</div>`;
     }
 
     return `
@@ -39,16 +49,18 @@ export default class Field extends Component {
     `;
   }
 
-  getFieldRow(numb) {
+  getFieldRow(numb, fieldRow) {
     const size = this.store.getState().userData.fieldSize;
+
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
-      rows += `<div class="frame__cell" data-col="${index + 1}" data-id="${numb}:${index}"></div>`;
+      const style = fieldRow[index] ? 'frame__cell_black' : '';
+      rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-id="${numb}:${index}"></div>`;
     }
 
     return `
-    <div class="frame__row" data-row="${numb+1}">
+    <div class="frame__row" data-row="${numb + 1}">
       ${rows}
     </div>
     `;
@@ -56,10 +68,12 @@ export default class Field extends Component {
 
   toHTML() {
     const size = this.store.getState().userData.fieldSize;
+    // const {gameMatrix} = this.store.getState().userData;
+    const {userMatrix} = this.store.getState().userData;
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
-      rows += this.getFieldRow(index);
+      rows += this.getFieldRow(index, userMatrix[index]);
     }
 
     return `

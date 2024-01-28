@@ -20,8 +20,9 @@
   background-color: #DADADA
   &__column
     display: flex
-    justify-content: center
-    align-items: flex-end
+    flex-direction: column
+    justify-content: flex-end
+    align-items: center
     min-height: calc(var(--cell-size) - 8px)
     width: var(--cell-size)
     padding-top: 4px
@@ -72,3 +73,5 @@
       border-left: 2px solid #000
     &:last-child
       border-right: 2px solid #000
+    &_black
+      background-color: #000

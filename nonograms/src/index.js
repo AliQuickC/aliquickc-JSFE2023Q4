@@ -5,13 +5,13 @@ import createStore from './redux/store';
 
 const initialState = {
   userData: {
-    fieldSize: 5,
+    fieldSize: 0,
     gameMatrix: [
       [true, false, true, false, true],
       [true, true, true, true, true],
       [false, true, true, true, false],
       [false, true, false, true, false],
-      [true, false, true, false, true],
+      [false, true, true, true, false],
     ],
     userMatrix: [
       [null, null, null, null, null],
@@ -20,6 +20,8 @@ const initialState = {
       [null, null, null, null, null],
       [null, null, null, null, null],
     ],
+    topClues: [],
+    leftClues: [],
   },
 };
 

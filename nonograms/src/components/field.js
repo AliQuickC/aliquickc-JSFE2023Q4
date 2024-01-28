@@ -1,4 +1,5 @@
 import Component from './component';
+import MOUSE_BUTTONS from '../modules/constants';
 
 export default class Field extends Component {
   constructor(props, tagName, className) {
@@ -7,7 +8,39 @@ export default class Field extends Component {
     this.init();
   }
 
-  init() {}
+  init() {
+    this.container.onclick = (event) => {
+      if (event.target && event.target.closest('[data-type="cell"]')) {
+        const elem = event.target.closest('[data-type="cell"]');
+        const id = elem.getAttribute('data-cell-id').split(':');
+        this.store.dispatch({
+          type: 'CELL_CLICK',
+          event: {
+            button: MOUSE_BUTTONS.leftButton,
+            x: +id[0],
+            y: +id[1],
+          },
+        });
+
+        const {userMatrix} = this.store.getState().userData;
+        if (userMatrix[+id[0]][+id[1]]) {
+          elem.classList.add('frame__cell_black');
+          elem.textContent = '';
+        } else {
+          elem.classList.remove('frame__cell_black');
+          elem.textContent = '';
+        }
+      }
+    };
+
+    // mouse right click
+    this.container.oncontextmenu = (event) => {
+      event.preventDefault();
+      if (event.target && event.target.closest('[data-type="cell"]')) {
+        console.log('event.target: ', event.target);
+      }
+    };
+  }
 
   destroy() {}
 
@@ -56,7 +89,7 @@ export default class Field extends Component {
 
     for (let index = 0; index < size; index += 1) {
       const style = fieldRow[index] ? 'frame__cell_black' : '';
-      rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-id="${numb}:${index}"></div>`;
+      rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-type="cell" data-cell-id="${numb}:${index}"></div>`;
     }
 
     return `

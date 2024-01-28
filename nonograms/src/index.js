@@ -22,6 +22,7 @@ const initialState = {
     ],
     topClues: [],
     leftClues: [],
+    isWin: false,
   },
 };
 

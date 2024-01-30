@@ -1,5 +1,6 @@
 import Component from './component';
 import MOUSE_BUTTONS from '../modules/constants';
+import {SELECT_TEMPLATE} from '../modules/field-template';
 
 export default class Field extends Component {
   constructor(props, tagName, className) {
@@ -116,7 +117,7 @@ export default class Field extends Component {
     }
 
     return `
-            <img class="field__mimipic" src="./assets/templates/5x5/01.jpg" alt="mimipic">
+            <img class="field__mimipic" src="./assets/templates/${SELECT_TEMPLATE}.jpg" alt="mimipic">
             ${this.getTopClues()}
             ${this.getLeftClues()}
             <div class="field__frame frame">

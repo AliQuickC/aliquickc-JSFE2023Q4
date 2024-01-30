@@ -18,16 +18,13 @@ export default function reducer(stateData, action) {
     case 'INIT_NEW_GAME':
       const topClues = countSequencesInColumn(state.userData.gameMatrix);
       const leftClues = countSequencesInRow(state.userData.gameMatrix);
+      const userMatrix = new Array(state.userData.gameMatrix.length).fill(
+        new Array(state.userData.gameMatrix.length).fill(null)
+      );
 
       state.userData = {
         ...state.userData,
-        userMatrix: [
-          [null, null, null, null, null],
-          [null, null, null, null, null],
-          [null, null, null, null, null],
-          [null, null, null, null, null],
-          [null, null, null, null, null],
-        ],
+        userMatrix,
         fieldSize: state.userData.gameMatrix.length,
         topClues,
         leftClues,
@@ -37,6 +34,7 @@ export default function reducer(stateData, action) {
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {
         const selectCall = state.userData.userMatrix[action.event.x][action.event.y];
+
         if (selectCall) {
           state.userData.userMatrix[action.event.x][action.event.y] = false;
         } else {

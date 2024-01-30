@@ -5,6 +5,12 @@
   overflow-x: auto
   padding: 3px
   background-color: #fff
+  @media(max-width: 860px)
+    --cell-size: 30px
+  @media(max-width: 700px)
+    --cell-size: 25px
+  @media(max-width: 600px)
+    --cell-size: 20px
   & *
     box-sizing: content-box
   &__mimipic
@@ -46,11 +52,12 @@
   @extend %unselectable
   &__row
     display: flex
+    flex-wrap: no-wrap
     justify-content: flex-end
     align-items: center
     padding-left: 4px
     padding-right: 4px
-    min-width: calc(var(--cell-size) - 8px)
+    min-width: max-content
     height: var(--cell-size)
     border-top: 1px solid #000
     &:nth-child(5n+1)

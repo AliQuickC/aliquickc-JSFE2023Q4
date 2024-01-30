@@ -41,8 +41,27 @@ export default class Field extends Component {
     // mouse right click
     this.container.oncontextmenu = (event) => {
       event.preventDefault();
+
+      if (this.store.getState().userData.isWin) return;
       if (event.target && event.target.closest('[data-type="cell"]')) {
-        console.log('event.target: ', event.target);
+        const elem = event.target.closest('[data-type="cell"]');
+        const id = elem.getAttribute('data-cell-id').split(':');
+        this.store.dispatch({
+          type: 'CELL_CLICK',
+          event: {
+            button: MOUSE_BUTTONS.rightButton,
+            x: +id[0],
+            y: +id[1],
+          },
+        });
+
+        const {userMatrix} = this.store.getState().userData;
+        if (userMatrix[+id[0]][+id[1]] === false && userMatrix[+id[0]][+id[1]] !== null) {
+          elem.classList.remove('frame__cell_black');
+          elem.textContent = '×';
+        } else {
+          elem.textContent = '';
+        }
       }
     };
   }
@@ -96,7 +115,8 @@ export default class Field extends Component {
 
     for (let index = 0; index < size; index += 1) {
       const style = fieldRow[index] ? 'frame__cell_black' : '';
-      rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-type="cell" data-cell-id="${numb}:${index}"></div>`;
+      const content = fieldRow[index] === false ? '×' : '';
+      rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-type="cell" data-cell-id="${numb}:${index}">${content}</div>`;
     }
 
     return `

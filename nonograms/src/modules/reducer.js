@@ -18,9 +18,10 @@ export default function reducer(stateData, action) {
     case 'INIT_NEW_GAME':
       const topClues = countSequencesInColumn(state.userData.gameMatrix);
       const leftClues = countSequencesInRow(state.userData.gameMatrix);
-      const userMatrix = new Array(state.userData.gameMatrix.length).fill(
-        new Array(state.userData.gameMatrix.length).fill(null)
-      );
+
+      const userMatrix = new Array(state.userData.gameMatrix.length)
+        .fill(null)
+        .map(() => new Array(state.userData.gameMatrix.length).fill(null));
 
       state.userData = {
         ...state.userData,
@@ -36,12 +37,19 @@ export default function reducer(stateData, action) {
         const selectCall = state.userData.userMatrix[action.event.x][action.event.y];
 
         if (selectCall) {
-          state.userData.userMatrix[action.event.x][action.event.y] = false;
+          state.userData.userMatrix[action.event.x][action.event.y] = null;
         } else {
           state.userData.userMatrix[action.event.x][action.event.y] = true;
         }
         if (isWin(state.userData.gameMatrix, state.userData.userMatrix)) {
           state.userData.isWin = true;
+        }
+      } else if (action.event.button === MOUSE_BUTTONS.rightButton) {
+        const selectCall = state.userData.userMatrix[action.event.x][action.event.y];
+        if (selectCall === null || selectCall) {
+          state.userData.userMatrix[action.event.x][action.event.y] = false;
+        } else if (selectCall === false) {
+          state.userData.userMatrix[action.event.x][action.event.y] = null;
         }
       }
       return state;

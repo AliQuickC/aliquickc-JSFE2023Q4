@@ -71,8 +71,8 @@ export default class Field extends Component {
   }
 
   getTopClues() {
-    const size = this.store.getState().userData.fieldSize;
-    const {topClues} = this.store.getState().userData;
+    const size = this.store.getState().fieldSize;
+    const {topClues} = this.store.getState();
     let columns = '';
 
     for (let index = 0; index < size; index += 1) {
@@ -89,8 +89,8 @@ export default class Field extends Component {
   }
 
   getLeftClues() {
-    const size = this.store.getState().userData.fieldSize;
-    const {leftClues} = this.store.getState().userData;
+    const size = this.store.getState().fieldSize;
+    const {leftClues} = this.store.getState();
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
@@ -109,7 +109,7 @@ export default class Field extends Component {
   }
 
   getFieldRow(numb, fieldRow) {
-    const size = this.store.getState().userData.fieldSize;
+    const size = this.store.getState().fieldSize;
 
     let rows = '';
 
@@ -127,8 +127,8 @@ export default class Field extends Component {
   }
 
   toHTML() {
-    const size = this.store.getState().userData.fieldSize;
-    // const {gameMatrix} = this.store.getState().userData;
+    const size = this.store.getState().fieldSize;
+    // const {gameMatrix} = this.store.getState();
     const {userMatrix} = this.store.getState().userData;
     let rows = '';
 

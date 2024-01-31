@@ -1,6 +1,7 @@
 import Header from './header';
 import InfoPanel from './info-panel';
 import Field from './field';
+import {SELECT_TEMPLATE} from '../modules/field-template';
 
 export default class App {
   constructor(props) {
@@ -14,7 +15,10 @@ export default class App {
   destroy() {}
 
   startGame = () => {
-    this.store.dispatch({type: 'INIT_NEW_GAME'});
+    this.store.dispatch({
+      type: 'INIT_NEW_GAME',
+      event: {isNewGame: true, userData: {selectidTemplate: SELECT_TEMPLATE}},
+    });
     this.render();
   };
 

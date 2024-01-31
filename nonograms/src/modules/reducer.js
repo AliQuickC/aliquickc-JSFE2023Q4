@@ -16,21 +16,22 @@ export default function reducer(stateData, action) {
   const state = stateData;
   switch (action.type) {
     case 'INIT_NEW_GAME':
-      const topClues = countSequencesInColumn(state.userData.gameMatrix);
-      const leftClues = countSequencesInRow(state.userData.gameMatrix);
+      const topClues = countSequencesInColumn(state.gameMatrix);
+      const leftClues = countSequencesInRow(state.gameMatrix);
 
-      const userMatrix = new Array(state.userData.gameMatrix.length)
-        .fill(null)
-        .map(() => new Array(state.userData.gameMatrix.length).fill(null));
+      const userMatrix = action.event.isNewGame
+        ? new Array(state.gameMatrix.length).fill(null).map(() => new Array(state.gameMatrix.length).fill(null))
+        : JSON.parse(JSON.stringify(action.userData.userMatrix));
 
       state.userData = {
         ...state.userData,
         userMatrix,
-        fieldSize: state.userData.gameMatrix.length,
-        topClues,
-        leftClues,
-        isWin: false,
+        selectidTemplate: action.event.userData.selectidTemplate,
+        isWin: action.isNewGame ? false : action.event.userData.isWin,
       };
+      state.fieldSize = state.gameMatrix.length;
+      state.topClues = topClues;
+      state.leftClues = leftClues;
       return state;
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {
@@ -41,7 +42,7 @@ export default function reducer(stateData, action) {
         } else {
           state.userData.userMatrix[action.event.x][action.event.y] = true;
         }
-        if (isWin(state.userData.gameMatrix, state.userData.userMatrix)) {
+        if (isWin(state.gameMatrix, state.userData.userMatrix)) {
           state.userData.isWin = true;
         }
       } else if (action.event.button === MOUSE_BUTTONS.rightButton) {

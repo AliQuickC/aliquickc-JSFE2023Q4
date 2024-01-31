@@ -7,14 +7,7 @@ export default class InfoPanel extends Component {
     this.init();
   }
 
-  init() {
-    this.container.onclick = (event) => {
-      if (event.target && event.target.closest('[data-type="startGame"]')) {
-        /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('startgame');
-      }
-    };
-  }
+  init() {}
 
   destroy() {
     this.container.remove();
@@ -23,7 +16,6 @@ export default class InfoPanel extends Component {
   toHTML() {
     const {isWin} = this.store.getState().userData;
     return `
-    <button class="panel__start-button" data-type="startGame">Start new game</button>
     <p class="panel__information ${isWin ? 'panel__information_visible' : ''}">
       Great!
       <br>

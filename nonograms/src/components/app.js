@@ -1,3 +1,4 @@
+import Header from './header';
 import InfoPanel from './info-panel';
 import Field from './field';
 
@@ -19,12 +20,10 @@ export default class App {
 
   toHTML() {
     return `
-    <main class="app">
-      <div class="app__container container">
-        <div class="app__wrap">
-        </div>
-      </div>
-    </main>
+    <div class="app">
+      <main class="app__container container main">
+      </main>
+    </div>
     `;
   }
 
@@ -38,15 +37,19 @@ export default class App {
       this.field.removeEventListener('endgame', this.panel.render);
     }
 
+    this.header = new Header(this.store, 'header', 'header');
     this.panel = new InfoPanel(this.store, 'div', 'panel');
     this.field = new Field(this.store, 'div', 'field');
     this.field.addEventListener('endgame', this.panel.render);
     this.panel.addEventListener('startgame', this.startGame);
+    this.header.addEventListener('startgame', this.startGame);
 
     this.container.innerHTML = this.toHTML();
-    const componentContainer = this.container.querySelector('.app__wrap');
-    componentContainer.append(this.panel.render());
-    componentContainer.append(this.field.render());
+    const appContainer = this.container.querySelector('.app');
+    const mainContainer = this.container.querySelector('.main');
+    appContainer.prepend(this.header.render());
+    mainContainer.append(this.field.render());
+    mainContainer.append(this.panel.render());
 
     return this.container;
   };

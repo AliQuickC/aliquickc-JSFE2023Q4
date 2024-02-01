@@ -66,9 +66,6 @@ export default class Field extends Component {
     };
   }
 
-  destroy() {
-    this.container.remove();
-  }
 
   getTopClues() {
     const size = this.store.getState().fieldSize;

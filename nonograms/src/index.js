@@ -12,6 +12,7 @@ const defaultUserData = {
   userMatrix: null,
   userMatrixHistori: [],
   rezults: {},
+  currentPage: 'selectGame', // 'gameField' | 'selectGame'
 };
 
 const initialState = {

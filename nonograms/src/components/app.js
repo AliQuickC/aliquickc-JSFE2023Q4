@@ -1,7 +1,7 @@
 import Header from './header';
 import InfoPanel from './info-panel';
 import Field from './field';
-import {SELECT_TEMPLATE} from '../modules/field-template';
+import SelectGame from './select-game';
 
 export default class App {
   constructor(props) {
@@ -46,9 +46,15 @@ export default class App {
       this.field.removeEventListener('endgame', this.panel.render);
     }
 
+    if (this.selectGame) {
+      this.selectGame.destroy();
+    }
+
     this.header = new Header(this.store, 'header', 'header');
     this.panel = new InfoPanel(this.store, 'div', 'panel');
     this.field = new Field(this.store, 'div', 'field');
+    this.selectGame = new SelectGame(this.store, 'div', 'select-game');
+
     this.field.addEventListener('endgame', this.panel.render);
     this.header.addEventListener('startgame', this.startGame);
     this.header.addEventListener('reStartgame', this.reStartGame);
@@ -57,8 +63,9 @@ export default class App {
     const appContainer = this.container.querySelector('.app');
     const mainContainer = this.container.querySelector('.main');
     appContainer.prepend(this.header.render());
-    mainContainer.append(this.field.render());
-    mainContainer.append(this.panel.render());
+    // mainContainer.append(this.field.render());
+    // mainContainer.append(this.panel.render());
+    mainContainer.append(this.selectGame.render());
 
     return this.container;
   };

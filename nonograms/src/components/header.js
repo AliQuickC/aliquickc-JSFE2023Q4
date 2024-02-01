@@ -19,9 +19,6 @@ export default class Header extends Component {
     };
   }
 
-  destroy() {
-    this.container.remove();
-  }
 
   toHTML() {
     return `

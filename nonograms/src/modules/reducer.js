@@ -1,5 +1,6 @@
 import MOUSE_BUTTONS from './constants';
 import {countSequencesInColumn, countSequencesInRow} from '../core/utils';
+import {templates} from './field-template';
 
 function isWin(templateArr, userArr) {
   for (let i = 0; i < userArr.length; i += 1) {
@@ -19,19 +20,33 @@ export default function reducer(stateData, action) {
       const topClues = countSequencesInColumn(state.gameMatrix);
       const leftClues = countSequencesInRow(state.gameMatrix);
 
-      const userMatrix = action.event.isNewGame
-        ? new Array(state.gameMatrix.length).fill(null).map(() => new Array(state.gameMatrix.length).fill(null))
-        : JSON.parse(JSON.stringify(action.userData.userMatrix));
-
-      state.userData = {
-        ...state.userData,
-        userMatrix,
-        selectidTemplate: action.event.userData.selectidTemplate,
-        isWin: action.isNewGame ? false : action.event.userData.isWin,
-      };
       state.fieldSize = state.gameMatrix.length;
       state.topClues = topClues;
       state.leftClues = leftClues;
+      return state;
+
+    case 'SET_USER_DATA':
+      state.gameMatrix = templates[action.userData.selectidTemplate];
+
+      if (action.userData.userMatrix === null) {
+        state.userData = {
+          ...action.userData,
+          userMatrix: new Array(state.gameMatrix.length)
+            .fill(null)
+            .map(() => new Array(state.gameMatrix.length).fill(null)),
+        };
+      } else {
+        state.userData = JSON.parse(JSON.stringify(action.userData));
+      }
+      return state;
+    case 'GAME_RESTART':
+      state.userData = {
+        ...state.userData,
+        userMatrix: new Array(state.gameMatrix.length)
+          .fill(null)
+          .map(() => new Array(state.gameMatrix.length).fill(null)),
+      };
+
       return state;
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {

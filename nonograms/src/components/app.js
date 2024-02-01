@@ -14,10 +14,16 @@ export default class App {
 
   destroy() {}
 
+  reStartGame = () => {
+    this.store.dispatch({
+      type: 'GAME_RESTART',
+    });
+    this.render();
+  };
+
   startGame = () => {
     this.store.dispatch({
       type: 'INIT_NEW_GAME',
-      event: {isNewGame: true, userData: {selectidTemplate: SELECT_TEMPLATE}},
     });
     this.render();
   };
@@ -34,7 +40,6 @@ export default class App {
   render = () => {
     if (this.panel) {
       this.panel.destroy();
-      this.panel.removeEventListener('startgame', this.startGame);
     }
     if (this.field) {
       this.field.destroy();
@@ -45,8 +50,8 @@ export default class App {
     this.panel = new InfoPanel(this.store, 'div', 'panel');
     this.field = new Field(this.store, 'div', 'field');
     this.field.addEventListener('endgame', this.panel.render);
-    this.panel.addEventListener('startgame', this.startGame);
     this.header.addEventListener('startgame', this.startGame);
+    this.header.addEventListener('reStartgame', this.reStartGame);
 
     this.container.innerHTML = this.toHTML();
     const appContainer = this.container.querySelector('.app');

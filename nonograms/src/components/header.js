@@ -12,6 +12,9 @@ export default class Header extends Component {
       if (event.target && event.target.closest('[data-type="startGame"]')) {
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('startgame');
+      } else if (event.target && event.target.closest('[data-type="reStartGame"]')) {
+        /* eslint-disable-next-line no-underscore-dangle */
+        this._triggerEvent('reStartgame');
       }
     };
   }
@@ -25,7 +28,7 @@ export default class Header extends Component {
     <div class="container header__container">
       <nav class="menu">
         <button data-type="startGame">Select new game</button>
-        <button>Restart game</button>
+        <button data-type="reStartGame">Restart game</button>
         <button>Random game</button>
         <button>Solution</button>
       </nav>

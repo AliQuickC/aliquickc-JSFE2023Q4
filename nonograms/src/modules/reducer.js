@@ -15,29 +15,53 @@ function isWin(templateArr, userArr) {
 
 export default function reducer(stateData, action) {
   const state = stateData;
+
+  let topClues;
+  let leftClues;
   switch (action.type) {
     case 'INIT_NEW_GAME':
-      const topClues = countSequencesInColumn(state.gameMatrix);
-      const leftClues = countSequencesInRow(state.gameMatrix);
-
+      state.gameMatrix = templates[action.selectGame];
       state.fieldSize = state.gameMatrix.length;
+
+      state.userData = {
+        ...state.userData,
+        selectidTemplate: action.selectGame,
+        isWin: false,
+        currentPage: 'gameField',
+        userMatrix: new Array(state.gameMatrix.length)
+          .fill(null)
+          .map(() => new Array(state.gameMatrix.length).fill(null)),
+      };
+
+      topClues = countSequencesInColumn(state.gameMatrix);
+      leftClues = countSequencesInRow(state.gameMatrix);
+
       state.topClues = topClues;
       state.leftClues = leftClues;
       return state;
-
-    case 'SET_USER_DATA':
+    case 'INIT_SAVED_GAME':
       state.gameMatrix = templates[action.userData.selectidTemplate];
+      state.fieldSize = state.gameMatrix.length;
 
-      if (action.userData.userMatrix === null) {
-        state.userData = {
-          ...action.userData,
-          userMatrix: new Array(state.gameMatrix.length)
-            .fill(null)
-            .map(() => new Array(state.gameMatrix.length).fill(null)),
-        };
-      } else {
-        state.userData = JSON.parse(JSON.stringify(action.userData));
-      }
+      state.userData = {
+        ...action.userData,
+        currentPage: 'gameField',
+      };
+
+      topClues = countSequencesInColumn(state.gameMatrix);
+      leftClues = countSequencesInRow(state.gameMatrix);
+
+      state.topClues = topClues;
+      state.leftClues = leftClues;
+      return state;
+    case 'SET_USER_DATA':
+      state.userData = JSON.parse(JSON.stringify(action.userData));
+      return state;
+    case 'SET_CURRENT_PAGE':
+      state.userData = {
+        ...state.userData,
+        currentPage: action.currentPage,
+      };
       return state;
     case 'GAME_RESTART':
       state.userData = {
@@ -46,7 +70,6 @@ export default function reducer(stateData, action) {
           .fill(null)
           .map(() => new Array(state.gameMatrix.length).fill(null)),
       };
-
       return state;
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {

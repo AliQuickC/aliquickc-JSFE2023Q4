@@ -9,9 +9,13 @@ export default class Header extends Component {
 
   init() {
     this.container.onclick = (event) => {
-      if (event.target && event.target.closest('[data-type="startGame"]')) {
+      if (event.target && event.target.closest('[data-type="selectNewGame"]')) {
+        this.store.dispatch({
+          type: 'SET_CURRENT_PAGE',
+          currentPage: 'selectGame',
+        });
         /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('startgame');
+        this._triggerEvent('selectGame');
       } else if (event.target && event.target.closest('[data-type="reStartGame"]')) {
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('reStartgame');
@@ -24,8 +28,8 @@ export default class Header extends Component {
     return `
     <div class="container header__container">
       <nav class="menu">
-        <button data-type="startGame">Select new game</button>
-        <button data-type="reStartGame">Restart game</button>
+        <button data-type="selectNewGame">Select new game</button>
+        <button data-type="reStartGame">Reset game</button>
         <button>Random game</button>
         <button>Solution</button>
       </nav>

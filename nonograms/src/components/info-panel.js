@@ -11,6 +11,7 @@ export default class InfoPanel extends Component {
 
   toHTML() {
     const {isWin} = this.store.getState().userData;
+
     return `
     <p class="panel__information ${isWin ? 'panel__information_visible' : ''}">
       Great!

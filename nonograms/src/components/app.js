@@ -10,7 +10,12 @@ export default class App {
     this.init();
   }
 
-  init() {}
+  init() {
+    this.header = new Header(this.store, 'header', 'header');
+
+    this.header.addEventListener('selectGame', this.render);
+    this.header.addEventListener('reStartgame', this.reStartGame);
+  }
 
   destroy() {}
 
@@ -22,9 +27,6 @@ export default class App {
   };
 
   startGame = () => {
-    this.store.dispatch({
-      type: 'INIT_NEW_GAME',
-    });
     this.render();
   };
 
@@ -49,23 +51,26 @@ export default class App {
     if (this.selectGame) {
       this.selectGame.destroy();
     }
+    const {currentPage} = this.store.getState().userData;
 
-    this.header = new Header(this.store, 'header', 'header');
     this.panel = new InfoPanel(this.store, 'div', 'panel');
-    this.field = new Field(this.store, 'div', 'field');
-    this.selectGame = new SelectGame(this.store, 'div', 'select-game');
-
-    this.field.addEventListener('endgame', this.panel.render);
-    this.header.addEventListener('startgame', this.startGame);
-    this.header.addEventListener('reStartgame', this.reStartGame);
 
     this.container.innerHTML = this.toHTML();
     const appContainer = this.container.querySelector('.app');
     const mainContainer = this.container.querySelector('.main');
     appContainer.prepend(this.header.render());
-    // mainContainer.append(this.field.render());
-    // mainContainer.append(this.panel.render());
-    mainContainer.append(this.selectGame.render());
+
+    if (currentPage === 'gameField') {
+      this.field = new Field(this.store, 'div', 'field');
+      this.field.addEventListener('endgame', this.panel.render);
+      mainContainer.append(this.field.render());
+      mainContainer.append(this.panel.render());
+    } else if (currentPage === 'selectGame') {
+      this.selectGame = new SelectGame(this.store, 'div', 'select-game');
+      this.selectGame.addEventListener('startNewGame', this.render);
+
+      mainContainer.append(this.selectGame.render());
+    }
 
     return this.container;
   };

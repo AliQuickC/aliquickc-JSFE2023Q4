@@ -8,7 +8,7 @@ const storeKEY = 'nonogram';
 
 const defaultUserData = {
   selectidTemplate: SELECT_TEMPLATE,
-  isWin: false,
+  isWin: true,
   userMatrix: null,
   userMatrixHistori: [],
   rezults: {},
@@ -41,7 +41,16 @@ function setItemToLocalStorage() {
 
 window.addEventListener('beforeunload', setItemToLocalStorage);
 
-store.dispatch({type: 'SET_USER_DATA', userData: getLocalStorage()});
+const userData = getLocalStorage();
+if (userData.isWin) {
+  store.dispatch({type: 'SET_USER_DATA', userData});
+  store.dispatch({
+    type: 'SET_CURRENT_PAGE',
+    currentPage: 'selectGame',
+  });
+} else {
+  store.dispatch({type: 'INIT_SAVED_GAME', userData});
+}
 
 const app = new App(store);
 app.startGame();

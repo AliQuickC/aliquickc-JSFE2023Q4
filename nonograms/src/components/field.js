@@ -66,7 +66,6 @@ export default class Field extends Component {
     };
   }
 
-
   getTopClues() {
     const size = this.store.getState().fieldSize;
     const {topClues} = this.store.getState();
@@ -125,8 +124,8 @@ export default class Field extends Component {
 
   toHTML() {
     const size = this.store.getState().fieldSize;
-    // const {gameMatrix} = this.store.getState();
     const {userMatrix} = this.store.getState().userData;
+    const {selectidTemplate} = this.store.getState().userData;
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
@@ -134,7 +133,7 @@ export default class Field extends Component {
     }
 
     return `
-            <img class="field__mimipic" src="./assets/templates/${SELECT_TEMPLATE}.jpg" alt="mimipic">
+            <img class="field__mimipic" src="./assets/templates/${selectidTemplate}.jpg" alt="mimipic">
             ${this.getTopClues()}
             ${this.getLeftClues()}
             <div class="field__frame frame">

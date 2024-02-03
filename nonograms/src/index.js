@@ -54,4 +54,4 @@ if (userData.isWin) {
 }
 
 const app = new App(store);
-app.startGame();
+app.render();

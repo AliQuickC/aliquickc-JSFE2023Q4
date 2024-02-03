@@ -16,6 +16,7 @@ export default class App {
 
     this.header.addEventListener('selectGame', this.render);
     this.header.addEventListener('reStartgame', this.reStartGame);
+    this.header.addEventListener('randomGame', this.startGame);
   }
 
   destroy() {}
@@ -27,7 +28,11 @@ export default class App {
     this.render();
   };
 
-  startGame = () => {
+  startGame = (event) => {
+    this.store.dispatch({
+      type: 'INIT_NEW_GAME',
+      selectGame: event.gameName,
+    });
     this.render();
   };
 
@@ -85,7 +90,7 @@ export default class App {
       mainContainer.append(this.panel.render());
     } else if (currentPage === 'selectGame') {
       this.selectGame = new SelectGame(this.store, 'div', 'select-game');
-      this.selectGame.addEventListener('startNewGame', this.render);
+      this.selectGame.addEventListener('startNewGame', this.startGame);
 
       mainContainer.append(this.selectGame.render());
     }

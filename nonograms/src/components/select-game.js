@@ -13,14 +13,14 @@ export default class SelectGame extends Component {
       if (event.target && event.target.closest('[data-type="selectGameItem"]')) {
         const elem = event.target.closest('[data-type="selectGameItem"]');
         const gameName = elem.getAttribute('data-game-name');
-        this.store.dispatch({
-          type: 'INIT_NEW_GAME',
-          selectGame: gameName,
-        });
         /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('startNewGame');
+        this._triggerEvent('startNewGame', {gameName});
       }
     };
+  }
+
+  destroy() {
+    this.container.onclick = null;
   }
 
   toHTML() {

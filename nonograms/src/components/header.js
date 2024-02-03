@@ -23,6 +23,7 @@ export default class Header extends Component {
     };
   }
 
+  destroy() {}
 
   toHTML() {
     return `
@@ -31,6 +32,7 @@ export default class Header extends Component {
         <button data-type="selectNewGame">Select new game</button>
         <button data-type="reStartGame">Reset game</button>
         <button>Random game</button>
+        <button>Continue last game</button>
         <button>Solution</button>
       </nav>
     </div>

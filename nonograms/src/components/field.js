@@ -1,6 +1,4 @@
 import Component from './component';
-import MOUSE_BUTTONS from '../modules/constants';
-import {SELECT_TEMPLATE} from '../modules/field-template';
 
 export default class Field extends Component {
   constructor(props, tagName, className) {
@@ -18,7 +16,7 @@ export default class Field extends Component {
         this.store.dispatch({
           type: 'CELL_CLICK',
           event: {
-            button: MOUSE_BUTTONS.leftButton,
+            button: event.button, // MOUSE_BUTTONS.leftButton,
             x: +id[0],
             y: +id[1],
           },
@@ -33,7 +31,8 @@ export default class Field extends Component {
           elem.textContent = '';
         }
 
-        /* eslint-disable-next-line no-underscore-dangle */
+        /* eslint-disable no-underscore-dangle */
+        this._triggerEvent('onclick');
         if (this.store.getState().userData.isWin) this._triggerEvent('endgame');
       }
     };
@@ -49,7 +48,7 @@ export default class Field extends Component {
         this.store.dispatch({
           type: 'CELL_CLICK',
           event: {
-            button: MOUSE_BUTTONS.rightButton,
+            button: event.button, // MOUSE_BUTTONS.rightButton,
             x: +id[0],
             y: +id[1],
           },
@@ -63,6 +62,9 @@ export default class Field extends Component {
           elem.textContent = '';
         }
       }
+      /* eslint-disable no-underscore-dangle */
+      this._triggerEvent('onclick');
+      if (this.store.getState().userData.isWin) this._triggerEvent('endgame');
     };
   }
 

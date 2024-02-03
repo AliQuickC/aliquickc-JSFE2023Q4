@@ -28,6 +28,7 @@ export default function reducer(stateData, action) {
         selectidTemplate: action.selectGame,
         isWin: false,
         currentPage: 'gameField',
+        timerValue: 0,
         userMatrix: new Array(state.gameMatrix.length)
           .fill(null)
           .map(() => new Array(state.gameMatrix.length).fill(null)),
@@ -66,10 +67,14 @@ export default function reducer(stateData, action) {
     case 'GAME_RESTART':
       state.userData = {
         ...state.userData,
+        timerValue: 0,
         userMatrix: new Array(state.gameMatrix.length)
           .fill(null)
           .map(() => new Array(state.gameMatrix.length).fill(null)),
       };
+      return state;
+    case 'RENEW_TIMER_VALUE':
+      state.userData.timerValue = action.time;
       return state;
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {

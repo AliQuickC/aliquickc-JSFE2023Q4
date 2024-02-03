@@ -13,6 +13,7 @@ const defaultUserData = {
   userMatrixHistori: [],
   rezults: {},
   currentPage: 'selectGame', // 'gameField' | 'selectGame'
+  timerValue: 0,
 };
 
 const initialState = {

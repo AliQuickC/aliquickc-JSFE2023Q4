@@ -68,6 +68,7 @@ export default function reducer(stateData, action) {
       state.userData = {
         ...state.userData,
         timerValue: 0,
+        isWin: false,
         userMatrix: new Array(state.gameMatrix.length)
           .fill(null)
           .map(() => new Array(state.gameMatrix.length).fill(null)),
@@ -85,9 +86,6 @@ export default function reducer(stateData, action) {
         } else {
           state.userData.userMatrix[action.event.x][action.event.y] = true;
         }
-        if (isWin(state.gameMatrix, state.userData.userMatrix)) {
-          state.userData.isWin = true;
-        }
       } else if (action.event.button === MOUSE_BUTTONS.rightButton) {
         const selectCall = state.userData.userMatrix[action.event.x][action.event.y];
         if (selectCall === null || selectCall) {
@@ -96,6 +94,11 @@ export default function reducer(stateData, action) {
           state.userData.userMatrix[action.event.x][action.event.y] = null;
         }
       }
+
+      if (isWin(state.gameMatrix, state.userData.userMatrix)) {
+        state.userData.isWin = true;
+      }
+
       return state;
     default:
       return state;

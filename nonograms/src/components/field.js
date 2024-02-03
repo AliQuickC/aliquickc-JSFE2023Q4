@@ -1,4 +1,10 @@
 import Component from './component';
+import MOUSE_BUTTONS from '../modules/constants';
+
+const timeZero = 0;
+const volumeDefault = 0.2;
+const SOUND_CELL_CLICK = '../assets/audio/bone.mp3';
+const SOUND_VICTORY = '../assets/audio/victory.mp3';
 
 export default class Field extends Component {
   constructor(props, tagName, className) {
@@ -7,22 +13,27 @@ export default class Field extends Component {
     this.init();
   }
 
-  init() {
-    this.container.onclick = (event) => {
-      if (this.store.getState().userData.isWin) return;
-      if (event.target && event.target.closest('[data-type="cell"]')) {
-        const elem = event.target.closest('[data-type="cell"]');
-        const id = elem.getAttribute('data-cell-id').split(':');
-        this.store.dispatch({
-          type: 'CELL_CLICK',
-          event: {
-            button: event.button, // MOUSE_BUTTONS.leftButton,
-            x: +id[0],
-            y: +id[1],
-          },
-        });
+  mouseClickHandler(event) {
+    if (event.button === MOUSE_BUTTONS.rightButton) {
+      event.preventDefault();
+    }
 
-        const {userMatrix} = this.store.getState().userData;
+    if (this.store.getState().userData.isWin) return;
+    if (event.target && event.target.closest('[data-type="cell"]')) {
+      const elem = event.target.closest('[data-type="cell"]');
+      const id = elem.getAttribute('data-cell-id').split(':');
+      this.store.dispatch({
+        type: 'CELL_CLICK',
+        event: {
+          // MOUSE_BUTTONS.leftButton | MOUSE_BUTTONS.rightButton
+          button: event.button,
+          x: +id[0],
+          y: +id[1],
+        },
+      });
+
+      const {userMatrix} = this.store.getState().userData;
+      if (event.button === MOUSE_BUTTONS.leftButton) {
         if (userMatrix[+id[0]][+id[1]]) {
           elem.classList.add('frame__cell_black');
           elem.textContent = '';
@@ -30,31 +41,7 @@ export default class Field extends Component {
           elem.classList.remove('frame__cell_black');
           elem.textContent = '';
         }
-
-        /* eslint-disable no-underscore-dangle */
-        this._triggerEvent('onclick');
-        if (this.store.getState().userData.isWin) this._triggerEvent('endgame');
-      }
-    };
-
-    // mouse right click
-    this.container.oncontextmenu = (event) => {
-      event.preventDefault();
-
-      if (this.store.getState().userData.isWin) return;
-      if (event.target && event.target.closest('[data-type="cell"]')) {
-        const elem = event.target.closest('[data-type="cell"]');
-        const id = elem.getAttribute('data-cell-id').split(':');
-        this.store.dispatch({
-          type: 'CELL_CLICK',
-          event: {
-            button: event.button, // MOUSE_BUTTONS.rightButton,
-            x: +id[0],
-            y: +id[1],
-          },
-        });
-
-        const {userMatrix} = this.store.getState().userData;
+      } else if (event.button === MOUSE_BUTTONS.rightButton) {
         if (userMatrix[+id[0]][+id[1]] === false && userMatrix[+id[0]][+id[1]] !== null) {
           elem.classList.remove('frame__cell_black');
           elem.textContent = '×';
@@ -62,10 +49,43 @@ export default class Field extends Component {
           elem.textContent = '';
         }
       }
+
+      this.audio.play();
       /* eslint-disable no-underscore-dangle */
       this._triggerEvent('onclick');
-      if (this.store.getState().userData.isWin) this._triggerEvent('endgame');
+      if (this.store.getState().userData.isWin) {
+        this.audioVictory.play();
+        this._triggerEvent('endgame');
+      }
+    }
+  }
+
+  init() {
+    this.audio = new Audio();
+    this.audio.currentTime = timeZero;
+    this.audio.volume = volumeDefault;
+    this.audio.src = SOUND_CELL_CLICK;
+
+    this.audioVictory = new Audio();
+    this.audioVictory.currentTime = timeZero;
+    this.audioVictory.volume = volumeDefault;
+    this.audioVictory.src = SOUND_VICTORY;
+
+    this.container.onclick = (event) => {
+      this.mouseClickHandler(event);
     };
+
+    // mouse right click
+    this.container.oncontextmenu = (event) => {
+      this.mouseClickHandler(event);
+    };
+  }
+
+  destroy() {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
+    }
   }
 
   getTopClues() {

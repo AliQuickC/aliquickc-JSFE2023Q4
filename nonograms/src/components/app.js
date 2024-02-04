@@ -36,10 +36,13 @@ export default class App {
         this.render();
         break;
       case 'loadGame':
-        this.store.dispatch({
-          type: 'LOAD_GAME',
-        });
-        this.render();
+        const {userSavedGame} = this.store.getState().userData;
+        if (userSavedGame) {
+          this.store.dispatch({
+            type: 'LOAD_GAME',
+          });
+          this.render();
+        }
         break;
       case 'resetGame':
         this.reStartGame();
@@ -117,7 +120,7 @@ export default class App {
     if (this.gameRezults) {
       this.gameRezults.destroy();
     }
-    if(this.header) {
+    if (this.header) {
       this.header.destroy();
     }
 

@@ -10,7 +10,7 @@ const defaultUserData = {
   selectidTemplate: SELECT_TEMPLATE,
   isWin: true,
   userMatrix: null,
-  userMatrixHistori: [],
+  userMatrixlatestGame: null,
   rezults: {},
   currentPage: 'selectGame', // 'gameField' | 'selectGame'
   timerValue: 0,

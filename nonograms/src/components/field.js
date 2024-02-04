@@ -18,7 +18,7 @@ export default class Field extends Component {
       event.preventDefault();
     }
 
-    if (this.store.getState().userData.isWin) return;
+    if (this.store.getState().userData.isGameEnd) return;
     if (event.target && event.target.closest('[data-type="cell"]')) {
       const elem = event.target.closest('[data-type="cell"]');
       const id = elem.getAttribute('data-cell-id').split(':');

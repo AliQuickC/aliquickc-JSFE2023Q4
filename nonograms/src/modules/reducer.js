@@ -27,6 +27,7 @@ export default function reducer(stateData, action) {
         ...state.userData,
         selectedTemplate: action.selectGame,
         isWin: false,
+        isGameEnd: false,
         currentPage: 'gameField',
         timerValue: 0,
         userMatrix: new Array(state.gameMatrix.length)
@@ -40,7 +41,7 @@ export default function reducer(stateData, action) {
       state.topClues = topClues;
       state.leftClues = leftClues;
       return state;
-    case 'INIT_FROM_OBJECT_GAME':
+    case 'INIT_GAME_FROM_OBJECT':
       state.gameMatrix = templates[action.userData.selectedTemplate];
       state.fieldSize = state.gameMatrix.length;
 
@@ -72,6 +73,7 @@ export default function reducer(stateData, action) {
         ...state.userData,
         ...userLoadGame,
         isWin: false,
+        isGameEnd: false,
         currentPage: 'gameField',
       };
 
@@ -103,6 +105,7 @@ export default function reducer(stateData, action) {
         ...state.userData,
         timerValue: 0,
         isWin: false,
+        isGameEnd: false,
         userMatrix: new Array(state.gameMatrix.length)
           .fill(null)
           .map(() => new Array(state.gameMatrix.length).fill(null)),
@@ -110,6 +113,26 @@ export default function reducer(stateData, action) {
       return state;
     case 'RENEW_TIMER_VALUE':
       state.userData.timerValue = action.time;
+      return state;
+    case 'SHOW_SOLUTION':
+      const {gameMatrix} = state;
+      const userMatrix = JSON.parse(JSON.stringify(state.userData.userMatrix));
+
+      for (let i = 0; i < userMatrix.length; i += 1) {
+        for (let j = 0; j < userMatrix.length; j += 1) {
+          if (gameMatrix[i][j]) {
+            userMatrix[i][j] = true;
+          } else if (userMatrix[i][j] === true) {
+            userMatrix[i][j] = null;
+          }
+        }
+      }
+      state.userData = {
+        ...state.userData,
+        userMatrix,
+        isWin: false,
+        isGameEnd: true,
+      };
       return state;
     case 'CELL_CLICK':
       if (action.event.button === MOUSE_BUTTONS.leftButton) {
@@ -131,6 +154,7 @@ export default function reducer(stateData, action) {
 
       if (isWin(state.gameMatrix, state.userData.userMatrix)) {
         state.userData.isWin = true;
+        state.userData.isGameEnd = true;
       }
 
       return state;

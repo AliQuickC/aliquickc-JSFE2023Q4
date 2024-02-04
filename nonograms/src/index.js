@@ -4,11 +4,12 @@ import reducer from './modules/reducer';
 import createStore from './redux/store';
 import {SELECT_TEMPLATE} from './modules/field-template';
 
-const storeKEY = 'nonogram13';
+const storeKEY = 'nonogram1';
 
 const defaultUserData = {
   selectedTemplate: SELECT_TEMPLATE,
-  isWin: true,
+  isWin: false,
+  isGameEnd: true,
   userMatrix: null,
   userSavedGame: null,
   rezults: [
@@ -48,14 +49,14 @@ function setItemToLocalStorage() {
 window.addEventListener('beforeunload', setItemToLocalStorage);
 
 const userData = getLocalStorage();
-if (userData.isWin) {
+if (userData.isGameEnd) {
   store.dispatch({type: 'SET_USER_DATA', userData});
   store.dispatch({
     type: 'SET_CURRENT_PAGE',
     currentPage: 'selectGame',
   });
 } else {
-  store.dispatch({type: 'INIT_FROM_OBJECT_GAME', userData});
+  store.dispatch({type: 'INIT_GAME_FROM_OBJECT', userData});
 }
 
 const app = new App(store);

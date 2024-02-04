@@ -23,9 +23,6 @@ export default class App {
         });
         this.render();
         break;
-      case 'reStartgame':
-        this.reStartGame();
-        break;
       case 'randomGame':
         const gameNames = Object.keys(templates);
         const gameName = gameNames[randomInteger(0, gameNames.length - 1)];
@@ -43,6 +40,17 @@ export default class App {
           type: 'LOAD_GAME',
         });
         this.render();
+        break;
+      case 'resetGame':
+        this.reStartGame();
+        break;
+      case 'showSolution':
+        if (!this.store.getState().userData.isWin) {
+          this.store.dispatch({
+            type: 'SHOW_SOLUTION',
+          });
+          this.render();
+        }
         break;
       default:
         break;

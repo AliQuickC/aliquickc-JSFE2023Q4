@@ -3,8 +3,8 @@ import MOUSE_BUTTONS from '../modules/constants';
 
 const timeZero = 0;
 const volumeDefault = 0.2;
-const SOUND_CELL_CLICK = '../assets/audio/bone.mp3';
-const SOUND_VICTORY = '../assets/audio/victory.mp3';
+const SOUND_CELL_CLICK = './assets/audio/bone.mp3';
+const SOUND_VICTORY = './assets/audio/victory.mp3';
 
 export default class Field extends Component {
   constructor(props, tagName, className) {
@@ -50,7 +50,7 @@ export default class Field extends Component {
         }
       }
 
-      this.audio.play();
+      this.audioClick.play();
       /* eslint-disable no-underscore-dangle */
       this._triggerEvent('onclick');
       if (this.store.getState().userData.isWin) {
@@ -73,10 +73,10 @@ export default class Field extends Component {
   }
 
   init() {
-    this.audio = new Audio();
-    this.audio.currentTime = timeZero;
-    this.audio.volume = volumeDefault;
-    this.audio.src = SOUND_CELL_CLICK;
+    this.audioClick = new Audio();
+    this.audioClick.currentTime = timeZero;
+    this.audioClick.volume = volumeDefault;
+    this.audioClick.src = SOUND_CELL_CLICK;
 
     this.audioVictory = new Audio();
     this.audioVictory.currentTime = timeZero;
@@ -95,8 +95,8 @@ export default class Field extends Component {
 
   destroy() {
     if (this.audio) {
-      this.audio.pause();
-      this.audio = null;
+      this.audioClick.pause();
+      this.audioClick = null;
     }
   }
 

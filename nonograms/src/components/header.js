@@ -1,6 +1,4 @@
 import Component from './component';
-import {templates} from '../modules/field-template';
-import {randomInteger} from '../core/utils';
 
 export default class Header extends Component {
   constructor(props, tagName, className) {
@@ -9,44 +7,38 @@ export default class Header extends Component {
     this.init();
   }
 
+  /* eslint-disable no-underscore-dangle */
   init() {
     this.container.onclick = (event) => {
-      if (!event.target) return;
-      if (event.target.closest('[data-type="selectNewGame"]')) {
-        this.store.dispatch({
-          type: 'SET_CURRENT_PAGE',
-          currentPage: 'selectGame',
-        });
-        /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('selectGame');
-      } else if (event.target.closest('[data-type="reStartGame"]')) {
-        /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('reStartgame');
-      } else if (event.target.closest('[data-type="randomGame"]')) {
-        const gameNames = Object.keys(templates);
-        const gameName = gameNames[randomInteger(0, gameNames.length - 1)];
-        // eslint-disable-next-line no-underscore-dangle
-        this._triggerEvent('randomGame', {gameName});
-      } else if (event.target.closest('[data-type="saveGame"]')) {
-        const {userData} = this.store.getState();
-        if (userData && !userData.isWin) {
-          this.store.dispatch({
-            type: 'SAVE_GAME',
-          });
-        }
-      } else if (event.target.closest('[data-type="loadGame"]')) {
-        this.store.dispatch({
-          type: 'LOAD_GAME',
-        });
-        /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('selectGame');
-      } else if (event.target.closest('[data-type="showRezults"]')) {
-        this.store.dispatch({
-          type: 'SET_CURRENT_PAGE',
-          currentPage: 'gameRezults',
-        });
-        /* eslint-disable-next-line no-underscore-dangle */
-        this._triggerEvent('showRezults');
+      if (!event.target || !event.target.closest('[data-type]')) return;
+
+      const type = event.target.closest('[data-type]').getAttribute('data-type');
+      switch (type) {
+        case 'selectNewGame':
+          this._triggerEvent('selectHeaderNav', {type: 'selectGame'});
+          break;
+        case 'reStartGame':
+          this._triggerEvent('selectHeaderNav', {type: 'reStartgame'});
+          break;
+        case 'randomGame':
+          this._triggerEvent('selectHeaderNav', {type: 'randomGame'});
+          break;
+        case 'saveGame':
+          const {userData} = this.store.getState();
+          if (userData && !userData.isWin) {
+            this.store.dispatch({
+              type: 'SAVE_GAME',
+            });
+          }
+          break;
+        case 'loadGame':
+          this._triggerEvent('selectHeaderNav', {type: 'loadGame'});
+          break;
+        case 'showRezults':
+          this._triggerEvent('selectHeaderNav', {type: 'showRezults'});
+          break;
+        default:
+          break;
       }
     };
   }

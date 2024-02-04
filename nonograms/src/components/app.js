@@ -4,7 +4,8 @@ import Field from './field';
 import SelectGame from './select-game';
 import GameTimer from './geme-timer';
 import Rezults from './rezults';
-
+import {templates} from '../modules/field-template';
+import {randomInteger} from '../core/utils';
 
 export default class App {
   constructor(props) {
@@ -13,23 +14,48 @@ export default class App {
     this.init();
   }
 
+  headerHandler = (action) => {
+    switch (action.type) {
+      case 'selectGame':
+        this.store.dispatch({
+          type: 'SET_CURRENT_PAGE',
+          currentPage: 'selectGame',
+        });
+        this.render();
+        break;
+      case 'reStartgame':
+        this.reStartGame();
+        break;
+      case 'randomGame':
+        const gameNames = Object.keys(templates);
+        const gameName = gameNames[randomInteger(0, gameNames.length - 1)];
+        this.startGame({gameName});
+        break;
+      case 'showRezults':
+        this.store.dispatch({
+          type: 'SET_CURRENT_PAGE',
+          currentPage: 'gameRezults',
+        });
+        this.render();
+        break;
+      case 'loadGame':
+        this.store.dispatch({
+          type: 'LOAD_GAME',
+        });
+        this.render();
+        break;
+      default:
+        break;
+    }
+  };
+
   init() {
     this.header = new Header(this.store, 'header', 'header');
 
-    this.header.addEventListener('selectGame', this.render);
-    this.header.addEventListener('selectGame', this.render);
-    this.header.addEventListener('reStartgame', this.reStartGame);
-    this.header.addEventListener('randomGame', this.startGame);
-    this.header.addEventListener('showRezults', this.render);
+    this.header.addEventListener('selectHeaderNav', this.headerHandler);
   }
 
   destroy() {
-    this.header.removeEventListener('selectGame', this.render);
-    this.header.removeEventListener('selectGame', this.render);
-    this.header.removeEventListener('reStartgame', this.reStartGame);
-    this.header.removeEventListener('randomGame', this.startGame);
-    this.header.removeEventListener('showRezults', this.render);
-
     this.header.destroy();
   }
 

@@ -11,22 +11,35 @@ export default class Header extends Component {
 
   init() {
     this.container.onclick = (event) => {
-      if (event.target && event.target.closest('[data-type="selectNewGame"]')) {
+      if (!event.target) return;
+      if (event.target.closest('[data-type="selectNewGame"]')) {
         this.store.dispatch({
           type: 'SET_CURRENT_PAGE',
           currentPage: 'selectGame',
         });
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('selectGame');
-      } else if (event.target && event.target.closest('[data-type="reStartGame"]')) {
+      } else if (event.target.closest('[data-type="reStartGame"]')) {
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('reStartgame');
-      } else if (event.target && event.target.closest('[data-type="randomGame"]')) {
-        // !!!
+      } else if (event.target.closest('[data-type="randomGame"]')) {
         const gameNames = Object.keys(templates);
         const gameName = gameNames[randomInteger(0, gameNames.length - 1)];
         // eslint-disable-next-line no-underscore-dangle
         this._triggerEvent('randomGame', {gameName});
+      } else if (event.target.closest('[data-type="saveGame"]')) {
+        const {userData} = this.store.getState();
+        if (userData && !userData.isWin) {
+          this.store.dispatch({
+            type: 'SAVE_GAME',
+          });
+        }
+      } else if (event.target.closest('[data-type="loadGame"]')) {
+        this.store.dispatch({
+          type: 'LOAD_GAME',
+        });
+        /* eslint-disable-next-line no-underscore-dangle */
+        this._triggerEvent('selectGame');
       }
     };
   }
@@ -40,8 +53,9 @@ export default class Header extends Component {
         <button data-type="selectNewGame">Select new game</button>
         <button data-type="reStartGame">Reset game</button>
         <button data-type="randomGame">Random game</button>
-        <button>Continue last game</button>
-        <button>Solution</button>
+        <button data-type="loadGame">Continue last game</button>
+        <button data-type="saveGame">Save game</button>
+        <button data-type="showSolution">Solution</button>
       </nav>
     </div>
     `;

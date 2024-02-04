@@ -4,13 +4,13 @@ import reducer from './modules/reducer';
 import createStore from './redux/store';
 import {SELECT_TEMPLATE} from './modules/field-template';
 
-const storeKEY = 'nonogram';
+const storeKEY = 'nonogram6';
 
 const defaultUserData = {
-  selectidTemplate: SELECT_TEMPLATE,
+  selectedTemplate: SELECT_TEMPLATE,
   isWin: true,
   userMatrix: null,
-  userMatrixlatestGame: null,
+  userSavedGame: null,
   rezults: {},
   currentPage: 'selectGame', // 'gameField' | 'selectGame'
   timerValue: 0,
@@ -50,7 +50,7 @@ if (userData.isWin) {
     currentPage: 'selectGame',
   });
 } else {
-  store.dispatch({type: 'INIT_SAVED_GAME', userData});
+  store.dispatch({type: 'INIT_FROM_OBJECT_GAME', userData});
 }
 
 const app = new App(store);

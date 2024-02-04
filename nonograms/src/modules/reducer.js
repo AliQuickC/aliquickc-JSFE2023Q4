@@ -25,7 +25,7 @@ export default function reducer(stateData, action) {
 
       state.userData = {
         ...state.userData,
-        selectidTemplate: action.selectGame,
+        selectedTemplate: action.selectGame,
         isWin: false,
         currentPage: 'gameField',
         timerValue: 0,
@@ -40,8 +40,8 @@ export default function reducer(stateData, action) {
       state.topClues = topClues;
       state.leftClues = leftClues;
       return state;
-    case 'INIT_SAVED_GAME':
-      state.gameMatrix = templates[action.userData.selectidTemplate];
+    case 'INIT_FROM_OBJECT_GAME':
+      state.gameMatrix = templates[action.userData.selectedTemplate];
       state.fieldSize = state.gameMatrix.length;
 
       state.userData = {
@@ -54,6 +54,35 @@ export default function reducer(stateData, action) {
 
       state.topClues = topClues;
       state.leftClues = leftClues;
+      return state;
+    case 'SAVE_GAME':
+      const userSavedGame = {
+        selectedTemplate: state.userData.selectedTemplate,
+        userMatrix: JSON.parse(JSON.stringify(state.userData.userMatrix)),
+        timerValue: state.userData.timerValue,
+      };
+      state.userData = {
+        ...state.userData,
+        userSavedGame,
+      };
+
+      return state;
+    case 'LOAD_GAME':
+      const userLoadGame = JSON.parse(JSON.stringify(state.userData.userSavedGame));
+      state.userData = {
+        ...state.userData,
+        ...userLoadGame,
+        isWin: false,
+        currentPage: 'gameField',
+      };
+
+      state.gameMatrix = templates[state.userData.selectedTemplate];
+      state.fieldSize = state.gameMatrix.length;
+      topClues = countSequencesInColumn(state.gameMatrix);
+      leftClues = countSequencesInRow(state.gameMatrix);
+      state.topClues = topClues;
+      state.leftClues = leftClues;
+
       return state;
     case 'SET_USER_DATA':
       state.userData = JSON.parse(JSON.stringify(action.userData));

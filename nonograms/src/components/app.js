@@ -15,6 +15,7 @@ export default class App {
     this.header = new Header(this.store, 'header', 'header');
 
     this.header.addEventListener('selectGame', this.render);
+    this.header.addEventListener('selectGame', this.render);
     this.header.addEventListener('reStartgame', this.reStartGame);
     this.header.addEventListener('randomGame', this.startGame);
   }

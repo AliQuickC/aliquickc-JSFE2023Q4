@@ -4,7 +4,7 @@ import reducer from './modules/reducer';
 import createStore from './redux/store';
 import {SELECT_TEMPLATE} from './modules/field-template';
 
-const storeKEY = 'nonogram1';
+const storeKEY = 'nonogram';
 
 const defaultUserData = {
   selectedTemplate: SELECT_TEMPLATE,

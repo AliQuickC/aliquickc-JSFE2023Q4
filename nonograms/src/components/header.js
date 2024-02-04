@@ -47,15 +47,22 @@ export default class Header extends Component {
   }
 
   toHTML() {
+    const {currentPage} = this.store.getState().userData;
     return `
     <div class="container header__container">
       <nav class="menu">
         <button data-type="selectNewGame">Select new game</button>
-        <button data-type="resetGame">Reset game</button>
         <button data-type="randomGame">Random game</button>
         <button data-type="loadGame">Continue last game</button>
+        ${
+          currentPage === 'gameField'
+            ? `
         <button data-type="saveGame">Save game</button>
+        <button data-type="resetGame">Reset game</button>
         <button data-type="showSolution">Solution</button>
+        `
+            : ''
+        }
         <button data-type="showRezults">Rezults</button>
       </nav>
     </div>

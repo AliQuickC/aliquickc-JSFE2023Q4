@@ -59,7 +59,6 @@ export default class App {
 
   init() {
     this.header = new Header(this.store, 'header', 'header');
-
     this.header.addEventListener('selectHeaderNav', this.headerHandler);
   }
 
@@ -117,6 +116,9 @@ export default class App {
     }
     if (this.gameRezults) {
       this.gameRezults.destroy();
+    }
+    if(this.header) {
+      this.header.destroy();
     }
 
     const {currentPage} = this.store.getState().userData;

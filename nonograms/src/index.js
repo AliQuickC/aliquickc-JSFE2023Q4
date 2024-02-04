@@ -4,15 +4,20 @@ import reducer from './modules/reducer';
 import createStore from './redux/store';
 import {SELECT_TEMPLATE} from './modules/field-template';
 
-const storeKEY = 'nonogram6';
+const storeKEY = 'nonogram13';
 
 const defaultUserData = {
   selectedTemplate: SELECT_TEMPLATE,
   isWin: true,
   userMatrix: null,
   userSavedGame: null,
-  rezults: {},
-  currentPage: 'selectGame', // 'gameField' | 'selectGame'
+  rezults: [
+    {selectedTemplate: 'hourglass', fieldSize: 5, timerValue: 459},
+    {selectedTemplate: 'castle', fieldSize: 15, timerValue: 4925},
+    {selectedTemplate: 'tv', fieldSize: 10, timerValue: 55},
+    {selectedTemplate: 'tree', fieldSize: 10, timerValue: 374},
+  ],
+  currentPage: 'selectGame', // 'gameField' | 'selectGame'| 'gameRezults'
   timerValue: 0,
 };
 

@@ -46,7 +46,6 @@ export default function reducer(stateData, action) {
 
       state.userData = {
         ...action.userData,
-        currentPage: 'gameField',
       };
 
       topClues = countSequencesInColumn(state.gameMatrix);
@@ -83,6 +82,12 @@ export default function reducer(stateData, action) {
       state.topClues = topClues;
       state.leftClues = leftClues;
 
+      return state;
+    case 'SAVE_REZULT':
+      const rezults = state.userData.rezults.slice();
+      rezults.push(action.rezult);
+      if (rezults.length > 5) rezults.shift();
+      state.userData.rezults = rezults;
       return state;
     case 'SET_USER_DATA':
       state.userData = JSON.parse(JSON.stringify(action.userData));

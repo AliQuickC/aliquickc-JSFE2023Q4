@@ -59,3 +59,11 @@ export function countSequencesInRow(matrix) {
   }
   return arr;
 }
+
+export function getTimeString(time) {
+  const secomds = (time % 60).toString(10).padStart(2, '0');
+  const minuts = Math.floor(time / 60)
+    .toString(10)
+    .padStart(2, '0');
+  return `${minuts}:${secomds}`; // 00:00-99:99
+}

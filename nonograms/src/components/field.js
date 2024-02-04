@@ -55,6 +55,18 @@ export default class Field extends Component {
       this._triggerEvent('onclick');
       if (this.store.getState().userData.isWin) {
         this.audioVictory.play();
+        const {selectedTemplate} = this.store.getState().userData;
+        const {timerValue} = this.store.getState().userData;
+        const {fieldSize} = this.store.getState();
+        const rezult = {
+          selectedTemplate,
+          fieldSize,
+          timerValue,
+        };
+        this.store.dispatch({
+          type: 'SAVE_REZULT',
+          rezult,
+        });
         this._triggerEvent('endgame');
       }
     }

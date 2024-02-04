@@ -40,11 +40,16 @@ export default class Header extends Component {
         });
         /* eslint-disable-next-line no-underscore-dangle */
         this._triggerEvent('selectGame');
+      } else if (event.target.closest('[data-type="showRezults"]')) {
+        this.store.dispatch({
+          type: 'SET_CURRENT_PAGE',
+          currentPage: 'gameRezults',
+        });
+        /* eslint-disable-next-line no-underscore-dangle */
+        this._triggerEvent('showRezults');
       }
     };
   }
-
-  destroy() {}
 
   toHTML() {
     return `
@@ -56,6 +61,7 @@ export default class Header extends Component {
         <button data-type="loadGame">Continue last game</button>
         <button data-type="saveGame">Save game</button>
         <button data-type="showSolution">Solution</button>
+        <button data-type="showRezults">Rezults</button>
       </nav>
     </div>
     `;

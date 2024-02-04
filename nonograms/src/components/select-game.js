@@ -35,7 +35,7 @@ export default class SelectGame extends Component {
           (item) => `
       <div class="select-game__item" data-type="selectGameItem" data-game-name="${item[0]}">
         <div class="select-game__picture">
-          <img src="../assets/templates/${item[0]}.jpg" alt="${item[0]}">
+          <img src="./assets/templates/${item[0]}.jpg" alt="${item[0]}">
         </div>
         <span>${item[0]}</span>
       </div>`

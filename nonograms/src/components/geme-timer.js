@@ -1,5 +1,6 @@
 import Component from './component';
 import Timer from '../modules/timer';
+import {getTimeString} from '../core/utils';
 
 export default class GameTimer extends Component {
   constructor(props, tagName, className) {
@@ -44,19 +45,11 @@ export default class GameTimer extends Component {
 
   toHTML() {
     const {timerValue} = this.store.getState().userData;
-    return this.getTimeString(timerValue);
-  }
-
-  getTimeString(time) {
-    const secomds = (time % 60).toString(10).padStart(2, '0');
-    const minuts = Math.floor(time / 60)
-      .toString(10)
-      .padStart(2, '0');
-    return `${minuts}:${secomds}`; // 00:00-99:99
+    return getTimeString(timerValue);
   }
 
   renewTime = (time) => {
-    this.container.textContent = this.getTimeString(time);
+    this.container.textContent = getTimeString(time);
   };
 
   render = () => {

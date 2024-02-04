@@ -3,6 +3,8 @@ import InfoPanel from './info-panel';
 import Field from './field';
 import SelectGame from './select-game';
 import GameTimer from './geme-timer';
+import Rezults from './rezults';
+
 
 export default class App {
   constructor(props) {
@@ -18,9 +20,18 @@ export default class App {
     this.header.addEventListener('selectGame', this.render);
     this.header.addEventListener('reStartgame', this.reStartGame);
     this.header.addEventListener('randomGame', this.startGame);
+    this.header.addEventListener('showRezults', this.render);
   }
 
-  destroy() {}
+  destroy() {
+    this.header.removeEventListener('selectGame', this.render);
+    this.header.removeEventListener('selectGame', this.render);
+    this.header.removeEventListener('reStartgame', this.reStartGame);
+    this.header.removeEventListener('randomGame', this.startGame);
+    this.header.removeEventListener('showRezults', this.render);
+
+    this.header.destroy();
+  }
 
   reStartGame = () => {
     this.store.dispatch({
@@ -64,13 +75,16 @@ export default class App {
       this.field.removeEventListener('endgame', this.pauseTimerHandler);
       this.field.removeEventListener('onclick', this.startTimerHandler);
     }
-
     if (this.selectGame) {
       this.selectGame.destroy();
     }
     if (this.gameTimer) {
       this.gameTimer.destroy();
     }
+    if (this.gameRezults) {
+      this.gameRezults.destroy();
+    }
+
     const {currentPage} = this.store.getState().userData;
 
     this.panel = new InfoPanel(this.store, 'div', 'panel');
@@ -94,6 +108,9 @@ export default class App {
       this.selectGame.addEventListener('startNewGame', this.startGame);
 
       mainContainer.append(this.selectGame.render());
+    } else if (currentPage === 'gameRezults') {
+      this.gameRezults = new Rezults(this.store, 'div', 'rezults');
+      mainContainer.append(this.gameRezults.render());
     }
 
     return this.container;

@@ -20,6 +20,7 @@ const defaultUserData = {
   ],
   currentPage: 'selectGame', // 'gameField' | 'selectGame'| 'gameRezults'
   timerValue: 0,
+  themeIsDark: true,
 };
 
 const initialState = {

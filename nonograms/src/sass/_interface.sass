@@ -1,3 +1,28 @@
+
+html.light-theme
+  --color-bg: #a7d5dd
+  --color-text: #333333
+  --button-bg-color: buttonface
+  --element-border: #0a27cc
+  --field-bg-color: #79f06f
+  --field-clues-color: #e9cb25
+  --field-clues-bg-color: #09a6c2
+  --field-border-color: #000
+  --field-cell-bg-color: #95ff8b
+  --field-cell-select-color: #4a1668
+
+html.dark-theme
+  --color-bg: #5C1F28
+  --color-text: #dac617
+  --button-bg-color: transparent
+  --element-border: #dac617
+  --field-bg-color: #ffffff
+  --field-clues-color: #000
+  --field-clues-bg-color: #DADADA
+  --field-border-color: #000
+  --field-cell-bg-color: #fff
+  --field-cell-select-color: #000
+
 %unselectable
   -webkit-touch-callout: none
   -webkit-user-select: none
@@ -9,9 +34,10 @@
 
 %gameButton
   padding: 5px 10px
-  color: #dac617
+  color: var(--color-text)
   font-size: 20px
-  background-color: transparent
+  border-radius: 8px
+  background-color: var(--button-bg-color)
 
 body
   font-family: sans-serif
@@ -23,3 +49,4 @@ button
   max-width: 1440px
   margin: 0 auto
   padding: 0 20px
+

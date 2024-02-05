@@ -1,6 +1,6 @@
 .header
-  border-bottom: 1px solid #dac617
-  box-shadow: 0px 0px 10px #dac617
+  border-bottom: 1px solid var(--element-border)
+  box-shadow: 0px 0px 10px var(--element-border)
   &__container
 
 .menu
@@ -13,3 +13,9 @@
   flex-wrap: wrap
   button
     @extend %gameButton
+
+.theme-switch
+  color: var(--color-text)
+  font-size: 18px
+  display: flex
+  column-gap: 10px

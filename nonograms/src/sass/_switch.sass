@@ -1,0 +1,37 @@
+.switch
+  display: inline-block
+  cursor: pointer
+  width: 2.25em
+  height: 1.25em
+  &__box
+    position: absolute
+    margin: -1px
+    width: 1px
+    height: 1px
+    overflow: hidden
+    clip: rect(0 0 0 0)
+  &__box:checked + .switch__button::before
+    left: 1.05em
+  &__box:checked + .switch__button
+    background-color: #505050
+  &__box:checked + .switch__button::before
+    background-color: #1B1B1B
+  &__button
+    display: block
+    width: 100%
+    height: 100%
+    border-radius: 10px
+    background-color: #F0F0F1
+    position: relative
+  &__button::before
+    content: ""
+    display: block
+    width: 1.0em
+    height: 1.0em
+    border-radius: 50%
+    background-color: #fff
+    position: absolute
+    left: 0.15em
+    top: 50%
+    transform: translateY(-50%)
+    transition: left 0.4s

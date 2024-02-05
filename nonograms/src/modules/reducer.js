@@ -19,6 +19,9 @@ export default function reducer(stateData, action) {
   let topClues;
   let leftClues;
   switch (action.type) {
+    case 'CHANGE_THEME':
+      state.userData.themeIsDark = action.themeIsDark;
+      return state;
     case 'INIT_NEW_GAME':
       state.gameMatrix = templates[action.selectGame];
       state.fieldSize = state.gameMatrix.length;

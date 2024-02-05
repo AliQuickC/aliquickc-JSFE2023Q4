@@ -4,7 +4,7 @@
   grid-template-areas: "mimi-picture top-clues" "left-clues frame"
   overflow-x: auto
   padding: 3px
-  background-color: #fff
+  background-color: var(--field-bg-color)
   @media(max-width: 768px)
     --cell-size: 30px
   @media(max-width: 660px)
@@ -28,7 +28,7 @@
 .top-clues
   display: flex
   flex-direction: row
-  background-color: #DADADA
+  background-color: var(--field-clues-bg-color)
   @extend %unselectable
   &__column
     display: flex
@@ -39,54 +39,57 @@
     width: var(--cell-size)
     padding-top: 4px
     padding-bottom: 4px
-    border-top: 2px solid #000
-    border-left: 1px solid #000
+    color: var(--field-clues-color)
+    border-top: 2px solid var(--field-border-color)
+    border-left: 1px solid var(--field-border-color)
     &:nth-child(5n+1)
-      border-left: 2px solid #000
+      border-left: 2px solid var(--field-border-color)
     &:last-child
-      border-right: 2px solid #000
+      border-right: 2px solid var(--field-border-color)
 
 .left-clues
-  background-color: #DADADA
-  border-left: 2px solid #000
+  background-color: var(--field-clues-bg-color)
+  border-left: 2px solid var(--field-border-color)
   @extend %unselectable
   &__row
     display: flex
     flex-wrap: no-wrap
-    justify-content: flex-end
-    align-items: center
     padding-left: 4px
     padding-right: 4px
     min-width: max-content
     height: var(--cell-size)
-    border-top: 1px solid #000
+    color: var(--field-clues-color)
+    border-top: 1px solid var(--field-border-color)
+    justify-content: flex-end
+    align-items: center
     &:nth-child(5n+1)
-      border-top: 2px solid #000
+      border-top: 2px solid var(--field-border-color)
     &:last-child
-      border-bottom: 2px solid #000
+      border-bottom: 2px solid var(--field-border-color)
 
 .frame
-  background-color: #fff
+  background-color: var(--field-cell-bg-color)
   @extend %unselectable
   &__row
     display: flex
     flex-direction: row
-    border-top: 1px solid #000
+    border-top: 1px solid var(--field-border-color)
     &:nth-child(5n+1)
-      border-top: 2px solid #000
+      border-top: 2px solid var(--field-border-color)
     &:last-child
-      border-bottom: 2px solid #000
+      border-bottom: 2px solid var(--field-border-color)
   &__cell
     width: var(--cell-size)
     height: var(--cell-size)
-    border-left: 1px solid #000
     display: flex
     justify-content: center
     align-items: center
+    color: var(--field-cell-select-color)
+    border-left: 1px solid var(--field-border-color)
     font-size: var(--cell-size)
     &:nth-child(5n+1)
-      border-left: 2px solid #000
+      border-left: 2px solid var(--field-border-color)
     &:last-child
-      border-right: 2px solid #000
-    &_black
-      background-color: #000
+      border-right: 2px solid var(--field-border-color)
+    &_select-cell
+      background-color: var(--field-cell-select-color)

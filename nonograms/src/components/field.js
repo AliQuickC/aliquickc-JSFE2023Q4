@@ -35,15 +35,15 @@ export default class Field extends Component {
       const {userMatrix} = this.store.getState().userData;
       if (event.button === MOUSE_BUTTONS.leftButton) {
         if (userMatrix[+id[0]][+id[1]]) {
-          elem.classList.add('frame__cell_black');
+          elem.classList.add('frame__cell_select-cell');
           elem.textContent = '';
         } else {
-          elem.classList.remove('frame__cell_black');
+          elem.classList.remove('frame__cell_select-cell');
           elem.textContent = '';
         }
       } else if (event.button === MOUSE_BUTTONS.rightButton) {
         if (userMatrix[+id[0]][+id[1]] === false && userMatrix[+id[0]][+id[1]] !== null) {
-          elem.classList.remove('frame__cell_black');
+          elem.classList.remove('frame__cell_select-cell');
           elem.textContent = '×';
         } else {
           elem.textContent = '';
@@ -144,7 +144,7 @@ export default class Field extends Component {
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
-      const style = fieldRow[index] ? 'frame__cell_black' : '';
+      const style = fieldRow[index] ? 'frame__cell_select-cell' : '';
       const content = fieldRow[index] === false ? '×' : '';
       rows += `<div class="frame__cell ${style}" data-col="${index + 1}" data-type="cell" data-cell-id="${numb}:${index}">${content}</div>`;
     }

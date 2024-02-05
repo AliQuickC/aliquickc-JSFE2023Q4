@@ -1,24 +1,26 @@
 .select-game
-  color: #dac617
+  color: var(--color-text)
   width: 100%
   @extend %unselectable
+  &__title
+    font-size: 24px
   &__subtitle
     margin-top: 40px
     margin-bottom: 10px
     text-decoration: underline
     text-underline-offset: 4px
-    font-size: 18px
+    font-size: 20px
   &__group
     display: flex
     gap: 30px
     flex-wrap: wrap
     justify-content: center
-    // align-items: stretch
   &__item
     display: flex
     flex-direction: column
     justify-content: space-between
     cursor: pointer
+    font-size: 20px
     & img
       max-width: 100%
       max-height: 100%

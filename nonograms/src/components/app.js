@@ -55,12 +55,27 @@ export default class App {
           this.render();
         }
         break;
+      case 'changeTheme':
+        this.changeThemeHandler();
+        break;
       default:
         break;
     }
   };
 
+  changeThemeHandler() {
+    const {themeIsDark} = this.store.getState().userData;
+    if (themeIsDark) {
+      document.documentElement.classList.remove('light-theme');
+      document.documentElement.classList.add('dark-theme');
+    } else {
+      document.documentElement.classList.remove('dark-theme');
+      document.documentElement.classList.add('light-theme');
+    }
+  }
+
   init() {
+    this.changeThemeHandler();
     this.header = new Header(this.store, 'header', 'header');
     this.header.addEventListener('selectHeaderNav', this.headerHandler);
   }

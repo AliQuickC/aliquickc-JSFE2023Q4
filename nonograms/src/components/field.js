@@ -106,10 +106,7 @@ export default class Field extends Component {
     let columns = '';
 
     for (let index = 0; index < size; index += 1) {
-      const clues = topClues[index]
-        .map((item) => `<span>${item}</span>`)
-        .reverse()
-        .join('');
+      const clues = topClues[index].map((item) => `<span>${item}</span>`).join('');
       columns += `<div class="top-clues__column">${clues}</div>`;
     }
 
@@ -124,10 +121,7 @@ export default class Field extends Component {
     let rows = '';
 
     for (let index = 0; index < size; index += 1) {
-      const clues = leftClues[index]
-        .map((item) => `${item} `)
-        .reverse()
-        .join('');
+      const clues = leftClues[index].map((item) => `${item} `).join('');
       rows += `<div class="left-clues__row">${clues}</div>`;
     }
 

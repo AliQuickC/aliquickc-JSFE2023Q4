@@ -4,13 +4,19 @@ import reducer from './modules/reducer';
 import createStore from './redux/store';
 import {SELECT_TEMPLATE} from './modules/field-template';
 
-const storeKEY = 'nonogram';
+const storeKEY = 'nonogram4';
 
 const defaultUserData = {
   selectedTemplate: SELECT_TEMPLATE,
   isWin: false,
-  isGameEnd: true,
-  userMatrix: null,
+  isGameEnd: false,
+  userMatrix: [
+    [null, null, null, null, null],
+    [null, null, null, null, null],
+    [null, null, null, null, null],
+    [null, null, null, null, null],
+    [null, null, null, null, null],
+  ],
   userSavedGame: null,
   rezults: [
     {selectedTemplate: 'hourglass', fieldSize: 5, timerValue: 459},
@@ -18,7 +24,7 @@ const defaultUserData = {
     {selectedTemplate: 'tv', fieldSize: 10, timerValue: 55},
     {selectedTemplate: 'tree', fieldSize: 10, timerValue: 374},
   ],
-  currentPage: 'selectGame', // 'gameField' | 'selectGame'| 'gameRezults'
+  currentPage: 'gameField', // 'gameField' | 'selectGame'| 'gameRezults'
   timerValue: 0,
   themeIsDark: true,
 };
@@ -57,6 +63,7 @@ if (userData.isGameEnd) {
     currentPage: 'selectGame',
   });
 } else {
+  console.log('userData: ', userData);
   store.dispatch({type: 'INIT_GAME_FROM_OBJECT', userData});
 }
 

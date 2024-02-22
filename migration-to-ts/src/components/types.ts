@@ -1,18 +1,19 @@
-// export enum Endpoints {
-//   Sources = 'sources',
-//   Everything = 'everything',
-// }
+/* eslint-disable no-unused-vars */
+export enum Endpoints {
+  Sources = 'sources',
+  Everything = 'everything',
+}
 
-// export type Callback<T> = (data: T) => void;
+export type Callback<T> = (data: T) => void;
 
 export interface SourcesData {
   status: string;
-  sources: Array<NewsItemData>;
+  sources: NewsItemData[];
 }
 
 export interface ArticlesData {
   status: string;
-  articles: Array<ArticlItemData>;
+  articles: ArticlItemData[];
   totalResults: number;
 }
 
@@ -39,4 +40,13 @@ export interface ArticlItemData extends Data {
   };
   title: string;
   urlToImage: string;
+}
+
+export interface UrlOptions {
+  [key: string]: string;
+}
+
+export enum Errors {
+  Unauthorized = 401,
+  NotFound = 404,
 }

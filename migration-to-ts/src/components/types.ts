@@ -1,10 +1,12 @@
-/* eslint-disable no-unused-vars */
 export enum Endpoints {
   Sources = 'sources',
   Everything = 'everything',
 }
 
-export type Callback<T> = (data: T) => void;
+export enum Errors {
+  Unauthorized = 401,
+  NotFound = 404,
+}
 
 export interface SourcesData {
   status: string;
@@ -46,7 +48,10 @@ export interface UrlOptions {
   [key: string]: string;
 }
 
-export enum Errors {
-  Unauthorized = 401,
-  NotFound = 404,
+export type GetRespNews = (data: SourcesData) => void;
+export type GetRespArticles = (data: ArticlesData) => void;
+
+export interface CallbackMap {
+  [Endpoints.Sources]: GetRespNews;
+  [Endpoints.Everything]: GetRespArticles;
 }

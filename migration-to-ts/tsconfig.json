@@ -9,8 +9,6 @@
     "forceConsistentCasingInFileNames": true,
     /* Type Checking */
     "strict": true /* Enable all strict type-checking options. */,
-    "allowJs": true,
-    "checkJs": false,
     "noImplicitAny": true /* Enable error reporting for expressions and declarations with an implied 'any' type. */,
     "skipLibCheck": true
   }

@@ -55,3 +55,8 @@ export interface CallbackMap {
   [Endpoints.Sources]: GetRespNews;
   [Endpoints.Everything]: GetRespArticles;
 }
+
+export interface DataMap {
+  [Endpoints.Sources]: SourcesData;
+  [Endpoints.Everything]: ArticlesData;
+}

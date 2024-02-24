@@ -11,7 +11,7 @@ class Loader {
 
   public getResp(
     { endpoint, options = {} }: { endpoint: Endpoints; options?: UrlOptions },
-    callback: CallbackMap[typeof endpoint]
+    callback: CallbackMap[Endpoints]
   ): void {
     this.load('GET', endpoint, callback, options);
   }
@@ -27,8 +27,8 @@ class Loader {
   }
 
   private makeUrl(options: UrlOptions, endpoint: Endpoints): string {
-    const urlOptions = { ...this.options, ...options };
-    let url = `${this.baseLink}${endpoint}?`;
+    const urlOptions: UrlOptions = { ...this.options, ...options };
+    let url: string = `${this.baseLink}${endpoint}?`;
 
     (Object.keys(urlOptions) as Array<keyof typeof urlOptions>).forEach((key) => {
       url += `${key}=${urlOptions[key]}&`;
@@ -37,16 +37,11 @@ class Loader {
     return url.slice(0, -1);
   }
 
-  private load(
-    method: string,
-    endpoint: Endpoints,
-    callback: CallbackMap[typeof endpoint],
-    options: UrlOptions = {}
-  ): void {
+  private load(method: string, endpoint: Endpoints, callback: CallbackMap[Endpoints], options: UrlOptions = {}): void {
     fetch(this.makeUrl(options, endpoint), { method })
       .then(this.errorHandler)
       .then((res: Response) => res.json())
-      .then((data) => callback(data))
+      .then(callback)
       .catch((err: Error) => console.error(err));
   }
 }

@@ -17,6 +17,10 @@ export default class StartPage extends BaseComponent {
   private toHTML(): string {
     return `
     <div class="container start__container">
+      <h2 class="start__title">RSS-Puzzle</h2>
+      <p class="start__description">
+        This is a fun game. Here you need to collect sentences from words. If you collect all the proposals, a painting by a famous artist will open.
+      </p>
       <button class="start__start-button">Start</button>
     </div>
     `;

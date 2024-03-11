@@ -4,7 +4,6 @@ import { Page } from '../types/types';
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
 
-  /* eslint-disable indent */
   switch (action.type) {
     case 'INIT':
       if (state.userData.firstName) {

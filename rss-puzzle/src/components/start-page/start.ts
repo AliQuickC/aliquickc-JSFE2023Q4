@@ -17,7 +17,7 @@ export default class StartPage extends BaseComponent {
   private toHTML(): string {
     return `
     <div class="container start__container">
-      Start
+      <button class="start__start-button">Start</button>
     </div>
     `;
   }

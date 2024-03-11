@@ -8,13 +8,38 @@
     align-items: center
   &__form
   &__group
+    width: 320px
     padding-top: 20px
     display: flex
     flex-direction: column
-    row-gap: 12px
+    align-items: center
+    row-gap: 36px
+    border: 2px solid #000
+    border-radius: 8px
+  &__capture
+    font-size: 18px
+    text-align: center
   &__send-button
-    margin-top: 12px
-    height: 32px
-    width: 100px
-    border-radius: 5px
-
+    margin-top: 16px
+    width: 120px
+    @extend %puzzle-button
+  &__input-group
+    position: relative
+    display: flex
+    justify-content: flex-start
+    column-gap: 10px
+    align-items: center
+    font-size: 18px
+    & .just-validate-error-label
+      position: absolute
+      top: 30px
+      font-weight: bold
+      font-size: 12px
+    & .just-validate-error-field
+      border: 1px solid red
+    & .just-validate-error-field:focus-visible
+      outline-color: red
+  &__input
+    width: 180px
+    font-size: 18px
+    border-radius: 6px

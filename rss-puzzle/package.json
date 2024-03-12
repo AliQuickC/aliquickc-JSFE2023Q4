@@ -15,7 +15,7 @@
     "lintfix": "eslint . --ext .ts --fix",
     "predeploy": "npm run build-prod",
     "deploy": "npm run build-prod && npx gh-pages -d build -e rss-puzzle",
-    "prepare": "husky install"
+    "prepare": "cd .. && husky install"
   },
   "husky": {
     "hooks": {
@@ -69,7 +69,5 @@
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.0.2"
   },
-  "dependencies": {
-    "just-validate": "^4.3.0"
-  }
+  "dependencies": {}
 }

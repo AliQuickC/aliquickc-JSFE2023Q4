@@ -1,6 +1,6 @@
 import BaseComponent from '../../core/base-component';
 import { Store } from '../../types/redux-type';
-import { Page } from '../../types/types';
+import { Page } from '../../types/enum';
 
 export default class StartPage extends BaseComponent {
   public store: Store;

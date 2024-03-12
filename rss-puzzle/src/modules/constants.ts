@@ -1,5 +1,5 @@
 import { State, UserData } from '../types/redux-type';
-import { Page } from '../types/types';
+import { Page } from '../types/enum';
 
 export const defaultUserData: UserData = {
   firstName: null,

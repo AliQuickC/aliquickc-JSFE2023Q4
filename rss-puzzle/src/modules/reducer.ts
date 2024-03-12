@@ -1,5 +1,5 @@
 import { Action, State } from '../types/redux-type';
-import { Page } from '../types/types';
+import { Page } from '../types/enum';
 
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;

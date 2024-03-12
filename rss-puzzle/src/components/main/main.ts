@@ -1,6 +1,6 @@
 import BaseComponent from '../../core/base-component';
 import { Store } from '../../types/redux-type';
-import { Page } from '../../types/types';
+import { Page } from '../../types/enum';
 import GamePage from '../game-page/game-page';
 import LoginPage from '../login-page/login-page';
 import StartPage from '../start-page/start-page';

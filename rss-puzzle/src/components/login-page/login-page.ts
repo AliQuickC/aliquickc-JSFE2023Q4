@@ -1,35 +1,38 @@
 import BaseComponent from '../../core/base-component';
+import AValidate from '../../core/validate';
+import { ValidatorRule } from '../../types/enum';
 import { Store } from '../../types/redux-type';
-import JustValidate, { Rules } from 'just-validate';
 
+const REQUIRED_REQUARED = 'The field is required';
 const FIRST_LETTER_ERROR = 'first letter must be capitalized, from "A" to "Z"';
 const ACCEPTABLE_LETTERS = 'Acceptable letters are from "a" to "z" and the symbol "-"';
-const checkCapitalize = (value: string | boolean): boolean => {
-  return !!(value as string).match(/^[A-Z]{1}/);
+const checkCapitalize = (value: string): boolean => {
+  return !!value.match(/^[A-Z]{1}/);
 };
+const minCharacterErrorMessage = (numb: number): string => `The field must contain a minimum of ${numb} characters`;
 
 const firstNameRule = [
-  { rule: 'required' as Rules },
+  { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
   {
     validator: checkCapitalize,
     errorMessage: FIRST_LETTER_ERROR,
   },
-  { rule: 'minLength' as Rules, value: 3 },
+  { rule: ValidatorRule.MinLength, value: 3, errorMessage: minCharacterErrorMessage(3) },
   {
-    validator: (value: string | boolean): boolean => {
-      return !!(value as string).match(/^[-A-Za-z]{3,}$/);
+    validator: (value: string): boolean => {
+      return !!value.match(/^[-A-Za-z]{3,}$/);
     },
     errorMessage: ACCEPTABLE_LETTERS,
   },
 ];
 
 const lastNameRule = [
-  { rule: 'required' as Rules },
+  { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
   {
     validator: checkCapitalize,
     errorMessage: FIRST_LETTER_ERROR,
   },
-  { rule: 'minLength' as Rules, value: 4 },
+  { rule: ValidatorRule.MinLength, value: 4, errorMessage: minCharacterErrorMessage(4) },
   {
     validator: (value: string | boolean): boolean => {
       return !!(value as string).match(/^[-A-Za-z]{4,}$/);
@@ -91,7 +94,7 @@ export default class LoginPage extends BaseComponent {
     this.container.innerHTML = this.toHTML();
 
     setTimeout(() => {
-      const validate = new JustValidate('#form');
+      const validate = new AValidate('#form');
 
       validate.addField('#firstname', firstNameRule).addField('#lastname', lastNameRule);
 
@@ -99,6 +102,16 @@ export default class LoginPage extends BaseComponent {
         this.submit();
       });
     }, 0);
+
+    // setTimeout(() => {
+    //   const validate = new JustValidate('#form');
+
+    //   validate.addField('#firstname', firstNameRule).addField('#lastname', lastNameRule);
+
+    //   validate.onSuccess(() => {
+    //     this.submit();
+    //   });
+    // }, 0);
 
     return this.container;
   };

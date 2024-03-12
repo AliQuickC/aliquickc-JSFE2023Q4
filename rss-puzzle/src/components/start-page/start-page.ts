@@ -1,5 +1,6 @@
 import BaseComponent from '../../core/base-component';
 import { Store } from '../../types/redux-type';
+import { Page } from '../../types/types';
 
 export default class StartPage extends BaseComponent {
   public store: Store;
@@ -10,7 +11,16 @@ export default class StartPage extends BaseComponent {
     this.init();
   }
 
-  public init(): void {}
+  public init(): void {
+    this.container.onclick = (event: Event): void => {
+      if (event.target && (event.target as HTMLElement).closest('[data-type="startButton"]')) {
+        this.store.dispatch({
+          type: 'SET-PAGE',
+          page: Page.Game,
+        });
+      }
+    };
+  }
 
   public destroy(): void {}
 
@@ -27,7 +37,7 @@ export default class StartPage extends BaseComponent {
         dear ${firstName} ${lastName}<br>
         press the "Start" button to start the game
       </p>
-      <button class="start__start-button">Start</button>
+      <button class="start__start-button" data-type="startButton">Start</button>
     </div>
     `;
   }

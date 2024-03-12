@@ -20,6 +20,10 @@ export default function reducer(stateData: State, action: Action): State {
       state.userData = { ...state.userData, firstName: null, lastName: null };
       state.appData = { ...state.appData, currentPage: Page.Login };
       return state;
+    case 'SET-PAGE':
+      console.log('!!!');
+      state.appData.currentPage = action.page;
+      return state;
     default:
       return state;
   }

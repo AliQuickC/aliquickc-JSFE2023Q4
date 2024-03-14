@@ -1,4 +1,5 @@
 import BaseComponent from '../../core/base-component';
+import { ActionID } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 
 export default class Header extends BaseComponent {
@@ -14,7 +15,7 @@ export default class Header extends BaseComponent {
     this.container.onclick = (event: Event): void => {
       if (event.target && (event.target as HTMLElement).closest('[data-type="logOutButton"]')) {
         this.store.dispatch({
-          type: 'LOG-OFF',
+          type: ActionID.LogOff,
         });
       }
     };

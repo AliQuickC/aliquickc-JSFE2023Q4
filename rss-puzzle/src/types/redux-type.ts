@@ -1,3 +1,6 @@
+import { ActionID, Page } from './enum';
+import { WordCollection } from './types';
+
 export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
 export type Unsubscribe = { unsubscribe: () => void };
@@ -7,7 +10,21 @@ export type UserData = {
   lastName: string | null;
 };
 
-export type AppData = { [ket: string]: string };
+export type CardsData = { cardNumb: number; word: string };
+export type CardsRow = CardsData[];
+export type RezultMatrix = CardsRow[];
+
+export type AppData = {
+  currentPage: Page;
+  currentCollection: number;
+  currentRound: number;
+  wordCollection: WordCollection[];
+  etalonRezultMatrix: RezultMatrix;
+  currentRezultMatrix: RezultMatrix;
+  sourceCards: CardsRow;
+  cardsInCurrentRezultRow: number[];
+  cardsSourceInRow: number[];
+};
 
 export interface State {
   userData: UserData;
@@ -21,6 +38,6 @@ export interface Store {
 }
 
 export interface Action {
-  type: string;
+  type: ActionID;
   [key: string]: string;
 }

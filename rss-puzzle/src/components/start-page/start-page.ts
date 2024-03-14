@@ -1,6 +1,6 @@
 import BaseComponent from '../../core/base-component';
 import { Store } from '../../types/redux-type';
-import { Page } from '../../types/enum';
+import { ActionID } from '../../types/enum';
 
 export default class StartPage extends BaseComponent {
   public store: Store;
@@ -15,8 +15,7 @@ export default class StartPage extends BaseComponent {
     this.container.onclick = (event: Event): void => {
       if (event.target && (event.target as HTMLElement).closest('[data-type="startButton"]')) {
         this.store.dispatch({
-          type: 'SET-PAGE',
-          page: Page.Game,
+          type: ActionID.StartGame,
         });
       }
     };

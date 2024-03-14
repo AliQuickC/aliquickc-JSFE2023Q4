@@ -1,6 +1,6 @@
 import BaseComponent from '../../core/base-component';
 import AValidate from '../../core/validate';
-import { ValidatorRule } from '../../types/enum';
+import { ActionID, ValidatorRule } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 
 const REQUIRED_REQUARED = 'The field is required';
@@ -57,7 +57,7 @@ export default class LoginPage extends BaseComponent {
       const firstName = this.container.querySelector('#firstname') as HTMLInputElement;
       const lastName = this.container.querySelector('#lastname') as HTMLInputElement;
       this.store.dispatch({
-        type: 'SET_USER',
+        type: ActionID.SetUser,
         firstName: firstName.value,
         lastName: lastName.value,
       });
@@ -102,16 +102,6 @@ export default class LoginPage extends BaseComponent {
         this.submit();
       });
     }, 0);
-
-    // setTimeout(() => {
-    //   const validate = new JustValidate('#form');
-
-    //   validate.addField('#firstname', firstNameRule).addField('#lastname', lastNameRule);
-
-    //   validate.onSuccess(() => {
-    //     this.submit();
-    //   });
-    // }, 0);
 
     return this.container;
   };

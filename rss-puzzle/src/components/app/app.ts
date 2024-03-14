@@ -1,3 +1,4 @@
+import { ActionID } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
 import Header from '../header/header';
@@ -18,7 +19,7 @@ export default class App {
 
   public init(): void {
     this.store.dispatch({
-      type: 'INIT',
+      type: ActionID.AppInit,
     });
     this.header = new Header(this.store, 'header', 'header');
     this.main = new Main(this.store, 'main', 'main');

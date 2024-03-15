@@ -13,27 +13,29 @@ export default class GamePage extends BaseComponent {
   }
 
   private init(): void {
-    this.container.onclick = (event: Event): void => {
-      if (event.target && (event.target as HTMLElement).closest('[data-card-source]')) {
-        const elem = (event.target as HTMLElement).closest('[data-card-source]') as HTMLElement;
-        const cardNumber = elem.getAttribute('data-card-source');
-        this.store.dispatch({
-          type: ActionID.MoveSorceCard,
-          cardNumber: cardNumber as string,
-        });
-      }
-      if (event.target && (event.target as HTMLElement).closest('[data-card-rezult]')) {
-        const elem = (event.target as HTMLElement).closest('[data-card-rezult]') as HTMLElement;
-        const cardNumber = elem.getAttribute('data-card-rezult');
-        this.store.dispatch({
-          type: ActionID.MoveRezultCard,
-          cardNumber: cardNumber as string,
-        });
-      }
-    };
+    this.container.onclick = this.cardClickHandler;
   }
 
   public destroy(): void {}
+
+  private cardClickHandler = (event: Event): void => {
+    if (event.target && (event.target as HTMLElement).closest('[data-card-source]')) {
+      const elem = (event.target as HTMLElement).closest('[data-card-source]') as HTMLElement;
+      const cardNumber = elem.getAttribute('data-card-source');
+      this.store.dispatch({
+        type: ActionID.MoveSorceCard,
+        cardNumber: cardNumber as string,
+      });
+    }
+    if (event.target && (event.target as HTMLElement).closest('[data-card-rezult]')) {
+      const elem = (event.target as HTMLElement).closest('[data-card-rezult]') as HTMLElement;
+      const cardNumber = elem.getAttribute('data-card-rezult');
+      this.store.dispatch({
+        type: ActionID.MoveRezultCard,
+        cardNumber: cardNumber as string,
+      });
+    }
+  };
 
   private getRowLayout(index: number, isShow: boolean): string {
     const { currentRezultMatrix } = this.store.getState().appData;
@@ -62,7 +64,7 @@ export default class GamePage extends BaseComponent {
     return `<div class="game__picture-row" data-row="${index + 1}">${rezultLayout}</div>`;
   }
 
-  private getSourceWordsLayout(index: number): string {
+  private getSourceRowLayout(index: number): string {
     const { cardsSourceInRow, cardsInCurrentRezultRow, etalonRezultMatrix } = this.store.getState().appData;
     let rezultLayout = '';
 
@@ -78,7 +80,7 @@ export default class GamePage extends BaseComponent {
   }
 
   private toHTML(): string {
-    const randomSentenceWordLayout: string = this.getSourceWordsLayout(CURRENT_ROW);
+    const randomSentenceWordLayout: string = this.getSourceRowLayout(CURRENT_ROW);
 
     const rowsLayout: string = new Array(REZULT_ROWS)
       .fill(null)

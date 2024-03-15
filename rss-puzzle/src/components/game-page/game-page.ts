@@ -1,5 +1,5 @@
 import BaseComponent from '../../core/base-component';
-import { CURRENT_ROW, REZULT_ROWS } from '../../modules/reducer';
+import { MAX_REZULT_ROWS } from '../../modules/constants';
 import { ActionID } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 
@@ -19,74 +19,95 @@ export default class GamePage extends BaseComponent {
   public destroy(): void {}
 
   private cardClickHandler = (event: Event): void => {
-    if (event.target && (event.target as HTMLElement).closest('[data-card-source]')) {
-      const elem = (event.target as HTMLElement).closest('[data-card-source]') as HTMLElement;
-      const cardNumber = elem.getAttribute('data-card-source');
+    if (event.target && (event.target as HTMLElement).closest('[data-type="sourceCard"]')) {
+      const elem = (event.target as HTMLElement).closest('[data-type="sourceCard"]') as HTMLElement;
+      const cardNumber = elem.getAttribute('data-card-number');
       this.store.dispatch({
         type: ActionID.MoveSorceCard,
         cardNumber: cardNumber as string,
       });
-    }
-    if (event.target && (event.target as HTMLElement).closest('[data-card-rezult]')) {
-      const elem = (event.target as HTMLElement).closest('[data-card-rezult]') as HTMLElement;
-      const cardNumber = elem.getAttribute('data-card-rezult');
+    } else if (event.target && (event.target as HTMLElement).closest('[data-type="rezultCard"]')) {
+      const elem = (event.target as HTMLElement).closest('[data-type="rezultCard"]') as HTMLElement;
+      const cardNumber = elem.getAttribute('data-card-number');
       this.store.dispatch({
         type: ActionID.MoveRezultCard,
         cardNumber: cardNumber as string,
       });
+    } else if (event.target && (event.target as HTMLElement).closest('[data-type="continueButton"]')) {
+      const { sentenceSuccess, roundComplete } = this.store.getState().appData;
+      if (sentenceSuccess && !roundComplete) {
+        this.store.dispatch({
+          type: ActionID.NextSentence,
+        });
+      } else if (sentenceSuccess && roundComplete) {
+        this.store.dispatch({
+          type: ActionID.NextRound,
+        });
+      }
     }
   };
 
-  private getRowLayout(index: number, isShow: boolean): string {
+  private getRowLayout(sentenceNumber: number, isShow: boolean): string {
     const { currentRezultMatrix } = this.store.getState().appData;
-    const rowLayout = currentRezultMatrix[index]
+    const rowLayout = currentRezultMatrix[sentenceNumber]
       .map(
         (item) =>
           `<div class="game__word-card ${isShow ? 'game__word-card_show game__word-card_complete' : ''} rezult-card">${item.word}</div>`
       )
       .join('');
 
-    return `<div class="game__picture-row" data-row="${index + 1}">${rowLayout}</div>`;
+    return `<div class="game__picture-row" data-row="${sentenceNumber + 1}">${rowLayout}</div>`;
   }
 
-  private getCurrentRowLayout(index: number): string {
+  private getCurrentRowLayout(sentenceNumber: number): string {
     const { cardsInCurrentRezultRow, cardsSourceInRow, etalonRezultMatrix } = this.store.getState().appData;
     let rezultLayout = '';
 
     for (let i = 0; i < cardsInCurrentRezultRow.length; i += 1) {
-      rezultLayout += `<div class="game__word-card game__word-card_show game__word-card_current rezult-card" data-card-rezult="${cardsInCurrentRezultRow[i]}">${etalonRezultMatrix[index][cardsInCurrentRezultRow[i]].word}</div>`;
+      rezultLayout += `<div class="game__word-card game__word-card_show game__word-card_current rezult-card" data-type="rezultCard" data-card-number="${cardsInCurrentRezultRow[i]}">${etalonRezultMatrix[sentenceNumber][cardsInCurrentRezultRow[i]].word}</div>`;
     }
 
     for (let i = 0; i < cardsSourceInRow.length; i += 1) {
-      rezultLayout += `<div class="game__word-card rezult-card">${etalonRezultMatrix[index][cardsSourceInRow[i]].word}</div>`;
+      rezultLayout += `<div class="game__word-card rezult-card">${etalonRezultMatrix[sentenceNumber][cardsSourceInRow[i]].word}</div>`;
     }
 
-    return `<div class="game__picture-row" data-row="${index + 1}">${rezultLayout}</div>`;
+    return `<div class="game__picture-row" data-row="${sentenceNumber + 1}">${rezultLayout}</div>`;
   }
 
-  private getSourceRowLayout(index: number): string {
-    const { cardsSourceInRow, cardsInCurrentRezultRow, etalonRezultMatrix } = this.store.getState().appData;
+  private getSourceRowLayout(sentenceNumber: number): string {
+    const { roundComplete, cardsSourceInRow, cardsInCurrentRezultRow, etalonRezultMatrix } =
+      this.store.getState().appData;
     let rezultLayout = '';
 
+    if (roundComplete) {
+      return '<div class="source-cards__card"></div>';
+    }
+
     for (let i = 0; i < cardsSourceInRow.length; i += 1) {
-      rezultLayout += `<div class="source-cards__card source-cards__card_show" data-type="sourceCard"  data-card-source="${cardsSourceInRow[i]}">${etalonRezultMatrix[index][cardsSourceInRow[i]].word}</div>`;
+      rezultLayout += `<div class="source-cards__card source-cards__card_show" data-type="sourceCard"  data-card-number="${cardsSourceInRow[i]}">${etalonRezultMatrix[sentenceNumber][cardsSourceInRow[i]].word}</div>`;
     }
 
     for (let i = 0; i < cardsInCurrentRezultRow.length; i += 1) {
-      rezultLayout += `<div class="source-cards__card" data-type="sourceCard">${etalonRezultMatrix[index][cardsInCurrentRezultRow[i]].word}</div>`;
+      rezultLayout += `<div class="source-cards__card" data-type="sourceCard">${etalonRezultMatrix[sentenceNumber][cardsInCurrentRezultRow[i]].word}</div>`;
     }
 
     return rezultLayout;
   }
 
   private toHTML(): string {
-    const randomSentenceWordLayout: string = this.getSourceRowLayout(CURRENT_ROW);
+    const { sentenceSuccess, currentSentenceNumber } = this.store.getState().appData;
+    const sourceRowLayout: string = this.getSourceRowLayout(currentSentenceNumber);
 
-    const rowsLayout: string = new Array(REZULT_ROWS)
+    const rowsLayout: string = new Array(MAX_REZULT_ROWS)
       .fill(null)
-      .map((_, index): string =>
-        index === CURRENT_ROW ? this.getCurrentRowLayout(index) : this.getRowLayout(index, index < CURRENT_ROW)
-      )
+      .map((_, index): string => {
+        if (index === currentSentenceNumber && !sentenceSuccess) {
+          return this.getCurrentRowLayout(index);
+        } else {
+          const isShow = index < currentSentenceNumber || (index === currentSentenceNumber && sentenceSuccess);
+          return this.getRowLayout(index, isShow);
+        }
+      })
       .join('');
 
     return `
@@ -96,8 +117,10 @@ export default class GamePage extends BaseComponent {
       </div>
 
       <div class="game__word-cards source-cards">
-        ${randomSentenceWordLayout}
+        ${sourceRowLayout}
       </div>
+
+      <button class="game__continue-button" data-type="continueButton" ${sentenceSuccess ? '' : 'disabled'}>Continue</button>
     </div>
     `;
   }

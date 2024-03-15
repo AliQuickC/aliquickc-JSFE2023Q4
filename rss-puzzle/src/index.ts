@@ -15,7 +15,7 @@ import { WordCollection } from './types/types';
     wordCollection.push(await getData(`./data/wordCollectionLevel${i}.json`));
   }
 
-  initialState.appData.wordCollection = wordCollection;
+  initialState.wordCollection = wordCollection;
 
   initialState.userData = getLocalStorage();
   const store = createStore(reducer, initialState);

@@ -11,24 +11,25 @@ export type UserData = {
 };
 
 export type CardsData = { cardNumb: number; word: string };
-export type CardsRow = CardsData[];
-export type RezultMatrix = CardsRow[];
 
 export type AppData = {
   currentPage: Page;
   currentCollection: number;
-  currentRound: number;
-  wordCollection: WordCollection[];
-  etalonRezultMatrix: RezultMatrix;
-  currentRezultMatrix: RezultMatrix;
-  sourceCards: CardsRow;
+  etalonRezultMatrix: CardsData[][];
+  currentRezultMatrix: CardsData[][];
+  sourceCards: CardsData[];
   cardsInCurrentRezultRow: number[];
   cardsSourceInRow: number[];
+  currentSentenceNumber: number;
+  currentRoundNumber: number;
+  sentenceSuccess: boolean;
+  roundComplete: boolean;
 };
 
 export interface State {
   userData: UserData;
   appData: AppData;
+  wordCollection: WordCollection[];
 }
 
 export interface Store {

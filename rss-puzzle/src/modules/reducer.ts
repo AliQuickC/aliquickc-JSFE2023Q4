@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Action, CardsData, CardsRow, State } from '../types/redux-type';
+import { Action, CardsData, State } from '../types/redux-type';
 import { ActionID, Page } from '../types/enum';
 import { shuffle } from '../core/utils';
-
-export const REZULT_ROWS = 10;
-export const CURRENT_ROW = 8;
+import { SentenceData } from '../types/types';
+import { FIRST_SENTENCE, MAX_REZULT_ROWS } from './constants';
 
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
@@ -37,57 +36,160 @@ export default function reducer(stateData: State, action: Action): State {
       return state;
     }
     case ActionID.StartGame: {
-      const { currentCollection, currentRound } = state.appData;
-      const { words } = state.appData.wordCollection[currentCollection].rounds[currentRound];
+      const { currentCollection, currentRoundNumber, currentSentenceNumber } = state.appData;
 
-      state.appData.etalonRezultMatrix = new Array(REZULT_ROWS).fill(null).map((_, index): CardsRow => {
-        const wordsArray: string[] = words[index].textExample.split(' ');
-        return new Array(wordsArray.length).fill(null).map(
-          (_, j): CardsData => ({
-            cardNumb: j,
-            word: wordsArray[j],
-          })
-        );
-      });
+      const words: SentenceData[] = state.wordCollection[currentCollection].rounds[currentRoundNumber].words;
 
-      const currentRezultMatrix = JSON.parse(JSON.stringify(state.appData.etalonRezultMatrix));
+      const etalonRezultMatrix: CardsData[][] = getEtalonSentenceMatrix(words);
 
-      state.appData.currentRezultMatrix = new Array(REZULT_ROWS)
-        .fill(null)
-        .map((_, index): CardsRow => shuffle(currentRezultMatrix[index]));
+      const currentRezultMatrix: CardsData[][] = shuffleRezultMatrix(etalonRezultMatrix);
 
-      state.appData.cardsInCurrentRezultRow = [];
-      state.appData.cardsSourceInRow = new Array(state.appData.currentRezultMatrix[CURRENT_ROW].length)
-        .fill(null)
-        .map((_, index) => state.appData.currentRezultMatrix[CURRENT_ROW][index].cardNumb);
+      const RezultMatrixRow: CardsData[] = currentRezultMatrix[currentSentenceNumber];
+      const cardsSourceInRow: number[] = getCardsSourceInRow(RezultMatrixRow);
+
+      state.appData = {
+        ...state.appData,
+        etalonRezultMatrix,
+        currentRezultMatrix,
+        cardsSourceInRow,
+        cardsInCurrentRezultRow: [],
+      };
 
       state.appData.currentPage = Page.Game;
       return state;
     }
     case ActionID.MoveSorceCard: {
-      const cardsInCurrentRezultRow = state.appData.cardsInCurrentRezultRow.slice(0);
+      const cardsInCurrentRezultRow: number[] = state.appData.cardsInCurrentRezultRow.slice(0);
       cardsInCurrentRezultRow.push(+action.cardNumber);
-      state.appData.cardsInCurrentRezultRow = cardsInCurrentRezultRow;
 
-      const cardsSourceInRow = state.appData.cardsSourceInRow.slice(0);
+      const cardsSourceInRow: number[] = state.appData.cardsSourceInRow.slice(0);
       const elemNumb = cardsSourceInRow.indexOf(+action.cardNumber);
       cardsSourceInRow.splice(elemNumb, 1);
-      state.appData.cardsSourceInRow = cardsSourceInRow;
 
-      return state;
+      state.appData = {
+        ...state.appData,
+        cardsInCurrentRezultRow,
+        cardsSourceInRow,
+      };
+
+      return reducer(state, { type: ActionID.CheckCorrectlySentence });
     }
     case ActionID.MoveRezultCard: {
       const cardsSourceInRow = state.appData.cardsSourceInRow.slice(0);
       cardsSourceInRow.push(+action.cardNumber);
-      state.appData.cardsSourceInRow = cardsSourceInRow;
 
       const cardsInCurrentRezultRow = state.appData.cardsInCurrentRezultRow.slice(0);
       const elemNumb = cardsInCurrentRezultRow.indexOf(+action.cardNumber);
       cardsInCurrentRezultRow.splice(elemNumb, 1);
-      state.appData.cardsInCurrentRezultRow = cardsInCurrentRezultRow;
+
+      state.appData = {
+        ...state.appData,
+        cardsSourceInRow,
+        cardsInCurrentRezultRow,
+      };
+      return state;
+    }
+    case ActionID.CheckCorrectlySentence: {
+      if (state.appData.cardsSourceInRow.length === 0) {
+        const { cardsInCurrentRezultRow, currentSentenceNumber, etalonRezultMatrix, currentRezultMatrix } =
+          state.appData;
+
+        const rezultSentence = getRezultSentence(etalonRezultMatrix[currentSentenceNumber], cardsInCurrentRezultRow);
+
+        const etalonSentence = getSentence(etalonRezultMatrix[currentSentenceNumber]);
+
+        if (etalonSentence === rezultSentence) {
+          const currentEtalonMatrixRow: CardsData[] = JSON.parse(
+            JSON.stringify(etalonRezultMatrix[currentSentenceNumber])
+          );
+          currentRezultMatrix[currentSentenceNumber] = currentEtalonMatrixRow;
+          state.appData.sentenceSuccess = true;
+          if (currentSentenceNumber + 1 === MAX_REZULT_ROWS) {
+            state.appData.roundComplete = true;
+          }
+        }
+      }
+      return state;
+    }
+    case ActionID.NextSentence: {
+      const { currentSentenceNumber, currentRezultMatrix } = state.appData;
+      if (currentSentenceNumber + 1 === MAX_REZULT_ROWS) {
+        return state;
+      }
+
+      const nextRezultMatrixRow: CardsData[] = currentRezultMatrix[currentSentenceNumber + 1];
+      const cardsSourceInRow: number[] = getCardsSourceInRow(nextRezultMatrixRow);
+
+      state.appData = {
+        ...state.appData,
+        currentSentenceNumber: currentSentenceNumber + 1,
+        cardsSourceInRow,
+        cardsInCurrentRezultRow: [],
+        sentenceSuccess: false,
+      };
+      return state;
+    }
+    case ActionID.NextRound: {
+      const wordCollection = state.wordCollection[state.appData.currentCollection];
+
+      if (wordCollection.roundsCount <= state.appData.currentRoundNumber + 1) {
+        return state;
+      }
+
+      const { currentRoundNumber } = state.appData;
+      const nextRoundWords: SentenceData[] = wordCollection.rounds[currentRoundNumber + 1].words;
+
+      const etalonRezultMatrix: CardsData[][] = getEtalonSentenceMatrix(nextRoundWords);
+
+      const currentRezultMatrix: CardsData[][] = shuffleRezultMatrix(etalonRezultMatrix);
+
+      const RezultMatrixCurrentRow: CardsData[] = currentRezultMatrix[FIRST_SENTENCE];
+      const cardsSourceInRow: number[] = getCardsSourceInRow(RezultMatrixCurrentRow);
+
+      state.appData = {
+        ...state.appData,
+        etalonRezultMatrix,
+        currentRezultMatrix,
+        cardsSourceInRow,
+        cardsInCurrentRezultRow: [],
+        currentRoundNumber: currentRoundNumber + 1,
+        currentSentenceNumber: FIRST_SENTENCE,
+        sentenceSuccess: false,
+        roundComplete: false,
+      };
       return state;
     }
     default:
       return state;
   }
+}
+
+function shuffleRezultMatrix(rezultMatrix: CardsData[][]): CardsData[][] {
+  const copyEtalonRezultMatrix: CardsData[][] = JSON.parse(JSON.stringify(rezultMatrix));
+
+  return new Array(MAX_REZULT_ROWS).fill(null).map((_, index): CardsData[] => shuffle(copyEtalonRezultMatrix[index]));
+}
+
+function getEtalonSentenceMatrix(sentenceArray: SentenceData[]): CardsData[][] {
+  return new Array(MAX_REZULT_ROWS).fill(null).map((_, index): CardsData[] => {
+    const wordsArray: string[] = sentenceArray[index].textExample.split(' ');
+    return new Array(wordsArray.length).fill(null).map(
+      (_, j): CardsData => ({
+        cardNumb: j,
+        word: wordsArray[j],
+      })
+    );
+  });
+}
+
+function getCardsSourceInRow(matrixRow: CardsData[]): number[] {
+  return new Array(matrixRow.length).fill(null).map((_, index) => matrixRow[index].cardNumb);
+}
+
+function getSentence(sentanceArray: CardsData[]): string {
+  return sentanceArray.map((item) => item.word).join(' ');
+}
+
+function getRezultSentence(sentanceArray: CardsData[], wordsArray: number[]): string {
+  return wordsArray.map((item) => sentanceArray[item].word).join(' ');
 }

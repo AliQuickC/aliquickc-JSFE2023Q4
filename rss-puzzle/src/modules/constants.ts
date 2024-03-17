@@ -19,7 +19,6 @@ export const initialState: State = {
     currentCollection: CURENT_COLLECTION,
     etalonRezultMatrix: [],
     currentRezultMatrix: [],
-    sourceCards: [],
     cardsInCurrentRezultRow: [],
     cardsSourceInRow: [],
     currentRoundNumber: DEFAULT_CURENT_ROUND,

@@ -21,4 +21,5 @@ export enum ActionID {
   CheckCorrectlyWords = 'CHECK-CORRECTLY-WORDS',
   NextSentence = 'NEXT-SENTENCE',
   NextRound = 'NEXT-ROUND',
+  autoCompleteSentence = 'AUTO-COMPLETE-SENTENCE',
 }

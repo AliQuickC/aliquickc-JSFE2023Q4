@@ -48,6 +48,10 @@ export default class GamePage extends BaseComponent {
       this.store.dispatch({
         type: ActionID.CheckCorrectlyWords,
       });
+    } else if (event.target && (event.target as HTMLElement).closest('[data-type="autoCompleteButton"]')) {
+      this.store.dispatch({
+        type: ActionID.autoCompleteSentence,
+      });
     }
   };
 
@@ -120,7 +124,7 @@ export default class GamePage extends BaseComponent {
       })
       .join('');
 
-    const disableContinueButton = !(cardsSourceInRow.length === 0); // || sentenceSuccess;
+    const disableContinueButton = !(cardsSourceInRow.length === 0);
 
     return `
     <div class="container game__container">
@@ -133,6 +137,7 @@ export default class GamePage extends BaseComponent {
       </div>
 
       <div class="game__buttons-wrap">
+        <button class="game__autocomplete-button" ${sentenceSuccess ? 'disabled' : ''} data-type="autoCompleteButton">Autocomplete</button>
         <button class="game__continue-button" data-type=${sentenceSuccess ? 'continueButton' : 'checkButton'} ${disableContinueButton ? 'disabled' : ''}>${sentenceSuccess ? 'Continue' : 'Check'}</button>
       </div>
     </div>

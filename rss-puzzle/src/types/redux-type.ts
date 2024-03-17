@@ -17,7 +17,6 @@ export type AppData = {
   currentCollection: number;
   etalonRezultMatrix: CardsData[][];
   currentRezultMatrix: CardsData[][];
-  sourceCards: CardsData[];
   cardsInCurrentRezultRow: number[];
   cardsSourceInRow: number[];
   currentSentenceNumber: number;

@@ -90,6 +90,23 @@ export default function reducer(stateData: State, action: Action): State {
       };
       return state;
     }
+    case ActionID.autoCompleteSentence: {
+      const { etalonRezultMatrix, currentSentenceNumber } = state.appData;
+      const length: number = etalonRezultMatrix[currentSentenceNumber].length;
+      const cardsInCurrentRezultRow: number[] = [];
+
+      for (let i = 0; i < length; i++) {
+        cardsInCurrentRezultRow.push(i);
+      }
+
+      state.appData = {
+        ...state.appData,
+        cardsInCurrentRezultRow,
+        cardsSourceInRow: [],
+      };
+
+      return reducer(state, { type: ActionID.CheckCorrectlySentence });
+    }
     case ActionID.CheckCorrectlySentence: {
       if (state.appData.cardsSourceInRow.length === 0) {
         const { cardsInCurrentRezultRow, currentSentenceNumber, etalonRezultMatrix, currentRezultMatrix } =

@@ -86,6 +86,7 @@ export default function reducer(stateData: State, action: Action): State {
         ...state.appData,
         cardsSourceInRow,
         cardsInCurrentRezultRow,
+        haveFeedbackWordOrder: false,
       };
       return state;
     }
@@ -94,9 +95,12 @@ export default function reducer(stateData: State, action: Action): State {
         const { cardsInCurrentRezultRow, currentSentenceNumber, etalonRezultMatrix, currentRezultMatrix } =
           state.appData;
 
-        const rezultSentence = getRezultSentence(etalonRezultMatrix[currentSentenceNumber], cardsInCurrentRezultRow);
+        const rezultSentence: string = getRezultSentence(
+          etalonRezultMatrix[currentSentenceNumber],
+          cardsInCurrentRezultRow
+        );
 
-        const etalonSentence = getSentence(etalonRezultMatrix[currentSentenceNumber]);
+        const etalonSentence: string = getSentence(etalonRezultMatrix[currentSentenceNumber]);
 
         if (etalonSentence === rezultSentence) {
           const currentEtalonMatrixRow: CardsData[] = JSON.parse(
@@ -109,6 +113,26 @@ export default function reducer(stateData: State, action: Action): State {
           }
         }
       }
+      return state;
+    }
+    case ActionID.CheckCorrectlyWords: {
+      const { currentSentenceNumber, etalonRezultMatrix, cardsInCurrentRezultRow } = state.appData;
+
+      const etalonSentenceWordsArray: string[] = getSentenceWordsArray(etalonRezultMatrix[currentSentenceNumber]);
+
+      const rezultSentenceWordsArray: string[] = getRezultSentenceWordsArray(
+        etalonRezultMatrix[currentSentenceNumber],
+        cardsInCurrentRezultRow
+      );
+
+      const wordOrder = etalonSentenceWordsArray.map((item, index) => item === rezultSentenceWordsArray[index]);
+
+      state.appData = {
+        ...state.appData,
+        wordOrder,
+        haveFeedbackWordOrder: true,
+      };
+
       return state;
     }
     case ActionID.NextSentence: {
@@ -126,6 +150,7 @@ export default function reducer(stateData: State, action: Action): State {
         cardsSourceInRow,
         cardsInCurrentRezultRow: [],
         sentenceSuccess: false,
+        haveFeedbackWordOrder: false,
       };
       return state;
     }
@@ -156,6 +181,7 @@ export default function reducer(stateData: State, action: Action): State {
         currentSentenceNumber: FIRST_SENTENCE,
         sentenceSuccess: false,
         roundComplete: false,
+        haveFeedbackWordOrder: false,
       };
       return state;
     }
@@ -189,7 +215,14 @@ function getCardsSourceInRow(matrixRow: CardsData[]): number[] {
 function getSentence(sentanceArray: CardsData[]): string {
   return sentanceArray.map((item) => item.word).join(' ');
 }
+function getSentenceWordsArray(sentanceArray: CardsData[]): string[] {
+  return sentanceArray.map((item) => item.word);
+}
 
 function getRezultSentence(sentanceArray: CardsData[], wordsArray: number[]): string {
   return wordsArray.map((item) => sentanceArray[item].word).join(' ');
+}
+
+function getRezultSentenceWordsArray(sentanceArray: CardsData[], wordsArray: number[]): string[] {
+  return wordsArray.map((item) => sentanceArray[item].word);
 }

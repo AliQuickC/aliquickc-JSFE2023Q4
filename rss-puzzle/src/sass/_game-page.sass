@@ -43,10 +43,15 @@
       visibility: visible
     &_current
       cursor: pointer
+    &_success
+      border: 2px solid #03f70f
+    &_fail
+      border: 2px solid red
+  &__buttons-wrap
+    display: flex
+    column-gap: 20px
   &__continue-button
     @extend %puzzle-button
-    &:disabled
-      cursor: default
 
 .source-cards
   margin-bottom: 40px

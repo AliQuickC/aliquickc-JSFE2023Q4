@@ -24,6 +24,8 @@ export type AppData = {
   currentRoundNumber: number;
   sentenceSuccess: boolean;
   roundComplete: boolean;
+  wordOrder: boolean[];
+  haveFeedbackWordOrder: boolean;
 };
 
 export interface State {

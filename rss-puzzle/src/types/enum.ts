@@ -18,6 +18,7 @@ export enum ActionID {
   MoveSorceCard = 'MOVE-SORCE-CARD',
   MoveRezultCard = 'MOVE-REZULT-CARD',
   CheckCorrectlySentence = 'CHECK-CORRECTLY-SENTENCE',
+  CheckCorrectlyWords = 'CHECK-CORRECTLY-WORDS',
   NextSentence = 'NEXT-SENTENCE',
   NextRound = 'NEXT-ROUND',
 }

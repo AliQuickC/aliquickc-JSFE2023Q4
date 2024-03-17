@@ -26,6 +26,8 @@ export const initialState: State = {
     currentSentenceNumber: FIRST_SENTENCE,
     sentenceSuccess: false,
     roundComplete: false,
+    wordOrder: [],
+    haveFeedbackWordOrder: false,
   },
   wordCollection: [],
 };

@@ -44,6 +44,10 @@ export default class GamePage extends BaseComponent {
           type: ActionID.NextRound,
         });
       }
+    } else if (event.target && (event.target as HTMLElement).closest('[data-type="checkButton"]')) {
+      this.store.dispatch({
+        type: ActionID.CheckCorrectlyWords,
+      });
     }
   };
 
@@ -60,11 +64,17 @@ export default class GamePage extends BaseComponent {
   }
 
   private getCurrentRowLayout(sentenceNumber: number): string {
-    const { cardsInCurrentRezultRow, cardsSourceInRow, etalonRezultMatrix } = this.store.getState().appData;
+    const { cardsInCurrentRezultRow, cardsSourceInRow, etalonRezultMatrix, wordOrder, haveFeedbackWordOrder } =
+      this.store.getState().appData;
     let rezultLayout = '';
 
+    let feedbackArray: string[] = [];
+    if (haveFeedbackWordOrder) {
+      feedbackArray = wordOrder.map((item) => (item ? 'game__word-card_success' : 'game__word-card_fail'));
+    }
+
     for (let i = 0; i < cardsInCurrentRezultRow.length; i += 1) {
-      rezultLayout += `<div class="game__word-card game__word-card_show game__word-card_current rezult-card" data-type="rezultCard" data-card-number="${cardsInCurrentRezultRow[i]}">${etalonRezultMatrix[sentenceNumber][cardsInCurrentRezultRow[i]].word}</div>`;
+      rezultLayout += `<div class="game__word-card game__word-card_show game__word-card_current rezult-card ${haveFeedbackWordOrder ? feedbackArray[i] : ''}" data-type="rezultCard" data-card-number="${cardsInCurrentRezultRow[i]}">${etalonRezultMatrix[sentenceNumber][cardsInCurrentRezultRow[i]].word}</div>`;
     }
 
     for (let i = 0; i < cardsSourceInRow.length; i += 1) {
@@ -95,7 +105,7 @@ export default class GamePage extends BaseComponent {
   }
 
   private toHTML(): string {
-    const { sentenceSuccess, currentSentenceNumber } = this.store.getState().appData;
+    const { sentenceSuccess, currentSentenceNumber, cardsSourceInRow } = this.store.getState().appData;
     const sourceRowLayout: string = this.getSourceRowLayout(currentSentenceNumber);
 
     const rowsLayout: string = new Array(MAX_REZULT_ROWS)
@@ -110,6 +120,8 @@ export default class GamePage extends BaseComponent {
       })
       .join('');
 
+    const disableContinueButton = !(cardsSourceInRow.length === 0) || sentenceSuccess;
+
     return `
     <div class="container game__container">
       <div class="game__picture">
@@ -120,7 +132,10 @@ export default class GamePage extends BaseComponent {
         ${sourceRowLayout}
       </div>
 
-      <button class="game__continue-button" data-type="continueButton" ${sentenceSuccess ? '' : 'disabled'}>Continue</button>
+      <div class="game__buttons-wrap">
+        <button class="game__continue-button" data-type="checkButton" ${disableContinueButton ? 'disabled' : ''}>Check</button>
+        <button class="game__continue-button" data-type="continueButton" ${sentenceSuccess ? '' : 'disabled'}>Continue</button>
+      </div>
     </div>
     `;
   }

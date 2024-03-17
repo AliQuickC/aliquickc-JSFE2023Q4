@@ -120,7 +120,7 @@ export default class GamePage extends BaseComponent {
       })
       .join('');
 
-    const disableContinueButton = !(cardsSourceInRow.length === 0) || sentenceSuccess;
+    const disableContinueButton = !(cardsSourceInRow.length === 0); // || sentenceSuccess;
 
     return `
     <div class="container game__container">
@@ -133,8 +133,7 @@ export default class GamePage extends BaseComponent {
       </div>
 
       <div class="game__buttons-wrap">
-        <button class="game__continue-button" data-type="checkButton" ${disableContinueButton ? 'disabled' : ''}>Check</button>
-        <button class="game__continue-button" data-type="continueButton" ${sentenceSuccess ? '' : 'disabled'}>Continue</button>
+        <button class="game__continue-button" data-type=${sentenceSuccess ? 'continueButton' : 'checkButton'} ${disableContinueButton ? 'disabled' : ''}>${sentenceSuccess ? 'Continue' : 'Check'}</button>
       </div>
     </div>
     `;

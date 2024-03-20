@@ -22,4 +22,5 @@ export enum ActionID {
   NextSentence = 'NEXT-SENTENCE',
   NextRound = 'NEXT-ROUND',
   autoCompleteSentence = 'AUTO-COMPLETE-SENTENCE',
+  replaceRezultCard = 'REPLACE-REZULT-CARD',
 }

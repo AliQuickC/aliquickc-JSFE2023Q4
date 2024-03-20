@@ -1,16 +1,5 @@
 .game
-  --card-height: 50px
-  --card-fond-size: 18px
   padding: 30px 0
-  @media(max-width: 960px),(max-height: 768px)
-    --card-height: 45px
-    --card-fond-size: 16px
-  @media(max-width: 768px),(max-height: 630px)
-    --card-height: 40px
-    --card-fond-size: 14px
-  @media(max-width: 640px)
-    --card-height: 30px
-    --card-fond-size: 12px
   &__container
     display: flex
     flex-direction: column
@@ -26,6 +15,8 @@
       justify-content: space-between
       height: var(--card-height)
       border: 1px solid black
+      &_red
+        border: 2px solid #FF0000
   &__word-card
     flex-grow: 1
     display: flex
@@ -35,6 +26,10 @@
     background-color: #e7e7e7
     font-size: var(--card-fond-size)
     font-weight: bold
+    &_red
+      border-left: 2px solid #FF0000
+    &_red-end
+      border-right: 2px solid #FF0000
     @extend %unselectable
     visibility: hidden
     &_complete
@@ -64,9 +59,11 @@
   justify-content: space-between
   padding: 2px 0
   background-color: green
-  border: 1px solid black
+  border: 2px solid black
+  &_red
+    border: 2px solid #FF0000
   &__card
-    height: var(--card-height)
+    height: calc(var(--card-height) - 2px)
     border: 1px solid black
     cursor: pointer
     display: flex

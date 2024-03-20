@@ -60,7 +60,7 @@ export default function reducer(stateData: State, action: Action): State {
     }
     case ActionID.MoveSorceCard: {
       const cardsInCurrentRezultRow: number[] = state.appData.cardsInCurrentRezultRow.slice(0);
-      cardsInCurrentRezultRow.push(+action.cardNumber);
+      cardsInCurrentRezultRow.push(action.cardNumber);
 
       const cardsSourceInRow: number[] = state.appData.cardsSourceInRow.slice(0);
       const elemNumb = cardsSourceInRow.indexOf(+action.cardNumber);
@@ -89,6 +89,28 @@ export default function reducer(stateData: State, action: Action): State {
         haveFeedbackWordOrder: false,
       };
       return state;
+    }
+    case ActionID.replaceRezultCard: {
+      const { startPosMoveCard, posCardAfterEndPosMoveCard } = action;
+      const { cardsInCurrentRezultRow } = state.appData;
+      const rezultRowArr = cardsInCurrentRezultRow.slice(0);
+      const moveCardNumber: number = cardsInCurrentRezultRow[startPosMoveCard];
+
+      rezultRowArr.splice(startPosMoveCard, 1);
+      if (posCardAfterEndPosMoveCard === cardsInCurrentRezultRow.length) {
+        rezultRowArr.push(moveCardNumber);
+      } else {
+        const cardNumberAfterEndPosMoveCard = cardsInCurrentRezultRow[posCardAfterEndPosMoveCard];
+        const posCardAfterMoveCard = rezultRowArr.indexOf(cardNumberAfterEndPosMoveCard);
+        rezultRowArr.splice(posCardAfterMoveCard, 0, moveCardNumber);
+      }
+
+      state.appData = {
+        ...state.appData,
+        cardsInCurrentRezultRow: rezultRowArr,
+        haveFeedbackWordOrder: false,
+      };
+      return reducer(state, { type: ActionID.CheckCorrectlySentence });
     }
     case ActionID.autoCompleteSentence: {
       const { etalonRezultMatrix, currentSentenceNumber } = state.appData;

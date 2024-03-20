@@ -39,7 +39,76 @@ export interface Store {
   dispatch: (action: Action) => void;
 }
 
-export interface Action {
-  type: ActionID;
-  [key: string]: string;
-}
+type ActionAppInit = {
+  type: typeof ActionID.AppInit;
+};
+
+type ActionSetUser = {
+  type: typeof ActionID.SetUser;
+  firstName: string;
+  lastName: string;
+};
+
+type ActionLogOff = {
+  type: typeof ActionID.LogOff;
+};
+
+type ActionSetPage = {
+  type: typeof ActionID.SetPage;
+  page: Page;
+};
+
+type ActionStartGame = {
+  type: typeof ActionID.StartGame;
+};
+
+type ActionMoveSorceCard = {
+  type: typeof ActionID.MoveSorceCard;
+  cardNumber: number;
+};
+
+type ActionMoveRezultCard = {
+  type: typeof ActionID.MoveRezultCard;
+  cardNumber: number;
+};
+
+type ActionCheckCorrectlySentence = {
+  type: typeof ActionID.CheckCorrectlySentence;
+};
+
+type ActionautoCompleteSentence = {
+  type: typeof ActionID.autoCompleteSentence;
+};
+
+type ActionCheckCorrectlyWords = {
+  type: typeof ActionID.CheckCorrectlyWords;
+};
+
+type ActionNextSentence = {
+  type: typeof ActionID.NextSentence;
+};
+
+type ActionNextRound = {
+  type: typeof ActionID.NextRound;
+};
+
+type ActionReplaceRezultCard = {
+  type: typeof ActionID.replaceRezultCard;
+  startPosMoveCard: number;
+  posCardAfterEndPosMoveCard: number;
+};
+
+export type Action =
+  | ActionAppInit
+  | ActionSetUser
+  | ActionLogOff
+  | ActionSetPage
+  | ActionStartGame
+  | ActionMoveSorceCard
+  | ActionMoveRezultCard
+  | ActionCheckCorrectlySentence
+  | ActionautoCompleteSentence
+  | ActionCheckCorrectlyWords
+  | ActionNextSentence
+  | ActionNextRound
+  | ActionReplaceRezultCard;

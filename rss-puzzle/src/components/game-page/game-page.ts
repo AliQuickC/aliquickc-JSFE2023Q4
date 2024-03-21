@@ -20,7 +20,6 @@ export default class GamePage extends BaseComponent {
 
   public destroy(): void {}
 
-  // eslint-disable-next-line max-lines-per-function
   private cardMousedownHandler = (event: MouseEvent | TouchEvent): void => {
     if (event.target && (event.target as HTMLElement).closest('[data-type="sourceCard"]')) {
       let shiftX: number;
@@ -71,7 +70,6 @@ export default class GamePage extends BaseComponent {
         };
       };
 
-      /* eslint-disable max-lines-per-function */
       const onMouseUp = (elem: HTMLElement, elemClone: HTMLElement) => {
         return (): void => {
           document.removeEventListener('mousemove', onMouseMoveHandler);
@@ -291,8 +289,7 @@ export default class GamePage extends BaseComponent {
         };
       };
 
-      // eslint-disable-next-line no-inner-declarations
-      function getCardNumberAfterInsert(moveCardCoord: number, cardCoordArray: number[]): number {
+      const getCardNumberAfterInsert = function (moveCardCoord: number, cardCoordArray: number[]): number {
         if (moveCardCoord < cardCoordArray[0]) {
           return 0;
         }
@@ -303,9 +300,8 @@ export default class GamePage extends BaseComponent {
           }
         }
         return 0;
-      }
+      };
 
-      /* eslint-disable max-lines-per-function */
       const onMouseUp = (elem: HTMLElement, elemClone: HTMLElement) => {
         return (): void => {
           document.removeEventListener('mousemove', onMouseMoveHandler);

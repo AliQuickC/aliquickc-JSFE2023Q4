@@ -14,10 +14,8 @@ const isDev = !isProd;
 // в зависимости от режима сборки, добавляет/удаляет хэш к имени файла
 const filename = (ext) => (isDev ? `bundle.${ext}` : `bundle.[hash].${ext}`);
 
-/* eslint-disable no-console */
 console.log('IS PROD', isProd);
 console.log('IS DEV', isDev);
-/* eslint-enable no-console */
 
 const devServer = (mode) =>
   !mode

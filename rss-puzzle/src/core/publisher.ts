@@ -5,7 +5,6 @@ export default abstract class Publisher {
     this.listeners = new Object() as { [key: string]: ((event: object) => void)[] };
   }
 
-  /* eslint-disable-next-line no-underscore-dangle */
   protected _triggerEvent(eventName: string, event: object = {}): void {
     // если массив eventName, внутри объекта listeners, существует
     if (this.listeners) {

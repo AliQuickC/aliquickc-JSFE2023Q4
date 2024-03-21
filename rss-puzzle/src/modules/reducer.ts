@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { Action, CardsData, State } from '../types/redux-type';
 import { ActionID, Page } from '../types/enum';
 import { shuffle } from '../core/utils';

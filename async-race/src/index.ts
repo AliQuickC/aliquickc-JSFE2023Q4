@@ -3,24 +3,22 @@ import App from './components/app/app';
 import reducer from './modules/reducer';
 import createStore from './redux/store';
 import { getCars, getWinners } from './modules/api';
-import { DEFAULT_FIRST_CARS_PAGE, DEFAULT_FIRST_WINNERS_PAGE } from './modules/constant';
-
-const initialState = {};
-
-const store = createStore(reducer, initialState);
+import { DEFAULT_FIRST_CARS_PAGE, DEFAULT_FIRST_WINNERS_PAGE, defaultState } from './modules/constant';
 
 (async function (): Promise<void> {
   {
     const { items, count } = await getCars(DEFAULT_FIRST_CARS_PAGE);
-    console.log('items: ', items);
-    console.log('count: ', count);
+    defaultState.cars = items;
+    defaultState.carCount = count;
   }
 
   {
     const { items, count } = await getWinners(DEFAULT_FIRST_WINNERS_PAGE);
-    console.log('items: ', items);
-    console.log('count: ', count);
+    defaultState.winners = items;
+    defaultState.winnerCount = count;
   }
+
+  const store = createStore(reducer, JSON.parse(JSON.stringify(defaultState)));
 
   const app = new App(store);
   app.render();

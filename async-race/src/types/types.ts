@@ -1,8 +1,20 @@
 export type emptyObject = Record<string, never>;
 
 export enum Page {
-  garage = 'garage',
-  winners = 'winners',
+  Garage = 'garage',
+  Winners = 'winners',
+}
+
+export enum Sort {
+  id = 'id',
+  wins = 'wins',
+  time = 'time',
+  none = 'none',
+}
+
+export enum Order {
+  asc = 'ASC',
+  desc = 'DESC',
 }
 
 export interface CarParams {
@@ -28,15 +40,3 @@ export interface WinnerFull extends Winner {
 
 export type EngineStatus = { velocity: number; distance: number };
 export type DriveStatus = { success: boolean };
-
-export enum Sort {
-  id = 'id',
-  wins = 'wins',
-  time = 'time',
-  none = 'none',
-}
-
-export enum Order {
-  asc = 'ASC',
-  desc = 'DESC',
-}

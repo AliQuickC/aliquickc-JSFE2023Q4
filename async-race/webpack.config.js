@@ -25,7 +25,7 @@ const devServer = (mode) =>
           open: true,
           hot: true,
           liveReload: true,
-          port: 3000,
+          port: 3001,
           static: ['./src', './public'],
         },
       };

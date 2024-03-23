@@ -1,0 +1,29 @@
+%unselectable
+  -webkit-touch-callout: none
+  -webkit-user-select: none
+  -khtml-user-select: none
+  -moz-user-select: none
+  -ms-user-select: none
+  -o-user-select: none
+  user-select: none
+
+%puzzle-button
+  padding: 4px 20px
+  border-radius: 5px
+  font-size: 18px
+  background-color: var(--button-bg)
+
+button
+  outline: none
+  cursor: pointer
+  @extend %unselectable
+  &:disabled
+    cursor: default
+
+.container
+  width: 1140px
+  margin: 0 auto
+
+@media(max-width: 1180px)
+  .container
+    width: auto

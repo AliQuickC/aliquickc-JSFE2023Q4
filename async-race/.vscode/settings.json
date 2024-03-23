@@ -1,0 +1,8 @@
+{
+  // disables automatic formatting
+  // if the .prettierrc configuration file is missing
+  "prettier.requireConfig": true,
+  "prettier.singleQuote": true,
+  // when formatting, replace tab with spaces
+  "prettier.useTabs": false
+}

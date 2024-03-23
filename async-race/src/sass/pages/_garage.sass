@@ -1,0 +1,132 @@
+.car
+  --car-icon-width: 60px
+  &-managment
+    margin-bottom: 8px
+
+.car-managment, .race-managment
+  width: fit-content
+  padding: 7px
+
+.garage
+  &__title
+    margin: 10px 0
+  &__page-title
+    margin: 0
+  &__winner-info
+    position: absolute
+    top: 50%
+    left: 50%
+    min-width: 70%
+    padding: 10px
+    text-align: center
+    transform: translate(-50%, -50%)
+    font-size: 36px
+    color: red
+    background-color: rgba(0,0,0,0.5)
+    border-radius: 10px
+    z-index: 2
+  &__winner-info.hide
+    display: none
+
+.car-create, .car-update
+  display: flex
+  align-items: center
+  column-gap: 10px
+  margin-bottom: 5px
+  & input[type="color"]
+    height: 22px
+
+.car-create, .car-update
+  & input[type="text"]
+    width: 120px
+
+.create-btn, .update-btn
+  background-color: #E0ECFC
+  border-radius: 5px
+
+.generate-cars-btn
+  background-color: #E0ECFC
+  border-radius: 5px
+  width: fit-content
+
+.race-btn, .reset-btn
+  background-color: #E1F8B2
+  border-radius: 5px
+
+.garage__cars-page
+  position: relative
+  margin-bottom: 30px
+
+.car
+  position: relative
+  border-bottom: 2px dashed #fff
+  padding-top: 10px
+  &__edit
+    display: flex
+    align-items: center
+    column-gap: 10px
+    height: fit-content
+  &__name
+    margin: 0
+  &__icon
+    width: var(--car-icon-width)
+    height: 25px
+  &__icon svg
+    width: 60px
+    height: 30px
+  &__icon-garage
+    position: absolute
+    bottom: 0
+    right: calc(100% - 60px - var(--car-icon-width))
+
+.select-btn, .remove-btn
+  background-color: #E0ECFC
+  border-radius: 5px
+
+.car__race
+  &-buttons
+    padding: 5px 0
+
+  &-start-btn, &-stop-btn
+    border-radius: 5px
+    width: 25px
+    height: 25px
+    border: none
+
+  &-start-btn
+    background: url("../assets/svg/start.svg") no-repeat center center
+    background-size: cover
+
+  &-start-btn:disabled
+    background: url("../assets/svg/start-dis.svg") no-repeat center center
+    background-size: cover
+
+  &-stop-btn
+    background: url("../assets/svg/stop.svg") no-repeat center center
+    background-size: cover
+    margin-left: -2px
+
+  &-stop-btn:disabled
+    background: url("../assets/svg/stop-dis.svg") no-repeat center center
+  &-flag
+    position: absolute
+    bottom: 0
+    right: 60px
+    display: block
+    width: 32px
+    height: 32px
+    background: url("../assets/svg/flag.svg") no-repeat center center
+    background-size: cover
+
+.prev-page-btn, .next-page-btn
+  background-color: #E1F8B2
+  border-radius: 5px
+
+@media (max-width: 768px)
+  .car-race__buttons
+    padding-bottom: 25px
+  .car__icon
+    right: calc(100% - 5px - var(--car-icon-width))
+  .garage__winner-info
+    font-size: 24px
+    width: 100%

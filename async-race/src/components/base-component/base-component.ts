@@ -1,11 +1,14 @@
+import { Store } from '../../types/redux-type';
 import Publisher from './publisher';
 
 export default abstract class BaseComponent extends Publisher {
   protected container: HTMLElement;
+  public store: Store;
 
-  constructor(tagName: keyof HTMLElementTagNameMap, className: string) {
+  constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
     super();
     this.container = document.createElement(tagName);
+    this.store = props;
     this.container.className = className;
   }
 

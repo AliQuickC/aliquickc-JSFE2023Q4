@@ -4,10 +4,6 @@ export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
 export type Unsubscribe = { unsubscribe: () => void };
 
-export type Action = {
-  type: string;
-};
-
 export interface State {
   carsPage: number;
   carsLimit: number;
@@ -28,4 +24,15 @@ export interface Store {
   subscribe: (fn: Listiner) => Unsubscribe;
   getState: () => State;
   dispatch: (action: Action) => void;
+}
+
+type ActionSetPage = {
+  type: typeof ActionID.SetPage;
+  page: Page;
+};
+
+export type Action = ActionSetPage;
+
+export enum ActionID {
+  SetPage = 'SET-PAGE',
 }

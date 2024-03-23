@@ -1,0 +1,40 @@
+body
+  background-color: grey
+
+.app
+  width: 100%
+  height: 100%
+
+.container
+  max-width: 1880px
+  margin: 0 auto
+
+.tab-buttons
+  padding: 10px 10px 0 10px
+  border-bottom: 1px solid white
+
+.tab-button
+  background-color: #E1F8B2
+  border-radius: 5px 5px 0 0
+  border-bottom: 0
+  width: 80px
+  height: 25px
+  padding-top: 5.5px
+  padding-bottom: 5.5px
+  &:first-child
+    margin-right: -6px
+  &.active
+    font-weight: 800
+    padding-top: 0px
+    padding-bottom: 0px
+    height: 26px
+.app-page
+  padding-top: 20px
+  padding-bottom: 20px
+
+@media (max-width: 1920px)
+  .container
+    max-width: auto
+    padding-left: 20px
+    padding-right: 20px
+    min-width: 320px

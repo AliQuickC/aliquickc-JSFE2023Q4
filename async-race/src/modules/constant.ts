@@ -3,14 +3,15 @@ import { Car, Order, Page, Sort, WinnerFull } from '../types/types';
 
 export const MAX_CARS_ON_PAGE = 7;
 export const DEFAULT_WINNERS_ON_PAGE = 10;
-export const DEFAULT_FIRST_CARS_PAGE = 1;
-export const DEFAULT_FIRST_WINNERS_PAGE = 1;
+export const FIRST_CARS_PAGE = 1;
+export const FIRST_WINNERS_PAGE = 1;
+const DEFAULT_CAR_COUNT = 0;
 
 export const defaultState: State = {
-  carsPage: DEFAULT_FIRST_CARS_PAGE,
+  carsPage: FIRST_CARS_PAGE,
   carsLimit: MAX_CARS_ON_PAGE,
   cars: [] as Car[],
-  carCount: 0,
+  carCount: DEFAULT_CAR_COUNT,
   selectCarId: 0,
   winnersPage: 1,
   winnersLimit: 10,

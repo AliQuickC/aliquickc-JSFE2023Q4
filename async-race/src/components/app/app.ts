@@ -1,8 +1,13 @@
-import { Store } from '../../types/redux-type';
+import { ActionID, Store } from '../../types/redux-type';
+import { Page } from '../../types/types';
+import GaragePage from '../garage-page/garage-page';
+import WinnersPage from '../winners-page/winners-page';
 
 export default class App {
   private container: HTMLBodyElement;
   public store: Store;
+  private garage!: GaragePage;
+  private winners!: WinnersPage;
 
   constructor(props: Store) {
     this.container = document.body as HTMLBodyElement;
@@ -10,16 +15,63 @@ export default class App {
     this.init();
   }
 
-  public init(): void {}
+  private init(): void {
+    this.container.innerHTML = this.toHTML();
+    this.addEvents();
+    this.store.subscribe(this.render);
+  }
+
+  private addEvents(): void {
+    const garageBtn = document.getElementById('garage-btn') as HTMLElement;
+    const winnersBtn = document.getElementById('winners-btn') as HTMLElement;
+
+    garageBtn.addEventListener('click', () => {
+      garageBtn.classList.add('active');
+      winnersBtn.classList.remove('active');
+      this.store.dispatch({ type: ActionID.SetPage, page: Page.Garage });
+    });
+    winnersBtn.addEventListener('click', () => {
+      garageBtn.classList.remove('active');
+      winnersBtn.classList.add('active');
+      this.store.dispatch({ type: ActionID.SetPage, page: Page.Winners });
+    });
+  }
 
   public destroy(): void {}
 
   private toHTML(): string {
-    return '<h1>Race</h1>';
+    return `<div class="app" id="app">
+    <div class="container">
+      <div class="tab-buttons select_none">
+        <button class="tab-button garage-btn active" id="garage-btn">Garage</button>
+        <button class="tab-button winners-btn" id="winners-btn">Winners</button>
+      </div>
+      <div class="app-page" id="app-page">
+      </div>
+    </div>
+  </div>`;
   }
 
   public render = (): HTMLElement => {
-    this.container.innerHTML = this.toHTML();
+    const { viewPage } = this.store.getState();
+
+    if (this.garage) {
+      this.garage.destroy();
+    }
+    if (this.winners) {
+      this.winners.destroy();
+    }
+
+    const appPage = this.container.querySelector('#app-page') as HTMLElement;
+    appPage.innerHTML = '';
+
+    if (viewPage === Page.Garage) {
+      this.garage = new GaragePage(this.store, 'section', 'garage');
+      appPage.append(this.garage.render());
+    } else if (viewPage === Page.Winners) {
+      this.winners = new WinnersPage(this.store, 'section', 'winners');
+      appPage.append(this.winners.render());
+    }
 
     return this.container;
   };

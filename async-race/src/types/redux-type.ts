@@ -31,8 +31,15 @@ type ActionSetPage = {
   page: Page;
 };
 
-export type Action = ActionSetPage;
+type ActionSetCars = {
+  type: typeof ActionID.SetCars;
+  cars: Car[];
+  carsCount: number;
+};
+
+export type Action = ActionSetPage | ActionSetCars;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
+  SetCars = 'SET-CARS',
 }

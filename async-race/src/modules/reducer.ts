@@ -8,6 +8,11 @@ export default function reducer(stateData: State, action: Action): State {
       state.viewPage = action.page;
       return state;
     }
+    case ActionID.SetCars: {
+      state.cars = action.cars;
+      state.carCount = action.carsCount;
+      return state;
+    }
     default:
       return state;
   }

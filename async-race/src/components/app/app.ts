@@ -18,7 +18,7 @@ export default class App {
   private init(): void {
     this.container.innerHTML = this.toHTML();
     this.addEvents();
-    this.store.subscribe(this.render);
+    // this.store.subscribe(this.render);
   }
 
   private addEvents(): void {
@@ -29,11 +29,13 @@ export default class App {
       garageBtn.classList.add('active');
       winnersBtn.classList.remove('active');
       this.store.dispatch({ type: ActionID.SetPage, page: Page.Garage });
+      this.render();
     });
     winnersBtn.addEventListener('click', () => {
       garageBtn.classList.remove('active');
       winnersBtn.classList.add('active');
       this.store.dispatch({ type: ActionID.SetPage, page: Page.Winners });
+      this.render();
     });
   }
 

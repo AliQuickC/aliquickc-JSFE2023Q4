@@ -1,4 +1,4 @@
-import { Car, Order, Page, Sort, WinnerFull } from './types';
+import { Car, CarParams, Order, Page, Sort, WinnerFull } from './types';
 
 export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
@@ -18,6 +18,8 @@ export interface State {
   sortOrder: Order;
   selectCar: number | null;
   viewPage: Page;
+  carCreateData: CarParams;
+  carEditData: CarParams;
 }
 
 export interface Store {
@@ -37,9 +39,23 @@ type ActionSetCars = {
   carsCount: number;
 };
 
-export type Action = ActionSetPage | ActionSetCars;
+type ActionInputCreateName = {
+  type: typeof ActionID.InputCreateName;
+  value: string;
+};
+
+type ActionInputCreateColor = {
+  type: typeof ActionID.InputCreateColor;
+  value: string;
+};
+
+export type Action = ActionSetPage | ActionSetCars | ActionInputCreateName | ActionInputCreateColor;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
   SetCars = 'SET-CARS',
+  InputCreateName = 'INPUT-CREATE-NAME',
+  InputCreateColor = 'INPUT-CREATE-COLOR',
+  InputEditName = 'INPUT-EDIT-NAME',
+  InputEditColor = 'INPUT-EDIT-COLOR',
 }

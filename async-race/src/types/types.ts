@@ -40,3 +40,24 @@ export interface WinnerFull extends Winner {
 
 export type EngineStatus = { velocity: number; distance: number };
 export type DriveStatus = { success: boolean };
+
+export enum GarageButtons {
+  create = 'create-btn',
+  update = 'update-btn',
+  generateCars = 'generate-cars',
+  raceBtn = 'race-btn',
+  resetBtn = 'reset-btn',
+  select = 'select-btn',
+  remove = 'remove-btn',
+  start = 'start-btn',
+  stop = 'stop-btn',
+  prev = 'prev-page-btn',
+  next = 'next-page-btn',
+}
+
+export enum GarageInput {
+  CreateName = 'create-name',
+  CreateColor = 'create-color',
+  EditName = 'edit-name',
+  EditColor = 'edit-color',
+}

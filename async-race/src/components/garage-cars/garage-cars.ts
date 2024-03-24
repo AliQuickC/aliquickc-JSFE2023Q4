@@ -38,7 +38,7 @@ export default class GarageCars extends BaseComponent {
   </div>`;
   }
 
-  private renderCarsList = async (pageNumber: number): Promise<void> => {
+  public renderCarsList = async (pageNumber: number): Promise<void> => {
     const { items, count } = await getCars(pageNumber);
 
     this.store.dispatch({ type: ActionID.SetCars, cars: items, carsCount: count });

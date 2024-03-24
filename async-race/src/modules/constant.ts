@@ -21,4 +21,6 @@ export const defaultState: State = {
   sortOrder: Order.asc,
   selectCar: null,
   viewPage: Page.Garage,
+  carCreateData: { name: '', color: '#000000' },
+  carEditData: { name: '', color: '#000000' },
 };

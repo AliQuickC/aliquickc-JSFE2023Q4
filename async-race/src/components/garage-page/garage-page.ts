@@ -1,4 +1,4 @@
-import { createCar } from '../../modules/api';
+import { createCar, deleteCar } from '../../modules/api';
 import { ActionID, Store } from '../../types/redux-type';
 import { GarageButtons, GarageInput } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
@@ -37,32 +37,44 @@ export default class GaragePage extends BaseComponent {
       }
     };
 
-    this.container.onclick = (event: Event): void => {
-      if (!event.target || !(event.target as HTMLElement).hasAttribute('data-btn-name')) {
-        return;
-      }
-
-      const elementName = (event.target as HTMLElement).dataset.btnName;
-      switch (elementName) {
-        case GarageButtons.create: {
-          const { carCreateData } = this.store.getState();
-          if (carCreateData.name.length !== 0) {
-            this.createNewCar();
-            this.store.dispatch({ type: ActionID.InputCreateName, value: '' });
-            this.render();
-          }
-          break;
-        }
-        default:
-          break;
-      }
-    };
+    this.container.onclick = this.clickHandler;
   }
 
-  private createNewCar = async (): Promise<void> => {
-    const { carCreateData, carsPage } = this.store.getState();
+  private clickHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-btn-name')) {
+      return;
+    }
+
+    const elementName = (event.target as HTMLElement).dataset.btnName;
+    switch (elementName) {
+      case GarageButtons.create: {
+        const { carCreateData } = this.store.getState();
+        if (carCreateData.name.length !== 0) {
+          this.createNewCarInGarage();
+          this.store.dispatch({ type: ActionID.InputCreateName, value: '' });
+        }
+        break;
+      }
+      case GarageButtons.remove: {
+        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
+        const carId: number = +(carElement.getAttribute('data-car-id') as string);
+        this.deleteCarInGarage(carId);
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  private deleteCarInGarage = async (id: number): Promise<void> => {
+    await deleteCar(id);
+    this.render();
+  };
+
+  private createNewCarInGarage = async (): Promise<void> => {
+    const { carCreateData } = this.store.getState();
     await createCar(carCreateData);
-    this.garageCars?.renderCarsList(carsPage);
+    this.render();
   };
 
   public destroy(): void {

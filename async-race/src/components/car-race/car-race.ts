@@ -9,7 +9,7 @@ export default class CarRace extends BaseComponent {
   constructor(props: { store: Store; car: Car }, tagName: keyof HTMLElementTagNameMap = 'div', className: string) {
     super(props.store, tagName, className);
     this.car = props.car;
-    this.container.setAttribute('data-id', this.car.id.toString());
+    this.container.setAttribute('data-car-id', this.car.id.toString());
   }
 
   private init(): void {}

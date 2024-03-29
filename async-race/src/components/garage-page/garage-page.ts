@@ -1,6 +1,6 @@
-import { createCar, deleteCar } from '../../modules/api';
+import { createCar, deleteCar, updateCar } from '../../modules/api';
 import { ActionID, Store } from '../../types/redux-type';
-import { GarageButtons, GarageInput } from '../../types/types';
+import { CarParams, GarageButtons, GarageInput } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 import GarageCars from '../garage-cars/garage-cars';
 import carManagementLayout from './car-management';
@@ -32,6 +32,14 @@ export default class GaragePage extends BaseComponent {
           this.store.dispatch({ type: ActionID.InputCreateColor, value: element.value });
           break;
         }
+        case GarageInput.EditName: {
+          this.store.dispatch({ type: ActionID.InputEditName, value: element.value });
+          break;
+        }
+        case GarageInput.EditColor: {
+          this.store.dispatch({ type: ActionID.InputEditColor, value: element.value });
+          break;
+        }
         default:
           break;
       }
@@ -47,7 +55,7 @@ export default class GaragePage extends BaseComponent {
 
     const elementName = (event.target as HTMLElement).dataset.btnName;
     switch (elementName) {
-      case GarageButtons.create: {
+      case GarageButtons.Create: {
         const { carCreateData } = this.store.getState();
         if (carCreateData.name.length !== 0) {
           this.createNewCarInGarage();
@@ -55,15 +63,41 @@ export default class GaragePage extends BaseComponent {
         }
         break;
       }
-      case GarageButtons.remove: {
+      case GarageButtons.Remove: {
         const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
         const carId: number = +(carElement.getAttribute('data-car-id') as string);
         this.deleteCarInGarage(carId);
         break;
       }
+      case GarageButtons.Select: {
+        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
+        const carId: number = +(carElement.getAttribute('data-car-id') as string);
+        const { cars } = this.store.getState();
+        const selectCarNumber: number = cars.findIndex((item) => item.id === carId);
+
+        this.store.dispatch({ type: ActionID.SelectCar, selectCarNumber });
+        this.render();
+        break;
+      }
+      case GarageButtons.Update: {
+        const { selectCarNumber } = this.store.getState();
+        if (selectCarNumber === null) {
+          return;
+        }
+        const carId: number = this.store.getState().cars[selectCarNumber].id;
+        const { carEditData } = this.store.getState();
+        this.updateCarInGarage(carId, carEditData);
+        this.render();
+        break;
+      }
       default:
         break;
     }
+  };
+
+  private updateCarInGarage = async (id: number, body: CarParams): Promise<void> => {
+    await updateCar(id, body);
+    this.render();
   };
 
   private deleteCarInGarage = async (id: number): Promise<void> => {
@@ -84,8 +118,10 @@ export default class GaragePage extends BaseComponent {
 
   private toHTML(): string {
     const { name, color } = this.store.getState().carCreateData;
+    const { selectCarNumber } = this.store.getState();
+    const selectCar: CarParams | null = selectCarNumber === null ? null : this.store.getState().carEditData;
     return `
-    ${carManagementLayout({ name, color })} ${raceManagment}
+    ${carManagementLayout({ name, color }, selectCar)} ${raceManagment}
     `;
   }
 

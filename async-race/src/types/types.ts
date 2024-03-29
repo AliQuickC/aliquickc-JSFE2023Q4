@@ -42,17 +42,17 @@ export type EngineStatus = { velocity: number; distance: number };
 export type DriveStatus = { success: boolean };
 
 export enum GarageButtons {
-  create = 'create-btn',
-  update = 'update-btn',
-  generateCars = 'generate-cars',
-  raceBtn = 'race-btn',
-  resetBtn = 'reset-btn',
-  select = 'select-btn',
-  remove = 'remove-btn',
-  start = 'start-btn',
-  stop = 'stop-btn',
-  prev = 'prev-page-btn',
-  next = 'next-page-btn',
+  Create = 'create-btn',
+  Update = 'update-btn',
+  GenerateCars = 'generate-cars',
+  RaceBtn = 'race-btn',
+  ResetBtn = 'reset-btn',
+  Select = 'select-btn',
+  Remove = 'remove-btn',
+  Start = 'start-btn',
+  Stop = 'stop-btn',
+  Prev = 'prev-page-btn',
+  Pext = 'next-page-btn',
 }
 
 export enum GarageInput {

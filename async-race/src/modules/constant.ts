@@ -19,7 +19,7 @@ export const defaultState: State = {
   winnerCount: 0,
   sortWinners: Sort.none,
   sortOrder: Order.asc,
-  selectCar: null,
+  selectCarNumber: null,
   viewPage: Page.Garage,
   carCreateData: { name: '', color: '#000000' },
   carEditData: { name: '', color: '#000000' },

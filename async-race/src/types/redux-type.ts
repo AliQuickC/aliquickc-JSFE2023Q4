@@ -16,7 +16,7 @@ export interface State {
   winnerCount: number;
   sortWinners: Sort;
   sortOrder: Order;
-  selectCar: number | null;
+  selectCarNumber: number | null;
   viewPage: Page;
   carCreateData: CarParams;
   carEditData: CarParams;
@@ -49,13 +49,36 @@ type ActionInputCreateColor = {
   value: string;
 };
 
-export type Action = ActionSetPage | ActionSetCars | ActionInputCreateName | ActionInputCreateColor;
+type ActionSelectCar = {
+  type: typeof ActionID.SelectCar;
+  selectCarNumber: number;
+};
+
+type ActionInputEditName = {
+  type: typeof ActionID.InputEditName;
+  value: string;
+};
+
+type ActionInputEditColor = {
+  type: typeof ActionID.InputEditColor;
+  value: string;
+};
+
+export type Action =
+  | ActionSetPage
+  | ActionSetCars
+  | ActionInputCreateName
+  | ActionInputCreateColor
+  | ActionSelectCar
+  | ActionInputEditName
+  | ActionInputEditColor;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
   SetCars = 'SET-CARS',
   InputCreateName = 'INPUT-CREATE-NAME',
   InputCreateColor = 'INPUT-CREATE-COLOR',
+  SelectCar = 'SELECT-CAR',
   InputEditName = 'INPUT-EDIT-NAME',
   InputEditColor = 'INPUT-EDIT-COLOR',
 }

@@ -1,4 +1,6 @@
-import { createCar, deleteCar, updateCar } from '../../modules/api';
+import { createCar, deleteCar, getCars, updateCar } from '../../modules/api';
+import { FIRST_CARS_PAGE } from '../../modules/constant';
+import { getRandomCarName, getRandomColor } from '../../modules/utils';
 import { ActionID, Store } from '../../types/redux-type';
 import { CarParams, GarageButtons, GarageInput } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
@@ -87,12 +89,27 @@ export default class GaragePage extends BaseComponent {
         const carId: number = this.store.getState().cars[selectCarNumber].id;
         const { carEditData } = this.store.getState();
         this.updateCarInGarage(carId, carEditData);
-        this.render();
+        break;
+      }
+      case GarageButtons.GenerateCars: {
+        this.generateCars();
         break;
       }
       default:
         break;
     }
+  };
+
+  private generateCars = async (): Promise<void> => {
+    const createCarArray = new Array(100)
+      .fill('undefined')
+      .map(() => createCar({ name: getRandomCarName(), color: getRandomColor() }));
+    await Promise.all(createCarArray);
+
+    const { items, count } = await getCars(FIRST_CARS_PAGE);
+    this.store.dispatch({ type: ActionID.SetCars, cars: items, carsCount: count });
+
+    this.render();
   };
 
   private updateCarInGarage = async (id: number, body: CarParams): Promise<void> => {

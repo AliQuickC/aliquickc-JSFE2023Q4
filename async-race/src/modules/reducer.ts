@@ -32,7 +32,13 @@ export default function reducer(stateData: State, action: Action): State {
     }
     case ActionID.DeleteCar: {
       state.selectCarNumber = null;
-      const newAction: ActionSetCars = { ...action, type: ActionID.SetCars };
+      const carsPage = action.carsPage;
+
+      const winnerCount = action.winnerCount;
+      const winnersPage = action.newWinnersPage;
+      state = { ...stateData, winnerCount, winnersPage };
+
+      const newAction: ActionSetCars = { ...action, carsPage, type: ActionID.SetCars };
       return reducer(state, newAction);
     }
     case ActionID.ChangeCarsPage: {

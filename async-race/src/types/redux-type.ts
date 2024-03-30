@@ -69,6 +69,8 @@ type ActionDeleteCar = {
   carCount: number;
   carsPage: number;
   carInputData: CarInputData;
+  newWinnersPage: number;
+  winnerCount: number;
 };
 
 export type Action =

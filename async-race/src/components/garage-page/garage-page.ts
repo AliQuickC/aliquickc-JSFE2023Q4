@@ -1,5 +1,5 @@
-import { createCar, deleteCar, getCars, updateCar } from '../../modules/api';
-import { FIRST_CARS_PAGE } from '../../modules/constant';
+import { createCar, deleteCar, deleteWinner, getCars, getWinners, updateCar } from '../../modules/api';
+import { FIRST_CARS_PAGE, FIRST_WINNERS_PAGE } from '../../modules/constant';
 import { getRandomCarName, getRandomColor } from '../../modules/utils';
 import { ActionID, Store } from '../../types/redux-type';
 import { CarInputData, GarageButtons, GarageInput } from '../../types/types';
@@ -160,15 +160,38 @@ export default class GaragePage extends BaseComponent {
 
   private deleteCarInGarage = async (id: number): Promise<void> => {
     await deleteCar(id);
+    await deleteWinner(id);
+
     const { carsPage, carsLimit } = this.store.getState();
     const { items, count } = await getCars(carsPage);
-    const carsPages = Math.ceil(count / carsLimit);
+    const carsPages: number = Math.ceil(count / carsLimit);
+    let newCarPage: number;
     if (carsPages < carsPage && carsPages >= FIRST_CARS_PAGE) {
-      this.changeCarsPageInGarage(carsPages);
-      return;
+      newCarPage = carsPages;
+    } else {
+      newCarPage = carsPage;
     }
+
+    let newWinnersPage: number;
+    const { winnerCount, winnersLimit, winnersPage } = this.store.getState();
+    if ((winnerCount - 1) / winnersLimit < winnersPage) {
+      newWinnersPage = winnersPage === 1 ? 1 : winnersPage - 1;
+    } else {
+      newWinnersPage = winnersPage;
+    }
+
+    const newWinnerCount: number = (await getWinners(FIRST_WINNERS_PAGE)).count;
+
     const carInputData = this.getCarInputData();
-    this.store.dispatch({ type: ActionID.DeleteCar, cars: items, carCount: count, carsPage: carsPage, carInputData });
+    this.store.dispatch({
+      type: ActionID.DeleteCar,
+      cars: items,
+      carCount: count,
+      carInputData,
+      carsPage: newCarPage,
+      winnerCount: newWinnerCount,
+      newWinnersPage,
+    });
   };
 
   private createNewCarInGarage = async (): Promise<void> => {

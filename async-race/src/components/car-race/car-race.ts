@@ -1,11 +1,18 @@
+import { drive, startEngine, stopEngine } from '../../modules/api';
 import { ActionID, Store } from '../../types/redux-type';
-import { Car, GarageButtons } from '../../types/types';
+import { Car, DriveStatus, EngineStatus, GarageButtons } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 import getSvgCar from './car-icon';
 
 export default class CarRace extends BaseComponent {
   private car!: Car;
+  private carId: number;
   private deleteCarInGarage: (id: number) => Promise<void>;
+  private idReqAnim!: number | null;
+  private onePercentDistance!: number;
+  private countTime!: number;
+  private driveStartTime!: number;
+  private carIcon!: HTMLElement;
 
   constructor(
     props: { store: Store; car: Car; deleteCarInGarage: (id: number) => Promise<void> },
@@ -14,7 +21,8 @@ export default class CarRace extends BaseComponent {
   ) {
     super(props.store, tagName, className);
     this.car = props.car;
-    this.container.setAttribute('data-car-id', this.car.id.toString());
+    this.carId = this.car.id;
+    this.container.setAttribute('data-car-id', this.carId.toString());
     this.deleteCarInGarage = props.deleteCarInGarage;
 
     this.init();
@@ -30,32 +38,102 @@ export default class CarRace extends BaseComponent {
     }
 
     const elementBtnName = (event.target as HTMLElement).dataset.btnName;
+
     switch (elementBtnName) {
       case GarageButtons.Select: {
-        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
-        const carId: number = +(carElement.getAttribute('data-car-id') as string);
         const { cars } = this.store.getState();
-        const selectCarNumber: number = cars.findIndex((item) => item.id === carId);
+        const selectCarNumber: number = cars.findIndex((item) => item.id === this.carId);
 
         this.store.dispatch({ type: ActionID.SelectCar, selectCarNumber });
         break;
       }
       case GarageButtons.Remove: {
-        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
-        const carId: number = +(carElement.getAttribute('data-car-id') as string);
-        this.deleteCarInGarage(carId);
+        this.deleteCarInGarage(this.carId);
         break;
       }
       case GarageButtons.Start: {
+        this.startCar();
         break;
       }
       case GarageButtons.Stop: {
+        this.stopCar();
         break;
       }
       default:
         break;
     }
   };
+
+  private carAnimation = (): void => {
+    const currentTime: number = new Date().getTime();
+    const percentTimeAhead: number = 100 - (currentTime - this.driveStartTime) / (this.countTime / 100);
+    const positionRight: number = this.onePercentDistance * percentTimeAhead;
+    if (positionRight > 0) {
+      this.carIcon.style.right = positionRight + 'px';
+      this.idReqAnim = requestAnimationFrame(this.carAnimation);
+    }
+  };
+
+  async startCar(): Promise<number> {
+    const carElement = this.container;
+    this.carIcon = carElement.querySelector('.car__icon') as HTMLElement;
+    const startBtn = carElement.querySelector('.car__race-start-btn') as HTMLButtonElement;
+    const stopBtn: HTMLButtonElement = carElement.querySelector('.car__race-stop-btn') as HTMLButtonElement;
+    const selectBtn = carElement.querySelector('.select-btn') as HTMLButtonElement;
+    const removeBtn = carElement.querySelector('.remove-btn') as HTMLButtonElement;
+    const distanceInPixel: number = carElement.offsetWidth - this.carIcon.offsetWidth - this.carIcon.offsetLeft;
+
+    startBtn.disabled = true;
+    selectBtn.disabled = true;
+    removeBtn.disabled = true;
+
+    const timeCorrection = 0;
+
+    this.onePercentDistance = distanceInPixel / 100;
+    this.carIcon.style.right = `${distanceInPixel.toString()}px`;
+
+    const engineStat: EngineStatus = await startEngine(this.carId);
+    stopBtn.disabled = false;
+
+    this.countTime = engineStat.distance / engineStat.velocity + timeCorrection;
+
+    this.driveStartTime = new Date().getTime();
+    this.idReqAnim = requestAnimationFrame(this.carAnimation);
+
+    const driveStart: DriveStatus = await drive(this.carId);
+
+    cancelAnimationFrame(this.idReqAnim);
+
+    if (driveStart.success && this.idReqAnim) {
+      stopBtn.disabled = false;
+      this.carIcon.style.right = '0px';
+      return this.carId;
+    }
+
+    return this.carId;
+  }
+
+  async stopCar(): Promise<void> {
+    const carElement = this.container;
+    const carIcon = carElement.querySelector('.car__icon') as HTMLElement;
+    const selectBtn = carElement.querySelector('.select-btn') as HTMLButtonElement;
+    const removeBtn = carElement.querySelector('.remove-btn') as HTMLButtonElement;
+    const startBtn = carElement.querySelector('.car__race-start-btn') as HTMLButtonElement;
+    const stopBtn = carElement.querySelector('.car__race-stop-btn') as HTMLButtonElement;
+    stopBtn.disabled = true;
+    selectBtn.disabled = false;
+    removeBtn.disabled = false;
+
+    const carId: number = +(this.container.getAttribute('data-car-id') as string);
+
+    // const engineStopStatus: EngineStatus =
+    await stopEngine(carId);
+    cancelAnimationFrame(this.idReqAnim as number);
+    this.idReqAnim = null;
+    carIcon.style.right = '';
+
+    startBtn.disabled = false;
+  }
 
   private toHTML(): string {
     return `

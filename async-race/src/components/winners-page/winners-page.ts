@@ -1,16 +1,18 @@
+import { getWinners } from '../../modules/api';
 import { FIRST_WINNERS_PAGE } from '../../modules/constant';
-import { Store } from '../../types/redux-type';
+import { ActionID, Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
+import WinnerTable from '../winner-table/winner-table';
 
 export default class WinnersPage extends BaseComponent {
+  private winnerTable!: WinnerTable;
+
   constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
     super(props, tagName, className);
     this.init();
   }
 
   private init(): void {}
-
-  public destroy(): void {}
 
   private toHTML(): string {
     const state = this.store.getState();
@@ -32,8 +34,30 @@ export default class WinnersPage extends BaseComponent {
 `;
   }
 
+  private renderWinnerPage = async (pageNumber: number): Promise<void> => {
+    const { items, count } = await getWinners(pageNumber);
+
+    this.store.dispatch({ type: ActionID.SetWinnes, winners: items, winnerCount: count, winnersPage: pageNumber });
+  };
+
+  public checkWinnerChanges = async (pageNumber: number): Promise<void> => {
+    const { winnerCount, winnersPage } = this.store.getState();
+    const { count } = await getWinners(pageNumber);
+    if (count != winnerCount) {
+      this.renderWinnerPage(winnersPage);
+    }
+  };
+
   public render = (): HTMLElement => {
+    const { winnersPage } = this.store.getState();
+    this.checkWinnerChanges(winnersPage);
+
     this.container.innerHTML = this.toHTML();
+
+    const winnersTableElement = this.container.querySelector('#winners-table') as HTMLElement;
+
+    this.winnerTable = new WinnerTable(this.store, 'div', 'winners__table');
+    winnersTableElement.replaceWith(this.winnerTable.render());
 
     return this.container;
   };

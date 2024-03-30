@@ -1,3 +1,4 @@
+import { CarInputData, Page } from './../types/types';
 import { State, Action, ActionID } from '../types/redux-type';
 
 export default function reducer(stateData: State, action: Action): State {
@@ -5,6 +6,11 @@ export default function reducer(stateData: State, action: Action): State {
 
   switch (action.type) {
     case ActionID.SetPage: {
+      if (action.page != Page.Garage) {
+        const { inputCarCreateData, inputCarEditData } = action.carInputData as CarInputData;
+        state.carCreateData = inputCarCreateData;
+        state.carEditData = inputCarEditData;
+      }
       state.viewPage = action.page;
       return state;
     }
@@ -12,24 +18,27 @@ export default function reducer(stateData: State, action: Action): State {
       const cars = action.cars;
       const carCount = action.carCount;
       const carsPage = action.carsPage;
-      state = { ...state, cars, carCount, carsPage };
+      const { inputCarCreateData, inputCarEditData } = action.carInputData;
+      const carCreateData = {
+        name: inputCarCreateData.name,
+        color: inputCarCreateData.color,
+      };
+      const carEditData = {
+        name: inputCarEditData.name,
+        color: inputCarEditData.color,
+      };
+      state = { ...state, cars, carCount, carsPage, carCreateData, carEditData };
       return state;
     }
     case ActionID.ChangeCarsPage: {
       const cars = action.cars;
-      const carCount = action.carCount;
       const carsPage = action.carsPage;
-      state = { ...state, cars, carCount, carsPage, selectCarNumber: null };
+      const { name, color } = action.inputCarCreateData;
+      const carCreateData = { name, color };
+      state = { ...state, cars, carsPage, carCreateData, selectCarNumber: null };
       return state;
     }
-    case ActionID.InputCreateName: {
-      state.carCreateData.name = action.value;
-      return state;
-    }
-    case ActionID.InputCreateColor: {
-      state.carCreateData.color = action.value;
-      return state;
-    }
+
     case ActionID.SelectCar: {
       const selectCarNumber = action.selectCarNumber;
       const name = state.cars[selectCarNumber].name;
@@ -37,12 +46,13 @@ export default function reducer(stateData: State, action: Action): State {
       state = { ...state, selectCarNumber, carEditData: { name, color } };
       return state;
     }
-    case ActionID.InputEditName: {
-      state.carEditData.name = action.value;
+    case ActionID.ChangeCarInputData: {
+      state.carCreateData = { name: action.inputCarCreateData.name, color: action.inputCarCreateData.color };
+      state.carEditData = { name: action.inputCarEditData.name, color: action.inputCarEditData.color };
       return state;
     }
-    case ActionID.InputEditColor: {
-      state.carEditData.color = action.value;
+    case ActionID.CreateCar: {
+      state.carCreateData.name = '';
       return state;
     }
     default:

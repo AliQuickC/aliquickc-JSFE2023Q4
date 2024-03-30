@@ -1,4 +1,4 @@
-import { Car, CarParams, Order, Page, Sort, WinnerFull } from './types';
+import { Car, CarInputData, CarParams, Order, Page, Sort, WinnerFull } from './types';
 
 export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
@@ -9,7 +9,6 @@ export interface State {
   carsLimit: number;
   cars: Car[];
   carCount: number;
-  selectCarId: number;
   winnersPage: number;
   winnersLimit: number;
   winners: WinnerFull[];
@@ -31,6 +30,7 @@ export interface Store {
 type ActionSetPage = {
   type: typeof ActionID.SetPage;
   page: Page;
+  carInputData?: CarInputData;
 };
 
 type ActionSetCars = {
@@ -38,23 +38,20 @@ type ActionSetCars = {
   cars: Car[];
   carCount: number;
   carsPage: number;
+  carInputData: CarInputData;
 };
 
 type ActionChangeCarsPage = {
   type: typeof ActionID.ChangeCarsPage;
   cars: Car[];
-  carCount: number;
   carsPage: number;
+  inputCarCreateData: CarParams;
 };
 
-type ActionInputCreateName = {
-  type: typeof ActionID.InputCreateName;
-  value: string;
-};
-
-type ActionInputCreateColor = {
-  type: typeof ActionID.InputCreateColor;
-  value: string;
+type ActionChangeCarInputData = {
+  type: typeof ActionID.ChangeCarInputData;
+  inputCarCreateData: CarParams;
+  inputCarEditData: CarParams;
 };
 
 type ActionSelectCar = {
@@ -62,25 +59,17 @@ type ActionSelectCar = {
   selectCarNumber: number;
 };
 
-type ActionInputEditName = {
-  type: typeof ActionID.InputEditName;
-  value: string;
-};
-
-type ActionInputEditColor = {
-  type: typeof ActionID.InputEditColor;
-  value: string;
+type ActionCreateCar = {
+  type: typeof ActionID.CreateCar;
 };
 
 export type Action =
   | ActionSetPage
   | ActionSetCars
   | ActionChangeCarsPage
-  | ActionInputCreateName
-  | ActionInputCreateColor
   | ActionSelectCar
-  | ActionInputEditName
-  | ActionInputEditColor;
+  | ActionChangeCarInputData
+  | ActionCreateCar;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -91,4 +80,6 @@ export enum ActionID {
   SelectCar = 'SELECT-CAR',
   InputEditName = 'INPUT-EDIT-NAME',
   InputEditColor = 'INPUT-EDIT-COLOR',
+  ChangeCarInputData = 'CHANGE-CAR-INPUT-DATA',
+  CreateCar = 'CREATE-CAR',
 }

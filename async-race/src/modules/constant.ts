@@ -12,7 +12,6 @@ export const defaultState: State = {
   carsLimit: MAX_CARS_ON_PAGE,
   cars: [] as Car[],
   carCount: DEFAULT_CAR_COUNT,
-  selectCarId: 0,
   winnersPage: 1,
   winnersLimit: 10,
   winners: [] as WinnerFull[],

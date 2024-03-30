@@ -1,3 +1,4 @@
+import { CarInputData, CarParams } from './../../types/types';
 import { ActionID, Store } from '../../types/redux-type';
 import { Page } from '../../types/types';
 import GaragePage from '../garage-page/garage-page';
@@ -8,6 +9,8 @@ export default class App {
   public store: Store;
   private garage!: GaragePage;
   private winners!: WinnersPage;
+  private inputCarCreateData!: CarParams;
+  private inputCarEditData!: CarParams;
 
   constructor(props: Store) {
     this.container = document.body as HTMLBodyElement;
@@ -18,7 +21,7 @@ export default class App {
   private init(): void {
     this.container.innerHTML = this.toHTML();
     this.addEvents();
-    // this.store.subscribe(this.render);
+    this.store.subscribe(this.render);
   }
 
   private addEvents(): void {
@@ -29,13 +32,12 @@ export default class App {
       garageBtn.classList.add('active');
       winnersBtn.classList.remove('active');
       this.store.dispatch({ type: ActionID.SetPage, page: Page.Garage });
-      this.render();
     });
     winnersBtn.addEventListener('click', () => {
       garageBtn.classList.remove('active');
       winnersBtn.classList.add('active');
-      this.store.dispatch({ type: ActionID.SetPage, page: Page.Winners });
-      this.render();
+      const carInputData: CarInputData = this.getCarInputData();
+      this.store.dispatch({ type: ActionID.SetPage, page: Page.Winners, carInputData });
     });
   }
 
@@ -54,6 +56,15 @@ export default class App {
   </div>`;
   }
 
+  private setCarInputData = (carInputData: CarInputData): void => {
+    this.inputCarCreateData = { ...carInputData.inputCarCreateData };
+    this.inputCarEditData = { ...carInputData.inputCarEditData };
+  };
+
+  private getCarInputData = (): CarInputData => {
+    return { inputCarCreateData: this.inputCarCreateData, inputCarEditData: this.inputCarEditData };
+  };
+
   public render = (): HTMLElement => {
     const { viewPage } = this.store.getState();
 
@@ -68,7 +79,11 @@ export default class App {
     appPage.innerHTML = '';
 
     if (viewPage === Page.Garage) {
-      this.garage = new GaragePage(this.store, 'section', 'garage');
+      this.garage = new GaragePage(
+        { store: this.store, setCarInputData: this.setCarInputData, getCarInputData: this.getCarInputData },
+        'section',
+        'garage'
+      );
       appPage.append(this.garage.render());
     } else if (viewPage === Page.Winners) {
       this.winners = new WinnersPage(this.store, 'section', 'winners');

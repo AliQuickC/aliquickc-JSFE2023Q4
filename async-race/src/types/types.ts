@@ -26,6 +26,8 @@ export interface Car extends CarParams {
   id: number;
 }
 
+export type CarInputData = { inputCarCreateData: CarParams; inputCarEditData: CarParams };
+
 export interface WinnerParams {
   id: number;
   time: number;

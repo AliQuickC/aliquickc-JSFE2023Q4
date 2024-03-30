@@ -1,9 +1,6 @@
 import { CarParams } from '../../types/types';
 
-export default function carManagementLayout(
-  createCarParam: CarParams,
-  selectCarParam: CarParams | null // = { name: '', color: '#000000' }
-): string {
+export default function carManagementLayout(createCarParam: CarParams, selectCarParam: CarParams | null): string {
   return `
 <fieldset class="car-managment">
     <legend>Car Managment</legend>

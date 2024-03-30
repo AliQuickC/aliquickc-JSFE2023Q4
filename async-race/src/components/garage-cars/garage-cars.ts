@@ -1,15 +1,20 @@
 import { getCars } from '../../modules/api';
 import { FIRST_CARS_PAGE } from '../../modules/constant';
-import { ActionID, Store } from '../../types/redux-type';
+import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 import CarRace from '../car-race/car-race';
 
 export default class GarageCars extends BaseComponent {
-  private prevCarPage: number | null = null;
   private raceCars: CarRace[] = [];
+  private renderGaragePage: (pageNumber: number) => Promise<void>;
 
-  constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
-    super(props, tagName, className);
+  constructor(
+    props: { store: Store; renderGaragePage: (pageNumber: number) => Promise<void> },
+    tagName: keyof HTMLElementTagNameMap,
+    className: string
+  ) {
+    super(props.store, tagName, className);
+    this.renderGaragePage = props.renderGaragePage;
     this.init();
   }
 
@@ -38,20 +43,17 @@ export default class GarageCars extends BaseComponent {
   </div>`;
   }
 
-  public renderCarsList = async (pageNumber: number): Promise<void> => {
-    const { items, count } = await getCars(pageNumber);
-
-    this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: pageNumber });
-
-    this.render();
+  public checkCarChanges = async (pageNumber: number): Promise<void> => {
+    const { carCount, carsPage } = this.store.getState();
+    const { count } = await getCars(pageNumber);
+    if (count != carCount) {
+      this.renderGaragePage(carsPage);
+    }
   };
 
   public render = (): HTMLElement => {
     const { carsPage } = this.store.getState();
-    if (this.prevCarPage !== carsPage) {
-      this.renderCarsList(carsPage);
-      this.prevCarPage = carsPage;
-    }
+    this.checkCarChanges(carsPage);
 
     this.container.innerHTML = this.toHTML();
 

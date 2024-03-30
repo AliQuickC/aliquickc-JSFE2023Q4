@@ -104,12 +104,24 @@ export default class GaragePage extends BaseComponent {
         this.changeCarsPageInGarage(carsPage - 1);
         break;
       }
+      case GarageButtons.Start: {
+        break;
+      }
+      case GarageButtons.Stop: {
+        break;
+      }
+      case GarageButtons.RaceBtn: {
+        break;
+      }
+      case GarageButtons.ResetBtn: {
+        break;
+      }
       default:
         break;
     }
   };
 
-  private getCarsInGarage = async (pageNumber: number): Promise<void> => {
+  private renderCarsInGarage = async (pageNumber: number): Promise<void> => {
     const { items, count } = await getCars(pageNumber);
     this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: pageNumber });
 
@@ -129,12 +141,13 @@ export default class GaragePage extends BaseComponent {
       .map(() => createCar({ name: getRandomCarName(), color: getRandomColor() }));
     await Promise.all(createCarArray);
 
-    this.getCarsInGarage(FIRST_CARS_PAGE);
+    this.renderCarsInGarage(FIRST_CARS_PAGE);
   };
 
   private updateCarInGarage = async (id: number, body: CarParams): Promise<void> => {
+    const { carsPage } = this.store.getState();
     await updateCar(id, body);
-    this.render();
+    this.renderCarsInGarage(carsPage);
   };
 
   private deleteCarInGarage = async (id: number): Promise<void> => {
@@ -174,7 +187,11 @@ export default class GaragePage extends BaseComponent {
     if (this.garageCars) {
       this.garageCars.destroy();
     }
-    this.garageCars = new GarageCars(this.store, 'div', 'garage__cars');
+    this.garageCars = new GarageCars(
+      { store: this.store, renderGaragePage: this.renderCarsInGarage },
+      'div',
+      'garage__cars'
+    );
     this.container.append(this.garageCars.render());
 
     return this.container;

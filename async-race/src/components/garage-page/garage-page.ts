@@ -16,7 +16,6 @@ export default class GaragePage extends BaseComponent {
     this.init();
   }
 
-  // eslint-disable-next-line max-lines-per-function
   private init(): void {
     this.container.oninput = (event: Event): void => {
       if (!event.target || !(event.target as HTMLElement).hasAttribute('data-input-name')) {
@@ -95,9 +94,33 @@ export default class GaragePage extends BaseComponent {
         this.generateCars();
         break;
       }
+      case GarageButtons.Next: {
+        const { carsPage } = this.store.getState();
+        this.changeCarsPageInGarage(carsPage + 1);
+        break;
+      }
+      case GarageButtons.Prev: {
+        const { carsPage } = this.store.getState();
+        this.changeCarsPageInGarage(carsPage - 1);
+        break;
+      }
       default:
         break;
     }
+  };
+
+  private getCarsInGarage = async (pageNumber: number): Promise<void> => {
+    const { items, count } = await getCars(pageNumber);
+    this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: pageNumber });
+
+    this.render();
+  };
+
+  private changeCarsPageInGarage = async (pageNumber: number): Promise<void> => {
+    const { items, count } = await getCars(pageNumber);
+    this.store.dispatch({ type: ActionID.ChangeCarsPage, cars: items, carCount: count, carsPage: pageNumber });
+
+    this.render();
   };
 
   private generateCars = async (): Promise<void> => {
@@ -106,10 +129,7 @@ export default class GaragePage extends BaseComponent {
       .map(() => createCar({ name: getRandomCarName(), color: getRandomColor() }));
     await Promise.all(createCarArray);
 
-    const { items, count } = await getCars(FIRST_CARS_PAGE);
-    this.store.dispatch({ type: ActionID.SetCars, cars: items, carsCount: count });
-
-    this.render();
+    this.getCarsInGarage(FIRST_CARS_PAGE);
   };
 
   private updateCarInGarage = async (id: number, body: CarParams): Promise<void> => {
@@ -119,6 +139,13 @@ export default class GaragePage extends BaseComponent {
 
   private deleteCarInGarage = async (id: number): Promise<void> => {
     await deleteCar(id);
+    const { carsPage, carsLimit } = this.store.getState();
+    const { count } = await getCars(carsPage);
+    const carsPages = Math.ceil(count / carsLimit);
+    if (carsPages < carsPage && carsPages >= FIRST_CARS_PAGE) {
+      this.changeCarsPageInGarage(carsPages);
+      return;
+    }
     this.render();
   };
 
@@ -144,7 +171,9 @@ export default class GaragePage extends BaseComponent {
 
   public render = (): HTMLElement => {
     this.container.innerHTML = this.toHTML();
-
+    if (this.garageCars) {
+      this.garageCars.destroy();
+    }
     this.garageCars = new GarageCars(this.store, 'div', 'garage__cars');
     this.container.append(this.garageCars.render());
 

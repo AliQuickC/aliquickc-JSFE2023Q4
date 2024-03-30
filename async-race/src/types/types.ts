@@ -52,7 +52,7 @@ export enum GarageButtons {
   Start = 'start-btn',
   Stop = 'stop-btn',
   Prev = 'prev-page-btn',
-  Pext = 'next-page-btn',
+  Next = 'next-page-btn',
 }
 
 export enum GarageInput {

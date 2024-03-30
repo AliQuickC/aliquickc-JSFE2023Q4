@@ -36,7 +36,15 @@ type ActionSetPage = {
 type ActionSetCars = {
   type: typeof ActionID.SetCars;
   cars: Car[];
-  carsCount: number;
+  carCount: number;
+  carsPage: number;
+};
+
+type ActionChangeCarsPage = {
+  type: typeof ActionID.ChangeCarsPage;
+  cars: Car[];
+  carCount: number;
+  carsPage: number;
 };
 
 type ActionInputCreateName = {
@@ -67,6 +75,7 @@ type ActionInputEditColor = {
 export type Action =
   | ActionSetPage
   | ActionSetCars
+  | ActionChangeCarsPage
   | ActionInputCreateName
   | ActionInputCreateColor
   | ActionSelectCar
@@ -76,6 +85,7 @@ export type Action =
 export enum ActionID {
   SetPage = 'SET-PAGE',
   SetCars = 'SET-CARS',
+  ChangeCarsPage = 'CHANGE-CARS-PAGE',
   InputCreateName = 'INPUT-CREATE-NAME',
   InputCreateColor = 'INPUT-CREATE-COLOR',
   SelectCar = 'SELECT-CAR',

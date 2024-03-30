@@ -9,8 +9,17 @@ export default function reducer(stateData: State, action: Action): State {
       return state;
     }
     case ActionID.SetCars: {
-      state.cars = action.cars;
-      state.carCount = action.carsCount;
+      const cars = action.cars;
+      const carCount = action.carCount;
+      const carsPage = action.carsPage;
+      state = { ...state, cars, carCount, carsPage };
+      return state;
+    }
+    case ActionID.ChangeCarsPage: {
+      const cars = action.cars;
+      const carCount = action.carCount;
+      const carsPage = action.carsPage;
+      state = { ...state, cars, carCount, carsPage, selectCarNumber: null };
       return state;
     }
     case ActionID.InputCreateName: {

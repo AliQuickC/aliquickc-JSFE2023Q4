@@ -22,26 +22,26 @@ export default class GarageCars extends BaseComponent {
 
   private toHTML(): string {
     const state = this.store.getState();
-    const { carCount, carsPage } = this.store.getState();
+    const { carCount, carsPage, carsLimit } = this.store.getState();
 
     return `
     <div class="garage__cars-page" id="cars-page">
       <h2 class="garage__title">Garage (${carCount})</h2>
-      <h3 class="garage__page-title">Page #${carsPage}</h3>
+      <h3 class="garage__page-title">Page #${carsPage} (${carCount === 0 ? 1 : Math.ceil(carCount / carsLimit)})</h3>
       <h3 class="garage__winner-info hide" id="winner-info">Winner Winner Winner Winner Winner</h3>
       <div class="garage__car-list" id="car-list"></div>
     </div>
 
     <div class="page-buttons select_none">
       <button class="prev-page-btn" id="prev-page-btn" data-btn-name="prev-page-btn" ${state.carsPage === FIRST_CARS_PAGE ? 'disabled' : ''}>Prev</button>
-      <button class="next-page-btn" id="next-page-btn" data-btn-name="next-page-btn" ${Math.ceil(state.carCount / state.carsLimit) === state.carsPage ? 'disabled' : ''}>Next</button>
+      <button class="next-page-btn" id="next-page-btn" data-btn-name="next-page-btn" ${Math.ceil(state.carCount / state.carsLimit) <= state.carsPage ? 'disabled' : ''}>Next</button>
   </div>`;
   }
 
   public renderCarsList = async (pageNumber: number): Promise<void> => {
     const { items, count } = await getCars(pageNumber);
 
-    this.store.dispatch({ type: ActionID.SetCars, cars: items, carsCount: count });
+    this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: pageNumber });
 
     this.render();
   };

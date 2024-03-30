@@ -8,12 +8,14 @@ export default class GarageCars extends BaseComponent {
   private raceCars: CarRace[] = [];
   private renderGaragePage: (pageNumber: number) => Promise<void>;
   private deleteCarInGarage: (id: number) => Promise<void>;
+  private starCarEvent: () => void;
 
   constructor(
     props: {
       store: Store;
       renderGaragePage: (pageNumber: number) => Promise<void>;
       deleteCarInGarage: (id: number) => Promise<void>;
+      starCarEvent: () => void;
     },
     tagName: keyof HTMLElementTagNameMap,
     className: string
@@ -21,6 +23,7 @@ export default class GarageCars extends BaseComponent {
     super(props.store, tagName, className);
     this.renderGaragePage = props.renderGaragePage;
     this.deleteCarInGarage = props.deleteCarInGarage;
+    this.starCarEvent = props.starCarEvent;
     this.init();
   }
 
@@ -76,6 +79,7 @@ export default class GarageCars extends BaseComponent {
               store: this.store,
               car: { id: car.id, name: car.name, color: car.color },
               deleteCarInGarage: this.deleteCarInGarage,
+              starCarEvent: this.starCarEvent,
             },
             'div',
             'car'

@@ -2,14 +2,14 @@ import { createCar, deleteCar, getCars, updateCar } from '../../modules/api';
 import { FIRST_CARS_PAGE } from '../../modules/constant';
 import { getRandomCarName, getRandomColor } from '../../modules/utils';
 import { ActionID, Store } from '../../types/redux-type';
-import { CarInputData, CarParams, GarageButtons, GarageInput } from '../../types/types';
+import { CarInputData, GarageButtons, GarageInput } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 import GarageCars from '../garage-cars/garage-cars';
-import carManagementLayout from './car-management';
-import raceManagment from './race-managment.html';
+import GarageManagement from '../garage-management/garage-management';
 
 export default class GaragePage extends BaseComponent {
   private garageCars!: GarageCars;
+  private garageManagement!: GarageManagement;
   private setCarInputData: (carInputData: CarInputData) => void;
   private getCarInputData: () => CarInputData;
 
@@ -72,6 +72,10 @@ export default class GaragePage extends BaseComponent {
 
     this.container.onclick = this.clickHandler;
   }
+
+  private starCarEvent = (): void => {
+    this._triggerEvent('start-car');
+  };
 
   private clickHandler = (event: Event): void => {
     if (!event.target || !(event.target as HTMLElement).hasAttribute('data-btn-name')) {
@@ -181,26 +185,33 @@ export default class GaragePage extends BaseComponent {
     super.destroy();
   }
 
-  private toHTML(): string {
-    const { name, color } = this.store.getState().carCreateData;
-    const { selectCarNumber } = this.store.getState();
-    const selectCar: CarParams | null = selectCarNumber === null ? null : this.store.getState().carEditData;
-    return `
-    ${carManagementLayout({ name, color }, selectCar)} ${raceManagment}
-    `;
-  }
-
   public render = (): HTMLElement => {
-    this.container.innerHTML = this.toHTML();
+    this.container.innerHTML = '';
     if (this.garageCars) {
       this.garageCars.destroy();
     }
+    if (this.garageManagement) {
+      this.removeEventListener('start-car', this.garageManagement.disableUpdateCar);
+      this.garageManagement.destroy();
+    }
+
+    this.garageManagement = new GarageManagement(this.store, 'div', 'garage-managment select_none');
+
     this.garageCars = new GarageCars(
-      { store: this.store, renderGaragePage: this.renderCarsInGarage, deleteCarInGarage: this.deleteCarInGarage },
+      {
+        store: this.store,
+        renderGaragePage: this.renderCarsInGarage,
+        deleteCarInGarage: this.deleteCarInGarage,
+        starCarEvent: this.starCarEvent,
+      },
       'div',
       'garage__cars'
     );
+
+    this.container.append(this.garageManagement.render());
     this.container.append(this.garageCars.render());
+
+    this.addEventListener('start-car', this.garageManagement.disableUpdateCar);
 
     return this.container;
   };

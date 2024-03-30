@@ -13,9 +13,10 @@ export default class CarRace extends BaseComponent {
   private countTime!: number;
   private driveStartTime!: number;
   private carIcon!: HTMLElement;
+  private starCarEvent: () => void;
 
   constructor(
-    props: { store: Store; car: Car; deleteCarInGarage: (id: number) => Promise<void> },
+    props: { store: Store; car: Car; deleteCarInGarage: (id: number) => Promise<void>; starCarEvent: () => void },
     tagName: keyof HTMLElementTagNameMap = 'div',
     className: string
   ) {
@@ -24,6 +25,7 @@ export default class CarRace extends BaseComponent {
     this.carId = this.car.id;
     this.container.setAttribute('data-car-id', this.carId.toString());
     this.deleteCarInGarage = props.deleteCarInGarage;
+    this.starCarEvent = props.starCarEvent;
 
     this.init();
   }
@@ -86,6 +88,7 @@ export default class CarRace extends BaseComponent {
     startBtn.disabled = true;
     selectBtn.disabled = true;
     removeBtn.disabled = true;
+    this.starCarEvent();
 
     const timeCorrection = 0;
 

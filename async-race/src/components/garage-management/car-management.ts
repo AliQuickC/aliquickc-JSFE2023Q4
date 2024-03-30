@@ -2,7 +2,7 @@ import { CarParams } from '../../types/types';
 
 export default function carManagementLayout(createCarParam: CarParams, selectCarParam: CarParams | null): string {
   return `
-<fieldset class="car-managment">
+  <fieldset class="car-managment select_none">
     <legend>Car Managment</legend>
     <div class="car-create">
       <input type="text" name="" id="create-name" data-input-name="create-name" autocomplete="off" value="${createCarParam.name}">

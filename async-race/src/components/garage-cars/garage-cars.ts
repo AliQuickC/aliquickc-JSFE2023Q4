@@ -7,14 +7,20 @@ import CarRace from '../car-race/car-race';
 export default class GarageCars extends BaseComponent {
   private raceCars: CarRace[] = [];
   private renderGaragePage: (pageNumber: number) => Promise<void>;
+  private deleteCarInGarage: (id: number) => Promise<void>;
 
   constructor(
-    props: { store: Store; renderGaragePage: (pageNumber: number) => Promise<void> },
+    props: {
+      store: Store;
+      renderGaragePage: (pageNumber: number) => Promise<void>;
+      deleteCarInGarage: (id: number) => Promise<void>;
+    },
     tagName: keyof HTMLElementTagNameMap,
     className: string
   ) {
     super(props.store, tagName, className);
     this.renderGaragePage = props.renderGaragePage;
+    this.deleteCarInGarage = props.deleteCarInGarage;
     this.init();
   }
 
@@ -64,7 +70,16 @@ export default class GarageCars extends BaseComponent {
       const { cars } = this.store.getState();
       const carList: HTMLElement = this.container.querySelector('#car-list') as HTMLElement;
       this.raceCars = cars.map(
-        (car) => new CarRace({ store: this.store, car: { id: car.id, name: car.name, color: car.color } }, 'div', 'car')
+        (car) =>
+          new CarRace(
+            {
+              store: this.store,
+              car: { id: car.id, name: car.name, color: car.color },
+              deleteCarInGarage: this.deleteCarInGarage,
+            },
+            'div',
+            'car'
+          )
       );
       this.raceCars.forEach((car) => carList.append(car.render()));
     }

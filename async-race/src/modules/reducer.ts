@@ -1,5 +1,5 @@
 import { CarInputData, Page } from './../types/types';
-import { State, Action, ActionID } from '../types/redux-type';
+import { State, Action, ActionID, ActionSetCars } from '../types/redux-type';
 
 export default function reducer(stateData: State, action: Action): State {
   let state = stateData;
@@ -29,6 +29,11 @@ export default function reducer(stateData: State, action: Action): State {
       };
       state = { ...state, cars, carCount, carsPage, carCreateData, carEditData };
       return state;
+    }
+    case ActionID.DeleteCar: {
+      state.selectCarNumber = null;
+      const newAction: ActionSetCars = { ...action, type: ActionID.SetCars };
+      return reducer(state, newAction);
     }
     case ActionID.ChangeCarsPage: {
       const cars = action.cars;

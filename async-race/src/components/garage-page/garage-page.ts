@@ -78,13 +78,10 @@ export default class GaragePage extends BaseComponent {
       return;
     }
 
-    const elementName = (event.target as HTMLElement).dataset.btnName;
-    switch (elementName) {
+    const elementBtnName = (event.target as HTMLElement).dataset.btnName;
+    switch (elementBtnName) {
       case GarageButtons.Create: {
-        const { carCreateData } = this.store.getState();
-        if (carCreateData.name.length !== 0) {
-          this.createNewCarInGarage();
-        }
+        this.createNewCarInGarage();
         break;
       }
       case GarageButtons.Update: {
@@ -114,27 +111,6 @@ export default class GaragePage extends BaseComponent {
         break;
       }
       case GarageButtons.ResetBtn: {
-        break;
-      }
-      case GarageButtons.Select: {
-        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
-        const carId: number = +(carElement.getAttribute('data-car-id') as string);
-        const { cars } = this.store.getState();
-        const selectCarNumber: number = cars.findIndex((item) => item.id === carId);
-
-        this.store.dispatch({ type: ActionID.SelectCar, selectCarNumber });
-        break;
-      }
-      case GarageButtons.Remove: {
-        const carElement: HTMLElement = (<HTMLElement>event.target).closest('[data-car-id]') as HTMLElement;
-        const carId: number = +(carElement.getAttribute('data-car-id') as string);
-        this.deleteCarInGarage(carId);
-        break;
-      }
-      case GarageButtons.Start: {
-        break;
-      }
-      case GarageButtons.Stop: {
         break;
       }
       default:
@@ -188,14 +164,16 @@ export default class GaragePage extends BaseComponent {
       return;
     }
     const carInputData = this.getCarInputData();
-    this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: carsPage, carInputData });
+    this.store.dispatch({ type: ActionID.DeleteCar, cars: items, carCount: count, carsPage: carsPage, carInputData });
   };
 
   private createNewCarInGarage = async (): Promise<void> => {
     const { inputCarCreateData } = this.getCarInputData();
 
-    await createCar(inputCarCreateData);
-    this.store.dispatch({ type: ActionID.CreateCar });
+    if (inputCarCreateData.name.length !== 0) {
+      await createCar(inputCarCreateData);
+      this.store.dispatch({ type: ActionID.CreateCar });
+    }
   };
 
   public destroy(): void {
@@ -218,7 +196,7 @@ export default class GaragePage extends BaseComponent {
       this.garageCars.destroy();
     }
     this.garageCars = new GarageCars(
-      { store: this.store, renderGaragePage: this.renderCarsInGarage },
+      { store: this.store, renderGaragePage: this.renderCarsInGarage, deleteCarInGarage: this.deleteCarInGarage },
       'div',
       'garage__cars'
     );

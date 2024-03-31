@@ -13,6 +13,28 @@ export default class GarageManagement extends BaseComponent {
 
   private init(): void {}
 
+  public interfaseSwitchRaceStart = (): void => {
+    const updateBtn = this.container.querySelector('[data-btn-name="update-btn"]') as HTMLButtonElement;
+    updateBtn.disabled = true;
+    const raceBtn = this.container.querySelector('#race-btn') as HTMLButtonElement;
+    raceBtn.disabled = true;
+  };
+
+  public interfaseSwitchRaceStop = (): void => {
+    const resetBtn = this.container.querySelector('#reset-btn') as HTMLButtonElement;
+    resetBtn.disabled = false;
+  };
+
+  public interfaseSwitchRaceResetStart = (): void => {
+    const resetBtn = this.container.querySelector('#reset-btn') as HTMLButtonElement;
+    resetBtn.disabled = true;
+  };
+
+  public interfaseSwitchRaceResetEnd = (): void => {
+    const resetBtn = this.container.querySelector('#reset-btn') as HTMLButtonElement;
+    resetBtn.disabled = false;
+  };
+
   public disableUpdateCar = (): void => {
     const updateBtn = this.container.querySelector('[data-btn-name="update-btn"]') as HTMLButtonElement;
     updateBtn.disabled = true;

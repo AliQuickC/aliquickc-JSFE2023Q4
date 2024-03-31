@@ -14,9 +14,16 @@ export default class CarRace extends BaseComponent {
   private driveStartTime!: number;
   private carIcon!: HTMLElement;
   private starCarEvent: () => void;
+  private checkWinner: (id: number, time: number) => boolean;
 
   constructor(
-    props: { store: Store; car: Car; deleteCarInGarage: (id: number) => Promise<void>; starCarEvent: () => void },
+    props: {
+      store: Store;
+      car: Car;
+      deleteCarInGarage: (id: number) => Promise<void>;
+      starCarEvent: () => void;
+      checkWinner: (id: number, time: number) => boolean;
+    },
     tagName: keyof HTMLElementTagNameMap = 'div',
     className: string
   ) {
@@ -26,6 +33,7 @@ export default class CarRace extends BaseComponent {
     this.container.setAttribute('data-car-id', this.carId.toString());
     this.deleteCarInGarage = props.deleteCarInGarage;
     this.starCarEvent = props.starCarEvent;
+    this.checkWinner = props.checkWinner;
 
     this.init();
   }
@@ -76,7 +84,7 @@ export default class CarRace extends BaseComponent {
     }
   };
 
-  async startCar(): Promise<number> {
+  public async startCar(): Promise<number> {
     const carElement = this.container;
     this.carIcon = carElement.querySelector('.car__icon') as HTMLElement;
     const startBtn = carElement.querySelector('.car__race-start-btn') as HTMLButtonElement;
@@ -110,6 +118,9 @@ export default class CarRace extends BaseComponent {
     if (driveStart.success && this.idReqAnim) {
       stopBtn.disabled = false;
       this.carIcon.style.right = '0px';
+
+      this.checkWinner(this.carId, this.countTime);
+
       return this.carId;
     }
 
@@ -129,7 +140,6 @@ export default class CarRace extends BaseComponent {
 
     const carId: number = +(this.container.getAttribute('data-car-id') as string);
 
-    // const engineStopStatus: EngineStatus =
     await stopEngine(carId);
     cancelAnimationFrame(this.idReqAnim as number);
     this.idReqAnim = null;

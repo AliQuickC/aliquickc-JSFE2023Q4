@@ -93,10 +93,8 @@ export default function reducer(stateData: State, action: Action): State {
       const sortOrder = action.sortOrder;
 
       state = { ...state, winners, winnersPage, winnerCount, sortOrder, sortWinners };
-
       return state;
     }
-
     default:
       return state;
   }

@@ -56,6 +56,20 @@ export default class App {
   </div>`;
   }
 
+  private interfaseSwitchRaceStart = (): void => {
+    const garageBtn = this.container.querySelector('#garage-btn') as HTMLButtonElement;
+    garageBtn.disabled = true;
+    const winnersBtn = this.container.querySelector('#winners-btn') as HTMLButtonElement;
+    winnersBtn.disabled = true;
+  };
+
+  private interfaseSwitchRaceStop = (): void => {
+    const garageBtn = this.container.querySelector('#garage-btn') as HTMLButtonElement;
+    garageBtn.disabled = false;
+    const winnersBtn = this.container.querySelector('#winners-btn') as HTMLButtonElement;
+    winnersBtn.disabled = false;
+  };
+
   private setCarInputData = (carInputData: CarInputData): void => {
     this.inputCarCreateData = { ...carInputData.inputCarCreateData };
     this.inputCarEditData = { ...carInputData.inputCarEditData };
@@ -80,7 +94,13 @@ export default class App {
 
     if (viewPage === Page.Garage) {
       this.garage = new GaragePage(
-        { store: this.store, setCarInputData: this.setCarInputData, getCarInputData: this.getCarInputData },
+        {
+          store: this.store,
+          setCarInputData: this.setCarInputData,
+          getCarInputData: this.getCarInputData,
+          interfaseSwitchRaceStart: this.interfaseSwitchRaceStart,
+          interfaseSwitchRaceStop: this.interfaseSwitchRaceStop,
+        },
         'section',
         'garage'
       );

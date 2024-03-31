@@ -1,4 +1,4 @@
-import { createCar, deleteCar, deleteWinner, getCars, getWinners, updateCar } from '../../modules/api';
+import { createCar, deleteCar, deleteWinner, getCars, getWinners, saveWinner, updateCar } from '../../modules/api';
 import { FIRST_CARS_PAGE } from '../../modules/constant';
 import { getRandomCarName, getRandomColor } from '../../modules/utils';
 import { ActionID, Store } from '../../types/redux-type';
@@ -12,12 +12,18 @@ export default class GaragePage extends BaseComponent {
   private garageManagement!: GarageManagement;
   private setCarInputData: (carInputData: CarInputData) => void;
   private getCarInputData: () => CarInputData;
+  private interfaseSwitchRaceStart: () => void;
+  private interfaseSwitchRaceStop: () => void;
+  private isGropeRace: boolean = false;
+  private winnerId: number | null = null;
 
   constructor(
     props: {
       store: Store;
       setCarInputData: (carInputData: CarInputData) => void;
       getCarInputData: () => CarInputData;
+      interfaseSwitchRaceStart: () => void;
+      interfaseSwitchRaceStop: () => void;
     },
     tagName: keyof HTMLElementTagNameMap,
     className: string
@@ -25,6 +31,8 @@ export default class GaragePage extends BaseComponent {
     super(props.store, tagName, className);
     this.setCarInputData = props.setCarInputData;
     this.getCarInputData = props.getCarInputData;
+    this.interfaseSwitchRaceStart = props.interfaseSwitchRaceStart;
+    this.interfaseSwitchRaceStop = props.interfaseSwitchRaceStop;
     this.setCarInputData({
       inputCarCreateData: this.store.getState().carCreateData,
       inputCarEditData: this.store.getState().carEditData,
@@ -86,7 +94,9 @@ export default class GaragePage extends BaseComponent {
     const elementBtnName = (event.target as HTMLElement).dataset.btnName;
     switch (elementBtnName) {
       case GarageButtons.Create: {
-        this.createNewCarInGarage();
+        if (!this.isGropeRace) {
+          this.createNewCarInGarage();
+        }
         break;
       }
       case GarageButtons.Update: {
@@ -99,7 +109,9 @@ export default class GaragePage extends BaseComponent {
         break;
       }
       case GarageButtons.GenerateCars: {
-        this.generateCars();
+        if (!this.isGropeRace) {
+          this.generateCars();
+        }
         break;
       }
       case GarageButtons.Next: {
@@ -113,14 +125,67 @@ export default class GaragePage extends BaseComponent {
         break;
       }
       case GarageButtons.RaceBtn: {
+        this.race();
         break;
       }
       case GarageButtons.ResetBtn: {
+        this.resetRace();
         break;
       }
       default:
         break;
     }
+  };
+
+  private race = async (): Promise<void> => {
+    this.winnerId = null;
+    const { cars } = this.store.getState();
+    if (cars.length === 0) {
+      return;
+    }
+
+    this.setGropeRaceStatus(true);
+
+    this.interfaseSwitchRaceStart();
+    this.garageManagement.interfaseSwitchRaceStart();
+    this.garageCars.interfaseSwitchRaceStart();
+
+    await this.garageCars.startAllCars(this.setGropeRaceStatus);
+
+    this.interfaseSwitchRaceStop();
+    this.garageManagement.interfaseSwitchRaceStop();
+    this.garageCars.interfaseSwitchRaceStop();
+  };
+
+  private resetRace = async (): Promise<void> => {
+    this.garageManagement.interfaseSwitchRaceResetStart();
+    this.garageCars.hideWinner();
+
+    await this.garageCars.stopAllCars();
+
+    this.garageManagement.interfaseSwitchRaceResetEnd();
+  };
+
+  private checkWinner = (id: number, time: number): boolean => {
+    if (this.getGropeRaceStatus() && this.winnerId === null) {
+      this.winnerId = id;
+      this.garageCars.showWinner(id, time);
+      this.addWinner(id, time);
+      return true;
+    }
+    return false;
+  };
+
+  private addWinner = async (id: number, time: number): Promise<void> => {
+    await saveWinner({ id: id, time: +(time / 1000).toFixed(2) });
+  };
+
+  private getGropeRaceStatus = (): boolean => {
+    return this.isGropeRace;
+  };
+
+  private setGropeRaceStatus = (status: boolean): void => {
+    this.isGropeRace = status;
   };
 
   private renderCarsInGarage = async (pageNumber: number): Promise<void> => {
@@ -240,6 +305,7 @@ export default class GaragePage extends BaseComponent {
         renderGaragePage: this.renderCarsInGarage,
         deleteCarInGarage: this.deleteCarInGarage,
         starCarEvent: this.starCarEvent,
+        checkWinner: this.checkWinner,
       },
       'div',
       'garage__cars'

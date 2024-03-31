@@ -39,6 +39,8 @@ export type ActionSetCars = {
   carCount: number;
   carsPage: number;
   carInputData: CarInputData;
+  winnerCount: number;
+  winners: WinnerFull[];
 };
 
 type ActionChangeCarsPage = {
@@ -70,6 +72,7 @@ type ActionDeleteCar = {
   carsPage: number;
   carInputData: CarInputData;
   newWinnersPage: number;
+  winners: WinnerFull[];
   winnerCount: number;
 };
 

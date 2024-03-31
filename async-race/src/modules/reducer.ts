@@ -27,7 +27,10 @@ export default function reducer(stateData: State, action: Action): State {
         name: inputCarEditData.name,
         color: inputCarEditData.color,
       };
-      state = { ...state, cars, carCount, carsPage, carCreateData, carEditData };
+      const winnerCount = action.winnerCount;
+      const winners = action.winners;
+
+      state = { ...state, cars, carCount, carsPage, carCreateData, carEditData, winnerCount, winners };
       return state;
     }
     case ActionID.SetWinnes: {
@@ -44,7 +47,9 @@ export default function reducer(stateData: State, action: Action): State {
 
       const winnerCount = action.winnerCount;
       const winnersPage = action.newWinnersPage;
-      state = { ...stateData, winnerCount, winnersPage };
+      const winners = action.winners;
+
+      state = { ...stateData, winnerCount, winnersPage, winners };
 
       const newAction: ActionSetCars = { ...action, carsPage, type: ActionID.SetCars };
       return reducer(state, newAction);

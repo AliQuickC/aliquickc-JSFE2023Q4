@@ -1,5 +1,5 @@
 import { createCar, deleteCar, deleteWinner, getCars, getWinners, updateCar } from '../../modules/api';
-import { FIRST_CARS_PAGE, FIRST_WINNERS_PAGE } from '../../modules/constant';
+import { FIRST_CARS_PAGE } from '../../modules/constant';
 import { getRandomCarName, getRandomColor } from '../../modules/utils';
 import { ActionID, Store } from '../../types/redux-type';
 import { CarInputData, GarageButtons, GarageInput } from '../../types/types';
@@ -124,11 +124,22 @@ export default class GaragePage extends BaseComponent {
   };
 
   private renderCarsInGarage = async (pageNumber: number): Promise<void> => {
-    const { items, count } = await getCars(pageNumber);
+    const { winnersPage } = this.store.getState();
+
+    const { items: carItems, count: carCount } = await getCars(pageNumber);
+    const { items: winnerItems, count: winnerCount } = await getWinners(winnersPage);
 
     const carInputData = this.getCarInputData();
 
-    this.store.dispatch({ type: ActionID.SetCars, cars: items, carCount: count, carsPage: pageNumber, carInputData });
+    this.store.dispatch({
+      type: ActionID.SetCars,
+      cars: carItems,
+      carCount: carCount,
+      carsPage: pageNumber,
+      carInputData,
+      winnerCount: winnerCount,
+      winners: winnerItems,
+    });
   };
 
   private changeCarsPageInGarage = async (pageNumber: number): Promise<void> => {
@@ -164,8 +175,9 @@ export default class GaragePage extends BaseComponent {
     await deleteWinner(id);
 
     const { carsPage, carsLimit } = this.store.getState();
-    const { items, count } = await getCars(carsPage);
-    const carsPages: number = Math.ceil(count / carsLimit);
+    const { items: carItems, count: carCount } = await getCars(carsPage);
+
+    const carsPages: number = Math.ceil(carCount / carsLimit);
     let newCarPage: number;
     if (carsPages < carsPage && carsPages >= FIRST_CARS_PAGE) {
       newCarPage = carsPages;
@@ -181,16 +193,17 @@ export default class GaragePage extends BaseComponent {
       newWinnersPage = winnersPage;
     }
 
-    const newWinnerCount: number = (await getWinners(FIRST_WINNERS_PAGE)).count;
+    const { items: winnerItems, count: newWinnerCount } = await getWinners(newWinnersPage);
 
     const carInputData = this.getCarInputData();
     this.store.dispatch({
       type: ActionID.DeleteCar,
-      cars: items,
-      carCount: count,
+      cars: carItems,
+      carCount: carCount,
       carInputData,
       carsPage: newCarPage,
       winnerCount: newWinnerCount,
+      winners: winnerItems,
       newWinnersPage,
     });
   };

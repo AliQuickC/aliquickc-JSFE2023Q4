@@ -67,4 +67,6 @@ export enum GarageInput {
 export enum WinnersButtons {
   Prev = 'prev-page-btn',
   Next = 'next-page-btn',
+  SortWins = 'th-wins',
+  SortTime = 'th-time',
 }

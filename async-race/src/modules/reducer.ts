@@ -80,6 +80,18 @@ export default function reducer(stateData: State, action: Action): State {
       state.carCreateData.name = '';
       return state;
     }
+    case ActionID.ChangeWinnersTable: {
+      const winners = action.winners;
+      const winnersPage = action.winnersPage;
+      const winnerCount = action.winnerCount;
+      const sortWinners = action.sortWinners;
+      const sortOrder = action.sortOrder;
+
+      state = { ...state, winners, winnersPage, winnerCount, sortOrder, sortWinners };
+
+      return state;
+    }
+
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import { getWinners } from '../../modules/api';
 import { FIRST_WINNERS_PAGE } from '../../modules/constant';
 import { ActionID, Store } from '../../types/redux-type';
-import { WinnersButtons } from '../../types/types';
+import { Sort, WinnerFull, WinnersButtons } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 import WinnerTable from '../winner-table/winner-table';
 
@@ -24,14 +24,13 @@ export default class WinnersPage extends BaseComponent {
       }
 
       const elementBtnName = (event.target as HTMLElement).dataset.btnName;
+      const { winnersPage } = this.store.getState();
       switch (elementBtnName) {
         case WinnersButtons.Next: {
-          const { winnersPage } = this.store.getState();
           this.changeWinnersPage(winnersPage + 1);
           break;
         }
         case WinnersButtons.Prev: {
-          const { winnersPage } = this.store.getState();
           this.changeWinnersPage(winnersPage - 1);
           break;
         }
@@ -42,11 +41,17 @@ export default class WinnersPage extends BaseComponent {
   };
 
   private changeWinnersPage = async (pageNumber: number): Promise<void> => {
-    const { items } = await getWinners(pageNumber);
+    const { sortWinners, winnersLimit, sortOrder } = this.store.getState();
+    let winners: { items: WinnerFull[]; count: number };
+    if (sortWinners === Sort.none) {
+      winners = await getWinners(pageNumber);
+    } else {
+      winners = await getWinners(pageNumber, winnersLimit, sortWinners, sortOrder);
+    }
 
     this.store.dispatch({
       type: ActionID.ChangeWinnersPage,
-      winners: items,
+      winners: winners.items,
       winnersPage: pageNumber,
     });
   };

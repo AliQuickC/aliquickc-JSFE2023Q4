@@ -86,6 +86,15 @@ type ActionChangeWinnersPage = {
   winnersPage: number;
 };
 
+type ActionChangeWinnersTable = {
+  type: typeof ActionID.ChangeWinnersTable;
+  winners: WinnerFull[];
+  winnersPage: number;
+  winnerCount: number;
+  sortWinners: Sort;
+  sortOrder: Order;
+};
+
 export type Action =
   | ActionSetPage
   | ActionSetCars
@@ -95,7 +104,8 @@ export type Action =
   | ActionCreateCar
   | ActionDeleteCar
   | ActionSetWinnes
-  | ActionChangeWinnersPage;
+  | ActionChangeWinnersPage
+  | ActionChangeWinnersTable;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -111,4 +121,5 @@ export enum ActionID {
   DeleteCar = 'DELETE-CAR',
   SetWinnes = 'SWT-WINNERS',
   ChangeWinnersPage = 'CHANGE-WINNERS-PAGE',
+  ChangeWinnersTable = 'CHANGE-WINNERS-TABLE',
 }

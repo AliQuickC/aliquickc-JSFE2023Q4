@@ -80,6 +80,12 @@ export type ActionSetWinnes = {
   winnersPage: number;
 };
 
+type ActionChangeWinnersPage = {
+  type: typeof ActionID.ChangeWinnersPage;
+  winners: WinnerFull[];
+  winnersPage: number;
+};
+
 export type Action =
   | ActionSetPage
   | ActionSetCars
@@ -88,7 +94,8 @@ export type Action =
   | ActionChangeCarInputData
   | ActionCreateCar
   | ActionDeleteCar
-  | ActionSetWinnes;
+  | ActionSetWinnes
+  | ActionChangeWinnersPage;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -103,4 +110,5 @@ export enum ActionID {
   CreateCar = 'CREATE-CAR',
   DeleteCar = 'DELETE-CAR',
   SetWinnes = 'SWT-WINNERS',
+  ChangeWinnersPage = 'CHANGE-WINNERS-PAGE',
 }

@@ -1,6 +1,7 @@
 import { getWinners } from '../../modules/api';
 import { FIRST_WINNERS_PAGE } from '../../modules/constant';
 import { ActionID, Store } from '../../types/redux-type';
+import { WinnersButtons } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 import WinnerTable from '../winner-table/winner-table';
 
@@ -12,7 +13,43 @@ export default class WinnersPage extends BaseComponent {
     this.init();
   }
 
-  private init(): void {}
+  private init(): void {
+    this.container.onclick = this.clickHandler;
+  }
+
+  private clickHandler = (event: Event): void => {
+    if (event.target) {
+      if (!event.target || !(event.target as HTMLElement).hasAttribute('data-btn-name')) {
+        return;
+      }
+
+      const elementBtnName = (event.target as HTMLElement).dataset.btnName;
+      switch (elementBtnName) {
+        case WinnersButtons.Next: {
+          const { winnersPage } = this.store.getState();
+          this.changeWinnersPage(winnersPage + 1);
+          break;
+        }
+        case WinnersButtons.Prev: {
+          const { winnersPage } = this.store.getState();
+          this.changeWinnersPage(winnersPage - 1);
+          break;
+        }
+        default:
+          break;
+      }
+    }
+  };
+
+  private changeWinnersPage = async (pageNumber: number): Promise<void> => {
+    const { items } = await getWinners(pageNumber);
+
+    this.store.dispatch({
+      type: ActionID.ChangeWinnersPage,
+      winners: items,
+      winnersPage: pageNumber,
+    });
+  };
 
   private toHTML(): string {
     const state = this.store.getState();
@@ -28,8 +65,8 @@ export default class WinnersPage extends BaseComponent {
 <div class="winners__table" id="winners-table"></div>
 
 <div class="page-buttons">
-  <button class="prev-page-btn" id="prev-page-btn" ${winnersPage === FIRST_WINNERS_PAGE ? 'disabled' : ''}>Prev</button>
-  <button class="next-page-btn" id="next-page-btn" ${Math.ceil(winnerCount / winnersLimit) === winnersPage ? 'disabled' : ''}>Next</button>
+  <button class="prev-page-btn" id="prev-page-btn" data-btn-name="prev-page-btn" ${winnersPage === FIRST_WINNERS_PAGE ? 'disabled' : ''}>Prev</button>
+  <button class="next-page-btn" id="next-page-btn" data-btn-name="next-page-btn" ${Math.ceil(winnerCount / winnersLimit) === winnersPage ? 'disabled' : ''}>Next</button>
 </div>
 `;
   }

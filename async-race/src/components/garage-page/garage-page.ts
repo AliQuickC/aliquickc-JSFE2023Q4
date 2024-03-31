@@ -33,48 +33,49 @@ export default class GaragePage extends BaseComponent {
   }
 
   private init(): void {
-    this.container.oninput = (event: Event): void => {
-      if (!event.target || !(event.target as HTMLElement).hasAttribute('data-input-name')) {
-        return;
-      }
-
-      const element = event.target as HTMLInputElement;
-      const elementName = element.dataset.inputName;
-      switch (elementName) {
-        case GarageInput.CreateName: {
-          const carInputData = this.getCarInputData();
-          carInputData.inputCarCreateData.name = element.value;
-          this.setCarInputData(carInputData);
-          break;
-        }
-        case GarageInput.CreateColor: {
-          const carInputData = this.getCarInputData();
-          carInputData.inputCarCreateData.color = element.value;
-          this.setCarInputData(carInputData);
-          break;
-        }
-        case GarageInput.EditName: {
-          const carInputData = this.getCarInputData();
-          carInputData.inputCarEditData.name = element.value;
-          this.setCarInputData(carInputData);
-          break;
-        }
-        case GarageInput.EditColor: {
-          const carInputData = this.getCarInputData();
-          carInputData.inputCarEditData.color = element.value;
-          this.setCarInputData(carInputData);
-          break;
-        }
-        default:
-          break;
-      }
-    };
-
+    this.container.oninput = this.inputHandler;
     this.container.onclick = this.clickHandler;
   }
 
   private starCarEvent = (): void => {
     this._triggerEvent('start-car');
+  };
+
+  private inputHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-input-name')) {
+      return;
+    }
+
+    const element = event.target as HTMLInputElement;
+    const elementName = element.dataset.inputName;
+    switch (elementName) {
+      case GarageInput.CreateName: {
+        const carInputData = this.getCarInputData();
+        carInputData.inputCarCreateData.name = element.value;
+        this.setCarInputData(carInputData);
+        break;
+      }
+      case GarageInput.CreateColor: {
+        const carInputData = this.getCarInputData();
+        carInputData.inputCarCreateData.color = element.value;
+        this.setCarInputData(carInputData);
+        break;
+      }
+      case GarageInput.EditName: {
+        const carInputData = this.getCarInputData();
+        carInputData.inputCarEditData.name = element.value;
+        this.setCarInputData(carInputData);
+        break;
+      }
+      case GarageInput.EditColor: {
+        const carInputData = this.getCarInputData();
+        carInputData.inputCarEditData.color = element.value;
+        this.setCarInputData(carInputData);
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   private clickHandler = (event: Event): void => {

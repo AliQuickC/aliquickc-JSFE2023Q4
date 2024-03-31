@@ -57,7 +57,13 @@ export default function reducer(stateData: State, action: Action): State {
       state = { ...state, cars, carsPage, carCreateData, selectCarNumber: null };
       return state;
     }
+    case ActionID.ChangeWinnersPage: {
+      const winners = action.winners;
+      const winnersPage = action.winnersPage;
 
+      state = { ...state, winners, winnersPage };
+      return state;
+    }
     case ActionID.SelectCar: {
       const selectCarNumber = action.selectCarNumber;
       const name = state.cars[selectCarNumber].name;

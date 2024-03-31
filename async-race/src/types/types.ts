@@ -63,3 +63,8 @@ export enum GarageInput {
   EditName = 'edit-name',
   EditColor = 'edit-color',
 }
+
+export enum WinnersButtons {
+  Prev = 'prev-page-btn',
+  Next = 'next-page-btn',
+}

@@ -231,8 +231,11 @@ export default class GaragePage extends BaseComponent {
   private updateCarInGarage = async (id: number): Promise<void> => {
     const { carsPage } = this.store.getState();
     const { inputCarEditData } = this.getCarInputData();
-    await updateCar(id, inputCarEditData);
-    this.renderCarsInGarage(carsPage);
+
+    if (inputCarEditData.name.length !== 0) {
+      await updateCar(id, inputCarEditData);
+      this.renderCarsInGarage(carsPage);
+    }
   };
 
   private deleteCarInGarage = async (id: number): Promise<void> => {

@@ -11,6 +11,7 @@ export default function reducer(stateData: State, action: Action): State {
         state.carCreateData = inputCarCreateData;
         state.carEditData = inputCarEditData;
       }
+      state.winnerCount = 0;
       state.viewPage = action.page;
       return state;
     }

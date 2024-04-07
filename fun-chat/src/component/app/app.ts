@@ -16,19 +16,30 @@ export default class App {
     this.init();
   }
 
-  private init(): void {
-    this.header = new Header(this.store, 'header', 'header');
-    this.main = new Main(this.store, 'main', 'main');
-    this.footer = new Footer(this.store, 'footer', 'footer');
-  }
+  private init(): void {}
 
   public destroy(): void {}
 
   public render = (): HTMLElement => {
+    this.header?.destroy();
+    this.main?.destroy();
+    this.footer?.destroy();
     this.container.innerHTML = '';
+
+    this.header = new Header(this.store, 'header', 'header');
+    this.main = new Main(this.store, 'main', 'main');
+    this.footer = new Footer(this.store, 'footer', 'footer');
+
     this.container.append(this.header.render());
     this.container.append(this.main.render());
     this.container.append(this.footer.render());
+
+    this.container.onkeydown = (event: KeyboardEvent): void => {
+      if (event.code === 'Enter') {
+        this.main.enterKeyDown();
+      }
+    };
+
     return this.container;
   };
 }

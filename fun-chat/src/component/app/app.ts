@@ -1,4 +1,5 @@
-import { Store } from '../../types/redux-type';
+import { Page } from '../../types/enum';
+import { ActionID, Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Main from '../main/main';
@@ -16,9 +17,32 @@ export default class App {
     this.init();
   }
 
-  private init(): void {}
+  private init(): void {
+    this.enableRouterChange();
+    this.store.subscribe(this.render);
+  }
 
   public destroy(): void {}
+
+  private enableRouterChange(): void {
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.slice(1);
+      const splitted = hash.toLocaleLowerCase().split('');
+      const first = splitted[0]?.toUpperCase();
+      splitted.splice(0, 1);
+      const pageHash = [first, ...splitted].join('');
+
+      const hasPage = Object.prototype.hasOwnProperty.call(Page, pageHash);
+      if (!hasPage) {
+        window.location.hash = Page.Error;
+      } else {
+        this.store.dispatch({
+          type: ActionID.SetPage,
+          page: pageHash.toLocaleLowerCase() as Page,
+        });
+      }
+    });
+  }
 
   public render = (): HTMLElement => {
     this.header?.destroy();

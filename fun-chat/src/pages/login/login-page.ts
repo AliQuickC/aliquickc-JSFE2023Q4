@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseComponent from '../../component/base-component/base-component';
 import AValidate from '../../modules/validate';
-import { ValidatorRule } from '../../types/enum';
-import { Store } from '../../types/redux-type';
+import { Page, ValidatorRule } from '../../types/enum';
+import { ActionID, Store } from '../../types/redux-type';
 
 const REQUIRED_REQUARED = 'The field is required';
 const FIRST_LETTER_ERROR = 'first letter must be capitalized, from "A" to "Z"';
@@ -40,15 +40,30 @@ const passwordRule = [
 ];
 
 export default class LoginPage extends BaseComponent {
-  public store: Store;
-
   constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
     super(props, tagName, className);
     this.store = props;
     this.init();
   }
 
-  public init(): void {}
+  public init(): void {
+    this.container.onclick = this.clickHandler;
+  }
+
+  private clickHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
+      return;
+    }
+
+    const element = event.target as HTMLInputElement;
+    const elementName = element.dataset.type;
+    if (elementName === 'aboutButton') {
+      this.store.dispatch({
+        type: ActionID.SetPage,
+        page: Page.About,
+      });
+    }
+  };
 
   private submit(): void {
     if (!this.store.getState().userData.name) {
@@ -56,8 +71,6 @@ export default class LoginPage extends BaseComponent {
       const passwor = this.container.querySelector('#password') as HTMLInputElement;
     }
   }
-
-  public destroy(): void {}
 
   private toHTML(): string {
     return `

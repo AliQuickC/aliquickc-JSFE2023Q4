@@ -7,4 +7,5 @@ export enum Page {
   Login = 'login',
   About = 'about',
   Chat = 'chat',
+  Error = 'error',
 }

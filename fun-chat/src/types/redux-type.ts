@@ -20,6 +20,7 @@ export interface State {
 
 type ActionSetPage = {
   type: typeof ActionID.SetPage;
+  page: Page;
 };
 
 export interface Store {

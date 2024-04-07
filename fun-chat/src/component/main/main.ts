@@ -1,10 +1,13 @@
+import About from '../../pages/about/about';
+import Chat from '../../pages/chat/chat';
+import ErrorPage from '../../pages/error/error';
 import LoginPage from '../../pages/login/login-page';
 import { Page } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 
 export default class Main extends BaseComponent {
-  private page!: LoginPage;
+  private page!: LoginPage | Chat | About | ErrorPage;
 
   constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
     super(props, tagName, className);
@@ -16,7 +19,7 @@ export default class Main extends BaseComponent {
 
   public enterKeyDown = (): void => {
     if (this.store.getState().appData.currentPage === Page.Login) {
-      this.page.enterKeyDown();
+      (this.page as LoginPage).enterKeyDown();
     }
   };
 
@@ -26,13 +29,24 @@ export default class Main extends BaseComponent {
     }
     this.container.innerHTML = '';
 
-    switch (this.store.getState().appData.currentPage) {
+    const { currentPage } = this.store.getState().appData;
+    switch (currentPage) {
       case Page.Login:
         this.page = new LoginPage(this.store, 'div', 'login');
+        break;
+      case Page.Chat:
+        this.page = new Chat(this.store, 'div', 'char');
+        break;
+      case Page.About:
+        this.page = new About(this.store, 'div', 'about');
+        break;
+      case Page.Error:
+        this.page = new ErrorPage(this.store, 'div', 'error');
         break;
       default:
         break;
     }
+    window.location.hash = currentPage;
 
     this.container.append(this.page.render());
     return this.container;

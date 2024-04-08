@@ -62,6 +62,8 @@ export default class LoginPage extends BaseComponent {
         type: ActionID.SetPage,
         page: Page.About,
       });
+    } else if (elementName === 'sendButton') {
+      console.log('login');
     }
   };
 
@@ -75,23 +77,24 @@ export default class LoginPage extends BaseComponent {
   private toHTML(): string {
     return `
     <div class="container login__container">
-      <form class="form" action="#" id="form" autocomplete="off" novalidate="novalidate">
+      <form class="login__form form" action="#" id="form" autocomplete="off" novalidate="novalidate">
         <fieldset class="login__group">
-          <legend class="login__capture">Enter the chat</legend>
+          <legend class="login__capture">Вход в чат</legend>
 
           <div class="login__input-group">
-            <label for="name">Name: </label>
-            <input class="login__input" type="text" id="name" placeholder="Name" autocomplete="off" data-type="loginInput" name="firstName" required/>
+            <label for="name">Имя: </label>
+            <input class="login__input" type="text" id="name" placeholder="имя" autocomplete="off" data-type="loginInput" name="firstName" required/>
           </div>
 
           <div class="login__input-group">
-            <label for="lastname">Password: </label>
-            <input class="login__input" type="password" id="password" placeholder="password" autocomplete="off" data-type="loginInput" name="password" required/>
+            <label for="lastname">Пароль: </label>
+            <input class="login__input" type="password" id="password" placeholder="пароль" autocomplete="off" data-type="loginInput" name="password" required/>
           </div>
 
-          <button type='submit' class="login__send-button" data-type="sendButton">Enter</button>
-          <button type='button' class="login__about-button" data-type="aboutButton">About</button>
+          <button type='submit' class="login__send-button" data-type="sendButton">Войти</button>
+
         </fieldset>
+        <button type='button' class="login__about-button" data-type="aboutButton">Инфо</button>
       </form>
     </div>
     `;

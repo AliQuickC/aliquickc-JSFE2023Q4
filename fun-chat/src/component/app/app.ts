@@ -59,7 +59,7 @@ export default class App {
     this.container.append(this.footer.render());
 
     this.container.onkeydown = (event: KeyboardEvent): void => {
-      if (event.code === 'Enter') {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
         this.main.enterKeyDown();
       }
     };

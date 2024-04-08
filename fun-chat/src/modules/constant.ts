@@ -8,7 +8,7 @@ export const defaultUserData: UserData = {
 
 export const defaultState: State = {
   appData: {
-    currentPage: Page.About,
+    currentPage: Page.Login,
   },
   userData: defaultUserData,
 };

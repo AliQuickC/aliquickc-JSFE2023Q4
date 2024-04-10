@@ -13,8 +13,18 @@ export default class Header extends BaseComponent {
   public destroy(): void {}
 
   private toHTML(): string {
+    const { userData } = this.store.getState();
+
     return `
     <div class="container header__container">
+      <span>Веселый чатик</span>
+      <div class="header__login-data">
+        <div class="header__login-info">
+          <label  class="header__login-label">Пользователь:</label>
+          <output  class="header__login-name">${userData.isLogin ? userData.name : 'не авторизован'}</output>
+        </div>
+        <button class="header__logout-button" data-type="logoutButton" ${userData.isLogin ? '' : 'disabled'}>Выход</button>
+      </div>
     </div>
     `;
   }

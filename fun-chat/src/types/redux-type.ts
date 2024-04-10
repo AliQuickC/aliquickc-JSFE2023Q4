@@ -7,6 +7,7 @@ export type Unsubscribe = { unsubscribe: () => void };
 export type UserData = {
   name: string | null;
   password: string | null;
+  isLogin: boolean;
 };
 
 export type AppData = {

@@ -1,4 +1,6 @@
 .header
+  padding-top: 10px
+  padding-bottom: 10px
   background-color: var(--bg-header-footer)
   min-height: 50px
   font-size: 18px
@@ -9,8 +11,26 @@
     height: 100%
     display: flex
     align-items: center
-    justify-content: flex-end
+    justify-content: space-between
     column-gap: 20px
+  &__login
+    &-info
+      display: flex
+      justify-content: space-between
+      align-items: center
+      column-gap: 6px
+    &-data
+      display: flex
+      justify-content: space-between
+      align-items: center
+      column-gap: 10px
+      font-size: 14px
+      @media(max-width: 768px)
+        flex-direction: column-reverse
+        gap: 6px
+        align-items: end
+    &-name
+      font-size: 16px
   &__logout-button
     font-size: 14px
     font-weight: bold

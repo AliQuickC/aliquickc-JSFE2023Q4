@@ -2,8 +2,9 @@ import { Page } from '../types/enum';
 import { State, UserData } from '../types/redux-type';
 
 export const defaultUserData: UserData = {
-  name: null,
+  name: 'Axcvbnm',
   password: null,
+  isLogin: false,
 };
 
 export const defaultState: State = {

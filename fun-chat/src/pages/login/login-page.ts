@@ -62,8 +62,6 @@ export default class LoginPage extends BaseComponent {
         type: ActionID.SetPage,
         page: Page.About,
       });
-    } else if (elementName === 'sendButton') {
-      console.log('login');
     }
   };
 

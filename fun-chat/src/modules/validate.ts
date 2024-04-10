@@ -29,7 +29,14 @@ export default class AValidate {
 
     submitButton.onclick = (event: Event): void => {
       event.preventDefault();
-      if (this.fields.reduce((isValid, field) => this.checkField(field) && isValid, true)) this.triggerSuccess();
+      if (
+        this.fields.reduce((isValid, field) => {
+          const isCheckFaeld = this.checkField(field);
+          return isCheckFaeld && isValid;
+        }, true)
+      ) {
+        this.triggerSuccess();
+      }
     };
   }
 

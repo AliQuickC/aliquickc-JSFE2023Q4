@@ -8,7 +8,7 @@ export default abstract class Publisher {
   protected _triggerEvent(eventName: string, event: object = {}): void {
     // если массив eventName, внутри объекта listeners, существует
     if (this.listeners) {
-      this.listeners[eventName].forEach((callback) => {
+      this.listeners[eventName]?.forEach((callback) => {
         // вызов ф-ций, из массива
         callback(event);
       });

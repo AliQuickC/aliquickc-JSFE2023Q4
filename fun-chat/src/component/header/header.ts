@@ -1,10 +1,15 @@
 import BaseComponent from '../base-component/base-component';
 import { Store } from '../../types/redux-type';
+import WebSocketController from '../../modules/ws-api';
 
 export default class Header extends BaseComponent {
-  constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
-    super(props, tagName, className);
-    this.store = props;
+  constructor(
+    props: { store: Store; wsController: WebSocketController },
+    tagName: keyof HTMLElementTagNameMap,
+    className: string
+  ) {
+    super(props.store, tagName, className);
+    this.store = props.store;
     this.init();
   }
 

@@ -1,3 +1,4 @@
+import WebSocketController from '../../modules/ws-api';
 import About from '../../pages/about/about';
 import Chat from '../../pages/chat/chat';
 import ErrorPage from '../../pages/error/error';
@@ -8,10 +9,16 @@ import BaseComponent from '../base-component/base-component';
 
 export default class Main extends BaseComponent {
   private page!: LoginPage | Chat | About | ErrorPage;
+  private wsController: WebSocketController;
 
-  constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
-    super(props, tagName, className);
-    this.store = props;
+  constructor(
+    props: { store: Store; wsController: WebSocketController },
+    tagName: keyof HTMLElementTagNameMap,
+    className: string
+  ) {
+    super(props.store, tagName, className);
+    this.store = props.store;
+    this.wsController = props.wsController;
     this.init();
   }
 
@@ -32,7 +39,7 @@ export default class Main extends BaseComponent {
     const { currentPage } = this.store.getState().appData;
     switch (currentPage) {
       case Page.Login:
-        this.page = new LoginPage(this.store, 'div', 'login');
+        this.page = new LoginPage({ store: this.store, wsController: this.wsController }, 'div', 'login');
         break;
       case Page.Chat:
         this.page = new Chat(this.store, 'div', 'char');

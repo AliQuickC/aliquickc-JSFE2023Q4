@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseComponent from '../../component/base-component/base-component';
 import AValidate from '../../modules/validate';
+import WebSocketController from '../../modules/ws-api';
 import { Page, ValidatorRule } from '../../types/enum';
 import { ActionID, Store } from '../../types/redux-type';
 
 const REQUIRED_REQUARED = 'The field is required';
 const FIRST_LETTER_ERROR = 'first letter must be capitalized, from "A" to "Z"';
 const ACCEPTABLE_LETTERS = 'Acceptable letters are from "a" to "z"';
-const ACCEPTABLE_LETTERS_PASSWORD = 'Acceptable letters are from "a" to "z" and contain a capital character';
+const ACCEPTABLE_LETTERS_PASSWORD = 'Acceptable letters are from "a" to "z" and contain one capital letter';
 const checkCapitalize = (value: string): boolean => {
   return !!value.match(/^[A-Z]{1}/);
 };
@@ -30,19 +31,26 @@ const nameRule = [
 
 const passwordRule = [
   { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
-  { rule: ValidatorRule.MinLength, value: 4, errorMessage: minCharacterErrorMessage(4) },
+  { rule: ValidatorRule.MinLength, value: 4, errorMessage: minCharacterErrorMessage(6) },
   {
     validator: (value: string | boolean): boolean => {
-      return !!(value as string).match(/(?=.*[A-Z])[-A-Za-z]{6,}$/);
+      return !!(value as string).match(/(?=.*[A-Z])[A-Za-z0-9]{6,}$/);
     },
     errorMessage: ACCEPTABLE_LETTERS_PASSWORD,
   },
 ];
 
 export default class LoginPage extends BaseComponent {
-  constructor(props: Store, tagName: keyof HTMLElementTagNameMap, className: string) {
-    super(props, tagName, className);
-    this.store = props;
+  private wsController: WebSocketController;
+
+  constructor(
+    props: { store: Store; wsController: WebSocketController },
+    tagName: keyof HTMLElementTagNameMap,
+    className: string
+  ) {
+    super(props.store, tagName, className);
+    this.store = props.store;
+    this.wsController = props.wsController;
     this.init();
   }
 
@@ -65,28 +73,28 @@ export default class LoginPage extends BaseComponent {
     }
   };
 
-  private submit(): void {
-    if (!this.store.getState().userData.name) {
-      const name = this.container.querySelector('#name') as HTMLInputElement;
-      const passwor = this.container.querySelector('#password') as HTMLInputElement;
-    }
-  }
+  private submit = (): void => {
+    const name = (this.container.querySelector('[data-type="nameInput"]') as HTMLInputElement).value;
+    const password = (this.container.querySelector('[data-type="passwordInput"]') as HTMLInputElement).value;
+
+    this.wsController.connectToServer(name, password);
+  };
 
   private toHTML(): string {
     return `
     <div class="container login__container">
-      <form class="login__form form" action="#" id="form" autocomplete="off" novalidate="novalidate">
+      <form class="login__form form" action="#" id="form" data-type="loginForm" autocomplete="off" novalidate="novalidate">
         <fieldset class="login__group">
           <legend class="login__capture">Вход в чат</legend>
 
           <div class="login__input-group">
             <label for="name">Имя: </label>
-            <input class="login__input" type="text" id="name" placeholder="имя" autocomplete="off" data-type="loginInput" name="firstName" required/>
+            <input class="login__input" type="text" id="name" data-type="nameInput" placeholder="имя" autocomplete="off" name="firstName" required/>
           </div>
 
           <div class="login__input-group">
             <label for="lastname">Пароль: </label>
-            <input class="login__input" type="password" id="password" placeholder="пароль" autocomplete="off" data-type="loginInput" name="password" required/>
+            <input class="login__input" type="password" id="password" placeholder="пароль" autocomplete="off" data-type="passwordInput" name="password" required/>
           </div>
 
           <button type='submit' class="login__send-button" data-type="sendButton">Войти</button>
@@ -109,13 +117,11 @@ export default class LoginPage extends BaseComponent {
     this.container.innerHTML = this.toHTML();
 
     setTimeout(() => {
-      const validate = new AValidate('#form');
+      const validate = new AValidate('[data-type="loginForm"]');
 
-      validate.addField('#name', nameRule).addField('#password', passwordRule);
+      validate.addField('[data-type="nameInput"]', nameRule).addField('[data-type="passwordInput"]', passwordRule);
 
-      validate.onSuccess(() => {
-        this.submit();
-      });
+      validate.onSuccess(this.submit);
     }, 0);
 
     return this.container;

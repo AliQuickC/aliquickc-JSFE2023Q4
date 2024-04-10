@@ -1,3 +1,4 @@
+import WebSocketController from '../../modules/ws-api';
 import { Page } from '../../types/enum';
 import { ActionID, Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
@@ -10,16 +11,22 @@ export default class App {
   private header!: Header;
   private main!: Main;
   private footer!: Footer;
+  private wsController: WebSocketController;
 
   constructor(props: Store) {
     this.container = document.body as HTMLBodyElement;
     this.store = props;
     this.init();
+    this.wsController = new WebSocketController();
   }
 
   private init(): void {
     this.enableRouterChange();
     this.store.subscribe(this.render);
+
+    // this.wsController.addEventListener('Authentication-Success', (): void => {
+    //   this.store.dispatch({ type: ActionID.Authentication, name, password });
+    // });
   }
 
   public destroy(): void {}
@@ -50,8 +57,8 @@ export default class App {
     this.footer?.destroy();
     this.container.innerHTML = '';
 
-    this.header = new Header(this.store, 'header', 'header');
-    this.main = new Main(this.store, 'main', 'main');
+    this.header = new Header({ store: this.store, wsController: this.wsController }, 'header', 'header');
+    this.main = new Main({ store: this.store, wsController: this.wsController }, 'main', 'main');
     this.footer = new Footer(this.store, 'footer', 'footer');
 
     this.container.append(this.header.render());

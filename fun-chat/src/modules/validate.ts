@@ -27,8 +27,15 @@ export default class AValidate {
 
     const submitButton = this.formElement.querySelector('button[type="submit"]') as HTMLButtonElement;
 
-    submitButton.onclick = (event: Event): void => {
+    this.formElement.addEventListener('keydown', (event: KeyboardEvent): void => {
+      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+        event.preventDefault();
+      }
+    });
+
+    submitButton.addEventListener('click', (event: Event): void => {
       event.preventDefault();
+      event.stopPropagation();
       if (
         this.fields.reduce((isValid, field) => {
           const isCheckFaeld = this.checkField(field);
@@ -37,7 +44,7 @@ export default class AValidate {
       ) {
         this.triggerSuccess();
       }
-    };
+    });
   }
 
   private checkField = (field: fieldCheckData): boolean => {

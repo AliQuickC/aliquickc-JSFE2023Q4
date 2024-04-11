@@ -29,4 +29,10 @@ export enum AuthenticationError {
 
 export enum messageId {
   Authentication = 'Authentication',
+  LogOut = 'logOut',
+}
+
+export enum publisherActionType {
+  AuthenticationSuccess = 'Authentication-Success',
+  LogoutSuccess = 'LogoutSuccess',
 }

@@ -8,7 +8,8 @@ import { ActionID, Store } from '../../types/redux-type';
 const REQUIRED_REQUARED = 'The field is required';
 const FIRST_LETTER_ERROR = 'first letter must be capitalized, from "A" to "Z"';
 const ACCEPTABLE_LETTERS = 'Acceptable letters are from "a" to "z"';
-const ACCEPTABLE_LETTERS_PASSWORD = 'Acceptable letters are from "a" to "z" and contain one capital letter';
+const ACCEPTABLE_LETTERS_PASSWORD =
+  'Acceptable letters are from "a" to "z", digits "0-9" and contain one capital letter';
 const checkCapitalize = (value: string): boolean => {
   return !!value.match(/^[A-Z]{1}/);
 };
@@ -42,6 +43,7 @@ const passwordRule = [
 
 export default class LoginPage extends BaseComponent {
   private wsController: WebSocketController;
+  private validate: AValidate | null = null;
 
   constructor(
     props: { store: Store; wsController: WebSocketController },
@@ -56,6 +58,13 @@ export default class LoginPage extends BaseComponent {
 
   public init(): void {
     this.container.onclick = this.clickHandler;
+  }
+
+  public destroy(): void {
+    super.destroy();
+    if (this.validate) {
+      this.validate = null;
+    }
   }
 
   private clickHandler = (event: Event): void => {
@@ -117,11 +126,11 @@ export default class LoginPage extends BaseComponent {
     this.container.innerHTML = this.toHTML();
 
     setTimeout(() => {
-      const validate = new AValidate('[data-type="loginForm"]');
+      this.validate = new AValidate('[data-type="loginForm"]');
 
-      validate.addField('[data-type="nameInput"]', nameRule).addField('[data-type="passwordInput"]', passwordRule);
+      this.validate.addField('[data-type="nameInput"]', nameRule).addField('[data-type="passwordInput"]', passwordRule);
 
-      validate.onSuccess(this.submit);
+      this.validate.onSuccess(this.submit);
     }, 0);
 
     return this.container;

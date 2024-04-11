@@ -1,5 +1,6 @@
 import WebSocketController from '../../modules/ws-api';
-import { Page } from '../../types/enum';
+import { Page, publisherActionType } from '../../types/enum';
+import { AuthenticationEvent, publisherEvent } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
 import Header from '../header/header';
@@ -11,22 +12,31 @@ export default class App {
   private header!: Header;
   private main!: Main;
   private footer!: Footer;
-  private wsController: WebSocketController;
+  private wsController!: WebSocketController;
 
   constructor(props: Store) {
     this.container = document.body as HTMLBodyElement;
     this.store = props;
     this.init();
-    this.wsController = new WebSocketController();
   }
 
   private init(): void {
     this.enableRouterChange();
     this.store.subscribe(this.render);
 
-    // this.wsController.addEventListener('Authentication-Success', (): void => {
-    //   this.store.dispatch({ type: ActionID.Authentication, name, password });
-    // });
+    this.wsController = new WebSocketController();
+
+    this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
+      this.store.dispatch({
+        type: ActionID.Authentication,
+        login: (event as AuthenticationEvent).login,
+        password: (event as AuthenticationEvent).password,
+      });
+    });
+
+    this.wsController.addEventListener(publisherActionType.LogoutSuccess, (): void => {
+      this.store.dispatch({ type: ActionID.Logout });
+    });
   }
 
   public destroy(): void {}

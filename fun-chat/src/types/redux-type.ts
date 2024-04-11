@@ -5,7 +5,7 @@ export type Listiner = (state: State) => void;
 export type Unsubscribe = { unsubscribe: () => void };
 
 export type UserData = {
-  name: string | null;
+  login: string | null;
   password: string | null;
   isLogin: boolean;
 };
@@ -26,19 +26,24 @@ type ActionSetPage = {
 
 type ActionAuthentication = {
   type: typeof ActionID.Authentication;
-  name: string;
+  login: string;
   password: string;
 };
+
+type ActionLogout = {
+  type: typeof ActionID.Logout;
+};
+
+export type Action = ActionSetPage | ActionAuthentication | ActionLogout;
+
+export enum ActionID {
+  SetPage = 'SET-PAGE',
+  Authentication = 'AUTHENTICATION',
+  Logout = 'LOGOUT',
+}
 
 export interface Store {
   subscribe: (fn: Listiner) => Unsubscribe;
   getState: () => State;
   dispatch: (action: Action) => void;
-}
-
-export type Action = ActionSetPage | ActionAuthentication;
-
-export enum ActionID {
-  SetPage = 'SET-PAGE',
-  Authentication = 'AUTHENTICATION',
 }

@@ -1,11 +1,14 @@
+import { publisherActionType } from '../../types/enum';
+import { publisherEvent } from '../../types/publisher-type';
+
 export default abstract class Publisher {
-  private listeners: { [key: string]: ((event: object) => void)[] };
+  private listeners: { [key: string]: ((event: publisherEvent) => void)[] };
 
   constructor() {
-    this.listeners = new Object() as { [key: string]: ((event: object) => void)[] };
+    this.listeners = new Object() as { [key: string]: ((event: publisherEvent) => void)[] };
   }
 
-  protected _triggerEvent(eventName: string, event: object = {}): void {
+  protected _triggerEvent(eventName: publisherActionType, event: publisherEvent = {}): void {
     // если массив eventName, внутри объекта listeners, существует
     if (this.listeners) {
       this.listeners[eventName]?.forEach((callback) => {
@@ -15,7 +18,7 @@ export default abstract class Publisher {
     }
   }
 
-  public addEventListener(eventName: string, listener: (event: object) => void): () => void {
+  public addEventListener(eventName: publisherActionType, listener: (event: publisherEvent) => void): () => void {
     // если массива listeners[eventName][] внутри объекта listeners не существует
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = []; // создаем его
@@ -27,7 +30,7 @@ export default abstract class Publisher {
     };
   }
 
-  public removeEventListener(eventName: string, listener: (event: object) => void): void {
+  public removeEventListener(eventName: publisherActionType, listener: (event: publisherEvent) => void): void {
     if (this.listeners[eventName]) {
       this.listeners[eventName] = this.listeners[eventName].filter((fn) => fn !== listener);
     }

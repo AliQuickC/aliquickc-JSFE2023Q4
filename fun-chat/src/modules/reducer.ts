@@ -10,11 +10,15 @@ export default function reducer(stateData: State, action: Action): State {
       return state;
     }
     case ActionID.Authentication: {
-      state.userData = { ...state.userData, name: action.name, password: action.password, isLogin: true };
+      state.userData = { ...state.userData, login: action.login, password: action.password, isLogin: true };
       state.appData = { ...state.appData, currentPage: Page.Chat };
       return state;
     }
-
+    case ActionID.Logout: {
+      state.userData = { ...state.userData, login: null, password: null, isLogin: false };
+      state.appData = { ...state.appData, currentPage: Page.Login };
+      return state;
+    }
     default:
       return state;
   }

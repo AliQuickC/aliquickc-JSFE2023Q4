@@ -86,6 +86,7 @@ export default class WebSocketController extends Publisher {
     } else if (eventData.id === messageId.LogOut) {
       if (eventData.type === 'USER_LOGOUT' && !eventData.payload.user.isLogin) {
         this._triggerEvent(publisherActionType.LogoutSuccess);
+        this.closeServer();
         this.ws = null;
       }
     }

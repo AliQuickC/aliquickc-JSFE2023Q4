@@ -21,31 +21,38 @@ export default class AValidate {
   private formElement!: HTMLFormElement;
   private successCallback: (() => void)[] = [];
   private fields: fieldCheckData[] = [];
+  private submitButton!: HTMLButtonElement;
 
   constructor(selector: string) {
     this.formElement = document.querySelector(selector) as HTMLFormElement;
 
-    const submitButton = this.formElement.querySelector('button[type="submit"]') as HTMLButtonElement;
+    this.submitButton = this.formElement.querySelector('button[type="submit"]') as HTMLButtonElement;
 
-    this.formElement.addEventListener('keydown', (event: KeyboardEvent): void => {
-      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        event.preventDefault();
-      }
-    });
-
-    submitButton.addEventListener('click', (event: Event): void => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (
-        this.fields.reduce((isValid, field) => {
-          const isCheckFaeld = this.checkField(field);
-          return isCheckFaeld && isValid;
-        }, true)
-      ) {
-        this.triggerSuccess();
-      }
-    });
+    this.formElement.addEventListener('keydown', this.keyDownHandler);
+    this.submitButton.addEventListener('click', this.clickHandler);
   }
+
+  private keyDownHandler = (event: KeyboardEvent): void => {
+    if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+      event.preventDefault();
+    }
+  };
+
+  private clickHandler = (event: Event): void => {
+    event.preventDefault();
+    this.submitHandler();
+  };
+
+  public submitHandler = (): void => {
+    if (
+      this.fields.reduce((isValid, field) => {
+        const isCheckFaeld = this.checkField(field);
+        return isCheckFaeld && isValid;
+      }, true)
+    ) {
+      this.triggerSuccess();
+    }
+  };
 
   private checkField = (field: fieldCheckData): boolean => {
     this.hideError(field.fieldElement, field.errorElement);
@@ -105,5 +112,15 @@ export default class AValidate {
 
   public onSuccess = (callback: () => void): void => {
     this.successCallback.push(callback);
+  };
+
+  public offSuccess = (): void => {
+    this.successCallback = [];
+  };
+
+  public destroy = (): void => {
+    this.offSuccess();
+    this.formElement.removeEventListener('keydown', this.keyDownHandler);
+    this.submitButton.removeEventListener('click', this.clickHandler);
   };
 }

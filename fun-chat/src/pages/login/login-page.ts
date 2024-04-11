@@ -63,6 +63,7 @@ export default class LoginPage extends BaseComponent {
   public destroy(): void {
     super.destroy();
     if (this.validate) {
+      this.validate.destroy();
       this.validate = null;
     }
   }
@@ -116,10 +117,7 @@ export default class LoginPage extends BaseComponent {
   }
 
   public enterKeyDown = (): void => {
-    const submitButton = this.container.querySelector('button[type="submit"]') as HTMLButtonElement;
-    if (submitButton) {
-      submitButton.click();
-    }
+    this.validate?.submitHandler();
   };
 
   public render = (): HTMLElement => {

@@ -4,48 +4,184 @@
   &__container
     display: flex
     height: 100%
-  &__user-wrap
-    height: calc(100% - 40px)
-    overflow-y: scroll
-  &__users
-    width: 35%
-    max-height: 100%
-    &-capture
-      text-align: center
-  &__find-wrap
-    display: flex
-    justify-content: space-between
-    align-items: center
-    margin-bottom: 12px
-    column-gap: 8px
-  &__find-user
-  &__find-clear-btn
-    width: 22px
-    height: 22px
+
+.users
+  padding: 0
+  width: 35%
+  max-height: 100%
+  border-color: var(--border-color)
+  &__capture
+    text-align: center
+
+.user-find
+  padding: 4px 15px 0 15px
+  border-bottom: 2px solid var(--bg-header-footer)
+  display: flex
+  justify-content: space-between
+  align-items: center
+  &__input
+    width: 100%
+    height: 24px
+    border-radius: 3px
+  &__clear-btn
+    margin-left: -2px
+    width: 24px
+    height: 24px
     display: flex
     justify-content: center
     align-items: center
-    border-radius: 5px
+    border-radius: 0 3px 3px 0
     background-color: var(--button-bg)
     font-size: 18px
-  &__correspondence
-    width: 65%
-    height: 100%
-    &-capture
-      text-align: center
-
-  &__find-user
-    width: 100%
-    border-radius: 3px
 
 .user-list
-  height: 100%
-  margin: 0
+  height: calc(100% - 30px)
+  overflow-y: auto
+  scrollbar-color: var(--button-bg) var(--border-color)
+  &__wrap
+    height: 100%
+    margin: 0
+    padding-left: 25px
   &__item
     cursor: pointer
+    height: 24px
+    display: flex
+    align-items: flex-end
+    column-gap: 20px
+    &_select
+      border: 1px dashed #000
     &_red
-      &::marker
-        color: #9e0101
+      & .user-list__item-name
+        &::marker
+          color: #9e0101
     &_green
+      & .user-list__item-name
+        &::marker
+          color: green
+    &-name
+      display: list-item
       &::marker
-        color: green
+        font-size: 20px
+    &-messages
+      position: relative
+      @extend %unselectable
+    &-icon
+      display: block
+      height: 24px
+      width: 24px
+      background: url("../assets/image/letter.png") no-repeat
+      background-size: cover
+    &-count
+      position: absolute
+      top: 50%
+      transform: translate(-50%, -40%)
+      left: 50%
+      color: #0408ff
+      font-weight: bold
+      font-size: 16px
+
+.correspondence
+  padding: 0
+  width: 65%
+  height: 100%
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+  border-color: var(--border-color)
+  &__capture
+    text-align: center
+  &__select-user
+  &__name
+  &__status
+  &__messages
+    height: 100%
+
+.select-user
+  height: 30px
+  padding: 5px 0
+  display: flex
+  justify-content: center
+  align-items: center
+  column-gap: 10px
+  border-bottom: 2px solid var(--bg-header-footer)
+  &__status
+    font-size: 14px
+    font-weight: bold
+    &_red
+      color: #9e0101
+    &_green
+      color: green
+
+.messages
+  padding: 5px 0
+  overflow-y: auto
+  scrollbar-color: var(--button-bg) var(--border-color)
+  &__wrap
+    padding: 0 15px
+    display: flex
+    flex-direction: column
+    row-gap: 10px
+  &__demarcation-line
+    text-align: center
+    font-size: 14px
+    border-bottom: 1px solid #000
+
+.message
+  width: 80%
+  max-width: 80%
+  flex-basis: 80%
+  align-self: start
+  border-radius: 5px
+  background-color: #eeebeb
+  border: 1px solid #000
+  font-size: 12px
+  &_own
+    align-self: end
+  &__header
+    padding: 3px 10px
+  &__status
+    padding: 3px 10px
+    display: flex
+    justify-content: space-between
+    align-items: center
+  &__control
+    display: flex
+    column-gap: 10px
+  &__control-edit, &__control-delete
+    width: 20px
+    height: 20px
+    border: none
+  &__control-edit
+    background: url("../assets/image/pencil.svg") no-repeat center
+    background-size: cover
+  &__control-delete
+    background: url("../assets/image/trash.svg") no-repeat center
+    background-size: 80%
+  &__text
+    display: block
+    border-radius: 5px
+    width: 100%
+    margin: 0
+    padding: 5px
+    background-color: #fff
+    font-size: 16px
+    resize: none
+    overflow: none
+    outline: none
+    border: none
+
+.send
+  display: flex
+  align-items: center
+  padding: 10px 15px
+  border-top: 2px solid var(--bg-header-footer)
+  &__input
+    height: 28px
+    flex-basis: auto
+    flex-grow: 1
+    border-radius: 3px
+  &__button
+    margin-left: -1px
+    border-radius: 0 3px 3px 0
+    background-color: var(--button-bg)
+    font-size: 18px

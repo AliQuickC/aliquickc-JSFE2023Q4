@@ -9,7 +9,7 @@ export const defaultUserData: UserData = {
 
 export const defaultState: State = {
   appData: {
-    currentPage: Page.Chat,
+    currentPage: Page.Login,
   },
   userData: defaultUserData,
 };

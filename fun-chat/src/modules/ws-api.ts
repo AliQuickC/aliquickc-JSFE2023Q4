@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Publisher from '../component/base-component/publisher';
-import { ServerReadyState, messageId, publisherActionType } from '../types/enum';
-import { AuthenticationLogin, AuthenticationMsg, LogoutMsg } from '../types/types';
+import ModalDialog from '../component/modal-dialog/modal-dialog';
+import { AuthenticationErrorMessage, ServerReadyState, messageId, publisherActionType } from '../types/enum';
+import { AuthenticationMsg, LogoutMsg, ResponseAuthentication } from '../types/types';
 
 const baseURL = 'ws://localhost:4000';
 
@@ -51,6 +52,12 @@ export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
   private passwordCache!: string;
+  private modalDialog: ModalDialog;
+
+  constructor(modalDialog: ModalDialog) {
+    super();
+    this.modalDialog = modalDialog;
+  }
 
   public init(): void {}
 
@@ -64,16 +71,18 @@ export default class WebSocketController extends Publisher {
     }
   }
 
-  private responseAuthentication = (eventData: AuthenticationLogin): void => {
+  private responseAuthentication = (eventData: ResponseAuthentication): void => {
     if (eventData.type === 'USER_LOGIN') {
-      //  ||
-      // (eventData.type === 'ERROR' && eventData.payload.error === AuthenticationError.AlreadyAuthorized))
-      // const { login: name, password } = eventData.payload.user;
       this._triggerEvent(publisherActionType.AuthenticationSuccess, {
         login: eventData.payload.user.login,
         password: this.passwordCache,
       });
-      // Authentication Success
+    } else if (eventData.type === 'ERROR') {
+      if (eventData.payload.error === AuthenticationErrorMessage.AlreadyAuthorized) {
+        this.modalDialog.showModal('пользователь с таким именем, уже вошол в чат!');
+      } else if (eventData.payload.error === AuthenticationErrorMessage.IncorrectPassword) {
+        this.modalDialog.showModal('Введен неверный пароль!');
+      }
     }
   };
 
@@ -94,7 +103,6 @@ export default class WebSocketController extends Publisher {
 
   private wsOpenHandler = (event: Event): void => {
     (event.target as WebSocket).send(JSON.stringify(this.msgAuthentication));
-    // ws.readyState
     (event.target as WebSocket).send(JSON.stringify(allAuthenticatedUsersMsg));
     (event.target as WebSocket).send(JSON.stringify(allUnauthorizedUsersMsg));
   };

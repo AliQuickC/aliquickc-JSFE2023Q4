@@ -224,7 +224,6 @@ export default class Chat extends BaseComponent {
 
   private textAreaPrepare = (containerElem: HTMLElement): void => {
     const textArea: NodeListOf<HTMLTextAreaElement> = containerElem.querySelectorAll('textarea');
-    console.log('textArea: ', textArea);
 
     textArea.forEach((item) => {
       item.style.height = '';

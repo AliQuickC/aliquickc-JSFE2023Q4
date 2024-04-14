@@ -34,6 +34,7 @@ export default class Main extends BaseComponent {
     if (this.page) {
       this.page.destroy();
     }
+
     this.container.innerHTML = '';
 
     const { currentPage } = this.store.getState().appData;
@@ -56,6 +57,7 @@ export default class Main extends BaseComponent {
     window.location.hash = currentPage;
 
     this.container.append(this.page.render());
+
     return this.container;
   };
 }

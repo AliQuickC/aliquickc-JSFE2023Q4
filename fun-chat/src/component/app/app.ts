@@ -5,6 +5,7 @@ import { ActionID, Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Main from '../main/main';
+import ModalDialog from '../modal-dialog/modal-dialog';
 
 export default class App {
   private container: HTMLBodyElement;
@@ -13,6 +14,7 @@ export default class App {
   private main!: Main;
   private footer!: Footer;
   private wsController!: WebSocketController;
+  private modalDialog!: ModalDialog;
 
   constructor(props: Store) {
     this.container = document.body as HTMLBodyElement;
@@ -24,7 +26,8 @@ export default class App {
     this.enableRouterChange();
     this.store.subscribe(this.render);
 
-    this.wsController = new WebSocketController();
+    this.modalDialog = new ModalDialog(this.store);
+    this.wsController = new WebSocketController(this.modalDialog);
 
     this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
       this.store.dispatch({
@@ -40,6 +43,10 @@ export default class App {
   }
 
   public destroy(): void {}
+
+  // private showModal = (message: string): void => {
+  //   this.modalDialog.showModal(message);
+  // };
 
   private enableRouterChange(): void {
     window.addEventListener('hashchange', () => {
@@ -74,10 +81,15 @@ export default class App {
     this.container.append(this.header.render());
     this.container.append(this.main.render());
     this.container.append(this.footer.render());
+    this.container.append(this.modalDialog.render());
+
+    // this.modalDialog.showModal('adfhfgdh');
 
     this.container.onkeydown = (event: KeyboardEvent): void => {
       if (event.code === 'Enter' || event.code === 'NumpadEnter') {
-        this.main.enterKeyDown();
+        if (!this.modalDialog.isShowModal) {
+          this.main.enterKeyDown();
+        }
       }
     };
 

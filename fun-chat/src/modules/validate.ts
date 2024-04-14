@@ -91,6 +91,7 @@ export default class AValidate {
   private checkRule = (value: string, options: ruleOptions): boolean => {
     if (options.rule === ValidatorRule.Required && value === '') return false;
     if (options.rule === ValidatorRule.MinLength && value.length < (options.value as number)) return false;
+    if (options.rule === ValidatorRule.MaxLength && value.length > (options.value as number)) return false;
     return true;
   };
 

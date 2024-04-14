@@ -14,17 +14,15 @@ const checkCapitalize = (value: string): boolean => {
   return !!value.match(/^[A-Z]{1}/);
 };
 const minCharacterErrorMessage = (numb: number): string => `The field must contain a minimum of ${numb} characters`;
+const maxCharacterErrorMessage = (numb: number): string => `field cannot contain more than ${numb} characters`;
 
 const nameRule = [
   { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
-  {
-    validator: checkCapitalize,
-    errorMessage: FIRST_LETTER_ERROR,
-  },
   { rule: ValidatorRule.MinLength, value: 3, errorMessage: minCharacterErrorMessage(3) },
+  { rule: ValidatorRule.MaxLength, value: 5, errorMessage: maxCharacterErrorMessage(5) },
   {
     validator: (value: string): boolean => {
-      return !!value.match(/^[A-Za-z]{3,}$/);
+      return !!value.match(/^[A-Za-zА-Яа-я]{3,}$/);
     },
     errorMessage: ACCEPTABLE_LETTERS,
   },
@@ -35,7 +33,7 @@ const passwordRule = [
   { rule: ValidatorRule.MinLength, value: 4, errorMessage: minCharacterErrorMessage(6) },
   {
     validator: (value: string | boolean): boolean => {
-      return !!(value as string).match(/(?=.*[A-Z])[A-Za-z0-9]{6,}$/);
+      return !!(value as string).match(/(?=.*[A-Z])[A-Za-z0-9]{3,}$/);
     },
     errorMessage: ACCEPTABLE_LETTERS_PASSWORD,
   },

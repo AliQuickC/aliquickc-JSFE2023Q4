@@ -33,14 +33,8 @@ export default class Header extends BaseComponent {
       if (login !== null && password !== null) {
         this.wsController.userLogout(login, password);
       }
-      // this.store.dispatch({
-      //   type: ActionID.SetPage,
-      //   page: Page.Login,
-      // });
     }
   };
-
-  public destroy(): void {}
 
   private toHTML(): string {
     const { userData } = this.store.getState();

@@ -1,6 +1,7 @@
 export enum ValidatorRule {
   Required = 'required',
   MinLength = 'minLength',
+  MaxLength = 'maxLength',
 }
 
 export enum Page {
@@ -17,19 +18,19 @@ export enum ServerReadyState {
   CLOSED = 3, // The connection is closed or couldn't be opened.
 }
 
-export enum ResponseType {
+export enum messageId {
+  Authentication = 'Authentication',
+  LogOut = 'logOut',
+}
+
+export enum messageType {
   UserLogin = 'USER_LOGIN',
   Error = 'ERROR',
 }
 
-export enum AuthenticationError {
+export enum AuthenticationErrorMessage {
   AlreadyAuthorized = 'a user with this login is already authorized',
   IncorrectPassword = 'incorrect password',
-}
-
-export enum messageId {
-  Authentication = 'Authentication',
-  LogOut = 'logOut',
 }
 
 export enum publisherActionType {

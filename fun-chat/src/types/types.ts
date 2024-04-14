@@ -1,4 +1,4 @@
-import { messageId } from './enum';
+import { AuthenticationErrorMessage, messageId, messageType } from './enum';
 
 export type UserLoginData = {
   login: string;
@@ -14,7 +14,7 @@ type GeneralRequestMsg<I, T, P> = {
 // Response
 export type AuthenticationLogin = {
   id: typeof messageId.Authentication;
-  type: 'USER_LOGIN';
+  type: typeof messageType.UserLogin;
   payload: {
     user: {
       login: string;
@@ -23,15 +23,15 @@ export type AuthenticationLogin = {
   };
 };
 
-// type AuthenticationAlready = {
-//   id: typeof messageId.Authentication;
-//   type: 'ERROR';
-//   payload: {
-//     error: 'a user with this login is already authorized';
-//   };
-// };
+export type AuthenticationError = {
+  id: typeof messageId.Authentication;
+  type: typeof messageType.Error;
+  payload: {
+    error: AuthenticationErrorMessage;
+  };
+};
 
-// export type ResponseAuthenticationSuccess = AuthenticationLogin | AuthenticationAlready;
+export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 // Response
 
 export type AuthenticationMsg = GeneralRequestMsg<
@@ -49,5 +49,3 @@ export type LogoutMsg = GeneralRequestMsg<
     user: UserLoginData;
   }
 >;
-
-export type FunChatEventData = { id: string };

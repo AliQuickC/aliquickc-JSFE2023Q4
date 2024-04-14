@@ -1,20 +1,26 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Publisher from '../component/base-component/publisher';
 import ModalDialog from '../component/modal-dialog/modal-dialog';
-import { AuthenticationErrorMessage, ServerReadyState, messageId, publisherActionType } from '../types/enum';
-import { AuthenticationMsg, LogoutMsg, ResponseAuthentication } from '../types/types';
+import {
+  AuthenticationErrorMessage,
+  ServerReadyState,
+  messageId,
+  messageType,
+  publisherActionType,
+} from '../types/enum';
+import { AuthenticationMsg, LogoutMsg, ResponseAuthentication, ServerResponse, UserInfo } from '../types/types';
 
 const baseURL = 'ws://localhost:4000';
 
 const allAuthenticatedUsersMsg = {
-  id: 'AuthenticatedUsers',
-  type: 'USER_ACTIVE',
+  id: messageId.UsersList,
+  type: messageType.UserActive,
   payload: null,
 };
 
 const allUnauthorizedUsersMsg = {
-  id: 'UnauthorizedUsers',
-  type: 'USER_INACTIVE',
+  id: messageId.UsersList,
+  type: messageType.UserInactive,
   payload: null,
 };
 
@@ -22,8 +28,8 @@ function logoutMsgCreator(name: string, userPassword: string): LogoutMsg {
   const login = name;
   const password = userPassword;
   return {
-    id: 'logOut',
-    type: 'USER_LOGOUT',
+    id: messageId.LogOut,
+    type: messageType.Userlogout,
     payload: {
       user: {
         login,
@@ -37,8 +43,8 @@ function authenticationMsgCreator(name: string, userPassword: string): Authentic
   const login = name;
   const password = userPassword;
   return {
-    id: 'Authentication',
-    type: 'USER_LOGIN',
+    id: messageId.Authentication,
+    type: messageType.UserLogin,
     payload: {
       user: {
         login,
@@ -53,6 +59,8 @@ export default class WebSocketController extends Publisher {
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
   private passwordCache!: string;
   private modalDialog: ModalDialog;
+  private authenticatedUsers: UserInfo[] | null = null;
+  private unauthorizedUsers: UserInfo[] | null = null;
 
   constructor(modalDialog: ModalDialog) {
     super();
@@ -72,12 +80,14 @@ export default class WebSocketController extends Publisher {
   }
 
   private responseAuthentication = (eventData: ResponseAuthentication): void => {
-    if (eventData.type === 'USER_LOGIN') {
+    if (eventData.type === messageType.UserLogin) {
       this._triggerEvent(publisherActionType.AuthenticationSuccess, {
         login: eventData.payload.user.login,
         password: this.passwordCache,
       });
-    } else if (eventData.type === 'ERROR') {
+
+      this.getUserList();
+    } else if (eventData.type === messageType.Error) {
       if (eventData.payload.error === AuthenticationErrorMessage.AlreadyAuthorized) {
         this.modalDialog.showModal('пользователь с таким именем, уже вошол в чат!');
       } else if (eventData.payload.error === AuthenticationErrorMessage.IncorrectPassword) {
@@ -86,25 +96,43 @@ export default class WebSocketController extends Publisher {
     }
   };
 
+  private getUserList = (): void => {
+    this.authenticatedUsers = null;
+    this.unauthorizedUsers = null;
+    (this.ws as WebSocket).send(JSON.stringify(allAuthenticatedUsersMsg));
+    (this.ws as WebSocket).send(JSON.stringify(allUnauthorizedUsersMsg));
+  };
+
   private messageHandler = (event: MessageEvent): void => {
-    const eventData = JSON.parse(event.data);
+    const eventData: ServerResponse = JSON.parse(event.data);
     console.log(eventData);
 
     if (eventData.id === messageId.Authentication) {
       this.responseAuthentication(eventData);
     } else if (eventData.id === messageId.LogOut) {
-      if (eventData.type === 'USER_LOGOUT' && !eventData.payload.user.isLogin) {
+      if (eventData.type === messageType.Userlogout && !eventData.payload.user.isLogined) {
         this._triggerEvent(publisherActionType.LogoutSuccess);
         this.closeServer();
         this.ws = null;
+      }
+    } else if (eventData.id === messageId.UsersList) {
+      const { users } = eventData.payload;
+      if (eventData.type === messageType.UserActive) {
+        this.authenticatedUsers = users;
+      } else if (eventData.type === messageType.UserInactive) {
+        this.unauthorizedUsers = users;
+      }
+
+      if (this.authenticatedUsers && this.unauthorizedUsers) {
+        const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
+
+        this._triggerEvent(publisherActionType.UserLisReady, { userList });
       }
     }
   };
 
   private wsOpenHandler = (event: Event): void => {
     (event.target as WebSocket).send(JSON.stringify(this.msgAuthentication));
-    (event.target as WebSocket).send(JSON.stringify(allAuthenticatedUsersMsg));
-    (event.target as WebSocket).send(JSON.stringify(allUnauthorizedUsersMsg));
   };
 
   public connectToServer = (name: string, password: string): void => {

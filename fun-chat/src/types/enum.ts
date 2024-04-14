@@ -21,11 +21,15 @@ export enum ServerReadyState {
 export enum messageId {
   Authentication = 'Authentication',
   LogOut = 'logOut',
+  UsersList = 'UsersList',
 }
 
 export enum messageType {
   UserLogin = 'USER_LOGIN',
+  Userlogout = 'USER_LOGOUT',
   Error = 'ERROR',
+  UserActive = 'USER_ACTIVE',
+  UserInactive = 'USER_INACTIVE',
 }
 
 export enum AuthenticationErrorMessage {
@@ -36,4 +40,5 @@ export enum AuthenticationErrorMessage {
 export enum publisherActionType {
   AuthenticationSuccess = 'Authentication-Success',
   LogoutSuccess = 'LogoutSuccess',
+  UserLisReady = 'UserLisReady',
 }

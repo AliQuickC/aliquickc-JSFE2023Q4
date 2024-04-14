@@ -1,5 +1,6 @@
 import { Page } from '../types/enum';
 import { State, Action, ActionID } from '../types/redux-type';
+import { UserInfo } from '../types/types';
 
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
@@ -17,6 +18,11 @@ export default function reducer(stateData: State, action: Action): State {
     case ActionID.Logout: {
       state.userData = { ...state.userData, login: null, password: null, isLogin: false };
       state.appData = { ...state.appData, currentPage: Page.Login };
+      return state;
+    }
+    case ActionID.RenewUserList: {
+      const userList: UserInfo[] = action.userList.filter((item) => item.login !== state.userData.login);
+      state.appData = { ...state.appData, userList };
       return state;
     }
     default:

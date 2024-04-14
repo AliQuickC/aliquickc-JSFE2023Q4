@@ -12,6 +12,16 @@ export default class Chat extends BaseComponent {
 
   // eslint-disable-next-line max-lines-per-function
   private toHTML(): string {
+    const users = this.store.getState().appData.userList;
+
+    const usersLayout = users
+      .map(
+        (item) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}">
+                  <span class="user-list__item-name">${item.login}</span>
+                </li>`
+      )
+      .join('');
+
     return `
     <div class="container chat__container">
       <fieldset class="chat__users users">
@@ -24,70 +34,7 @@ export default class Chat extends BaseComponent {
 
         <div class="users__user-list user-list">
           <ul class="user-list__wrap">
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_red">
-              <span class="user-list__item-name">user2</span>
-              <span class="user-list__item-messages">
-                <span class="user-list__item-icon"></span>
-                <span class="user-list__item-count">9</span>
-              </span>
-            </li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_green user-list__item_select">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_green">
-              <span class="user-list__item-name">user2</span>
-              <span class="user-list__item-messages">
-                <span class="user-list__item-icon"></span>
-                <span class="user-list__item-count">0</span>
-              </span>
-            </li>
-            <li class="user-list__item user-list__item_green">
-              <span class="user-list__item-name">user2</span>
-            </li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_red">user1</li>
-            <li class="user-list__item user-list__item_red">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
-            <li class="user-list__item user-list__item_green">user1</li>
-            <li class="user-list__item user-list__item_green">user2</li>
+            ${usersLayout}
           </ul>
         </div>
       </fieldset>

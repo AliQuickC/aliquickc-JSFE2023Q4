@@ -10,6 +10,7 @@ export const defaultUserData: UserData = {
 export const defaultState: State = {
   appData: {
     currentPage: Page.Login,
+    userList: [],
   },
   userData: defaultUserData,
 };

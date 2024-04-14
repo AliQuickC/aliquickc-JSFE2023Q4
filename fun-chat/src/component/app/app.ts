@@ -1,6 +1,6 @@
 import WebSocketController from '../../modules/ws-api';
 import { Page, publisherActionType } from '../../types/enum';
-import { AuthenticationEvent, publisherEvent } from '../../types/publisher-type';
+import { AuthenticationEvent, UserLisReadyEvent, publisherEvent } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import Footer from '../footer/footer';
 import Header from '../header/header';
@@ -34,6 +34,13 @@ export default class App {
         type: ActionID.Authentication,
         login: (event as AuthenticationEvent).login,
         password: (event as AuthenticationEvent).password,
+      });
+    });
+
+    this.wsController.addEventListener(publisherActionType.UserLisReady, (event: publisherEvent): void => {
+      this.store.dispatch({
+        type: ActionID.RenewUserList,
+        userList: (event as UserLisReadyEvent).userList,
       });
     });
 

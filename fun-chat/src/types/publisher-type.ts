@@ -1,5 +1,6 @@
-import { UserLoginData } from './types';
+import { UserInfo, UserLoginData } from './types';
 
 export type AuthenticationEvent = UserLoginData;
+export type UserLisReadyEvent = { userList: UserInfo[] };
 
-export type publisherEvent = AuthenticationEvent | object;
+export type publisherEvent = AuthenticationEvent | UserLisReadyEvent | object;

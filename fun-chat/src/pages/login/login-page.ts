@@ -19,7 +19,7 @@ const maxCharacterErrorMessage = (numb: number): string => `field cannot contain
 const nameRule = [
   { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
   { rule: ValidatorRule.MinLength, value: 3, errorMessage: minCharacterErrorMessage(3) },
-  { rule: ValidatorRule.MaxLength, value: 5, errorMessage: maxCharacterErrorMessage(5) },
+  { rule: ValidatorRule.MaxLength, value: 20, errorMessage: maxCharacterErrorMessage(20) },
   {
     validator: (value: string): boolean => {
       return !!value.match(/^[A-Za-zА-Яа-я]{3,}$/);
@@ -30,7 +30,8 @@ const nameRule = [
 
 const passwordRule = [
   { rule: ValidatorRule.Required, errorMessage: REQUIRED_REQUARED },
-  { rule: ValidatorRule.MinLength, value: 4, errorMessage: minCharacterErrorMessage(6) },
+  { rule: ValidatorRule.MinLength, value: 3, errorMessage: minCharacterErrorMessage(6) },
+  { rule: ValidatorRule.MaxLength, value: 20, errorMessage: maxCharacterErrorMessage(20) },
   {
     validator: (value: string | boolean): boolean => {
       return !!(value as string).match(/(?=.*[A-Z])[A-Za-z0-9]{3,}$/);

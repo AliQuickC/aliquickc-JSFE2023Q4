@@ -1,4 +1,5 @@
 import { Page } from './enum';
+import { UserInfo } from './types';
 
 export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
@@ -12,6 +13,7 @@ export type UserData = {
 
 export type AppData = {
   currentPage: Page;
+  userList: UserInfo[];
 };
 
 export interface State {
@@ -34,12 +36,18 @@ type ActionLogout = {
   type: typeof ActionID.Logout;
 };
 
-export type Action = ActionSetPage | ActionAuthentication | ActionLogout;
+type ActionRenewUserList = {
+  type: typeof ActionID.RenewUserList;
+  userList: UserInfo[];
+};
+
+export type Action = ActionSetPage | ActionAuthentication | ActionLogout | ActionRenewUserList;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
   Authentication = 'AUTHENTICATION',
   Logout = 'LOGOUT',
+  RenewUserList = 'RenewUserList',
 }
 
 export interface Store {

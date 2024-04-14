@@ -67,9 +67,18 @@ export default class App {
       if (!hasPage) {
         window.location.hash = Page.Error;
       } else {
+        const { isLogin } = this.store.getState().userData;
+        let page: Page = pageHash.toLocaleLowerCase() as Page;
+
+        if (page === Page.Chat && !isLogin) {
+          page = Page.Login;
+        } else if (page === Page.Login && isLogin) {
+          page = Page.Chat;
+        }
+
         this.store.dispatch({
           type: ActionID.SetPage,
-          page: pageHash.toLocaleLowerCase() as Page,
+          page: page,
         });
       }
     });

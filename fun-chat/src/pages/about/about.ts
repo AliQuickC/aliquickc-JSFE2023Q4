@@ -21,9 +21,12 @@ export default class About extends BaseComponent {
     const element = event.target as HTMLInputElement;
     const elementName = element.dataset.type;
     if (elementName === 'returnButton') {
+      const { isLogin } = this.store.getState().userData;
+      const page = isLogin ? Page.Chat : Page.Login;
+
       this.store.dispatch({
         type: ActionID.SetPage,
-        page: Page.Login,
+        page: page,
       });
     }
   };

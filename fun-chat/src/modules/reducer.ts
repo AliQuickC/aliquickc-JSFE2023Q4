@@ -25,6 +25,26 @@ export default function reducer(stateData: State, action: Action): State {
       state.appData = { ...state.appData, userList };
       return state;
     }
+    case ActionID.AddUser: {
+      const userList: UserInfo[] = state.appData.userList.slice(0);
+      const userIndex = userList.findIndex((item) => item.login === action.user.login);
+      if (userIndex === -1) {
+        userList.push(action.user);
+      } else {
+        userList[userIndex].isLogined = true;
+      }
+
+      state.appData = { ...state.appData, userList };
+      return state;
+    }
+    case ActionID.RemoveUser: {
+      const userList: UserInfo[] = state.appData.userList.slice(0);
+      const userIndex = userList.findIndex((item) => item.login === action.user.login);
+      userList[userIndex].isLogined = false;
+
+      state.appData = { ...state.appData, userList };
+      return state;
+    }
     default:
       return state;
   }

@@ -1,7 +1,7 @@
 import BaseComponent from '../base-component/base-component';
 import { ActionID, Store } from '../../types/redux-type';
 import WebSocketController from '../../modules/ws-api';
-import { Page } from '../../types/enum';
+import { Page, ServerReadyState } from '../../types/enum';
 
 export default class Header extends BaseComponent {
   private wsController: WebSocketController;
@@ -31,14 +31,15 @@ export default class Header extends BaseComponent {
     if (elementName === 'logoutButton') {
       const { login, password } = this.store.getState().userData;
 
-      if (login !== null && password !== null) {
+      const wsState = this.wsController.wsState;
+      if (login !== null && password !== null && wsState === ServerReadyState.OPEN) {
         this.wsController.userLogout(login, password);
+      } else {
+        this.store.dispatch({
+          type: ActionID.SetPage,
+          page: Page.Login,
+        });
       }
-
-      this.store.dispatch({
-        type: ActionID.SetPage,
-        page: Page.Login,
-      });
     }
   };
 

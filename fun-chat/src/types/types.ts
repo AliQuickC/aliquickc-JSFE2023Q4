@@ -63,10 +63,26 @@ export type UnauthorizedUsers = {
   };
 };
 
+export type UserExternalLogin = {
+  id: null;
+  type: typeof messageType.UserExternalLogin;
+  payload: {
+    user: UserInfo;
+  };
+};
+
+export type UserExternalLogout = {
+  id: null;
+  type: typeof messageType.UserExternalLogout;
+  payload: {
+    user: UserInfo;
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
-export type ServerResponse = ResponseAuthentication | LogoutUser | UsersList;
+export type ServerResponse = ResponseAuthentication | LogoutUser | UsersList | UserExternalLogin | UserExternalLogout;
 // Response
 
 export type AuthenticationMsg = GeneralRequestMsg<

@@ -73,6 +73,13 @@ export default class WebSocketController extends Publisher {
     this.closeServer();
   }
 
+  get wsState(): ServerReadyState {
+    if (this.ws) {
+      return this.ws.readyState;
+    }
+    return ServerReadyState.CLOSED;
+  }
+
   private errorHandler(error: Event): void {
     if ((error.currentTarget as WebSocket).readyState === ServerReadyState.CLOSED) {
       console.log('Не удалось установить соединение с сервером!');
@@ -127,6 +134,14 @@ export default class WebSocketController extends Publisher {
         const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
 
         this._triggerEvent(publisherActionType.UserLisReady, { userList });
+      }
+    } else if (eventData.id === null) {
+      if (eventData.type === messageType.UserExternalLogin) {
+        const user: UserInfo = eventData.payload.user;
+        this._triggerEvent(publisherActionType.AddUser, { user });
+      } else if (eventData.type === messageType.UserExternalLogout) {
+        const user: UserInfo = eventData.payload.user;
+        this._triggerEvent(publisherActionType.RemoveUser, { user });
       }
     }
   };

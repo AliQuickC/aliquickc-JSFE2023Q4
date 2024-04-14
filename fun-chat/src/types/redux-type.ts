@@ -41,13 +41,31 @@ type ActionRenewUserList = {
   userList: UserInfo[];
 };
 
-export type Action = ActionSetPage | ActionAuthentication | ActionLogout | ActionRenewUserList;
+type ActionAddUser = {
+  type: typeof ActionID.AddUser;
+  user: UserInfo;
+};
+
+type ActionRemoveUser = {
+  type: typeof ActionID.RemoveUser;
+  user: UserInfo;
+};
+
+export type Action =
+  | ActionSetPage
+  | ActionAuthentication
+  | ActionLogout
+  | ActionRenewUserList
+  | ActionAddUser
+  | ActionRemoveUser;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
   Authentication = 'AUTHENTICATION',
   Logout = 'LOGOUT',
   RenewUserList = 'RenewUserList',
+  AddUser = 'AddUser',
+  RemoveUser = 'RemoveUser',
 }
 
 export interface Store {

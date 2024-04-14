@@ -30,6 +30,8 @@ export enum messageType {
   Error = 'ERROR',
   UserActive = 'USER_ACTIVE',
   UserInactive = 'USER_INACTIVE',
+  UserExternalLogin = 'USER_EXTERNAL_LOGIN',
+  UserExternalLogout = 'USER_EXTERNAL_LOGOUT',
 }
 
 export enum AuthenticationErrorMessage {
@@ -41,4 +43,6 @@ export enum publisherActionType {
   AuthenticationSuccess = 'Authentication-Success',
   LogoutSuccess = 'LogoutSuccess',
   UserLisReady = 'UserLisReady',
+  AddUser = 'AddUser',
+  RemoveUser = 'RemoveUser',
 }

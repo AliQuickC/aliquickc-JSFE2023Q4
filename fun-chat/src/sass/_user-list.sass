@@ -1,0 +1,93 @@
+.users
+  padding: 0
+  width: 35%
+  max-height: 100%
+  border-color: var(--border-color)
+  &__capture
+    text-align: center
+
+.user-find
+  padding: 4px 15px 0 15px
+  border-bottom: 2px solid var(--bg-header-footer)
+  display: flex
+  justify-content: space-between
+  align-items: center
+  &__input
+    width: 100%
+    height: 24px
+    border-radius: 3px
+  &__clear-btn
+    margin-left: -2px
+    width: 24px
+    height: 24px
+    display: flex
+    justify-content: center
+    align-items: center
+    border-radius: 0 3px 3px 0
+    background-color: var(--button-bg)
+    font-size: 18px
+
+.user-list
+  height: calc(100% - 30px)
+  overflow-y: auto
+  scrollbar-color: var(--button-bg) var(--border-color)
+  &__wrap
+    height: 100%
+    margin: 0
+    padding-left: 25px
+  &__item
+    cursor: pointer
+    height: 24px
+    display: flex
+    align-items: flex-end
+    column-gap: 20px
+    @extend %unselectable
+    &_select
+      border: 1px dashed #000
+    &_red
+      & .user-list__item-name
+        &::marker
+          color: #9e0101
+    &_green
+      & .user-list__item-name
+        &::marker
+          color: green
+    &-name
+      display: list-item
+      &::marker
+        font-size: 20px
+    &-messages
+      position: relative
+      @extend %unselectable
+    &-icon
+      display: block
+      height: 24px
+      width: 24px
+      background: url("../assets/image/letter.png") no-repeat
+      background-size: cover
+    &-count
+      position: absolute
+      top: 50%
+      transform: translate(-50%, -40%)
+      left: 50%
+      color: #0408ff
+      font-weight: bold
+      font-size: 16px
+    &.hide
+      display: none
+
+.select-user
+  height: 30px
+  padding: 5px 0
+  display: flex
+  justify-content: center
+  align-items: center
+  column-gap: 10px
+  border-bottom: 2px solid var(--bg-header-footer)
+  &__status
+    font-size: 14px
+    font-weight: bold
+    &_red
+      color: #9e0101
+    &_green
+      color: green

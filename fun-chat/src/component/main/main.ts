@@ -43,7 +43,7 @@ export default class Main extends BaseComponent {
         this.page = new LoginPage({ store: this.store, wsController: this.wsController }, 'div', 'login');
         break;
       case Page.Chat:
-        this.page = new Chat(this.store, 'div', 'chat');
+        this.page = new Chat({ store: this.store, wsController: this.wsController }, 'div', 'chat');
         break;
       case Page.About:
         this.page = new About(this.store, 'div', 'about');

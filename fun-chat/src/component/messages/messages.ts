@@ -169,9 +169,16 @@ export default class Messages extends BaseComponent {
       item.style.height = `${item.scrollHeight + 2}px`;
     });
 
-    const messagesContainer = containerElem.querySelector('.messages') as HTMLElement;
-    const elemHeight = messagesContainer.getBoundingClientRect().height;
-    messagesContainer.scrollBy(0, elemHeight);
+    const messagesFrame = containerElem.querySelector('.messages') as HTMLElement;
+    const messagesContainer = containerElem.querySelector('.messages__wrap') as HTMLElement;
+
+    const msgContainerHeight = messagesContainer.getBoundingClientRect().height;
+    const msgFrameHeight = messagesFrame.getBoundingClientRect().height;
+    const hideScroll = msgContainerHeight - msgFrameHeight;
+
+    if (hideScroll > 0) {
+      messagesFrame.scrollBy(0, hideScroll);
+    }
   };
 
   public render = (): HTMLElement => {

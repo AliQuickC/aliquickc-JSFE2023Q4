@@ -14,11 +14,12 @@ export type UserData = {
 export type AppData = {
   currentPage: Page;
   userList: UserInfo[];
+  selectedUser: string | null;
 };
 
 export interface State {
   appData: AppData;
-  userData: UserData;
+  loginedUser: UserData;
 }
 
 type ActionSetPage = {
@@ -51,13 +52,19 @@ type ActionRemoveUser = {
   user: UserInfo;
 };
 
+type ActionSelectUser = {
+  type: typeof ActionID.SelectUser;
+  login: string;
+};
+
 export type Action =
   | ActionSetPage
   | ActionAuthentication
   | ActionLogout
   | ActionRenewUserList
   | ActionAddUser
-  | ActionRemoveUser;
+  | ActionRemoveUser
+  | ActionSelectUser;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -66,6 +73,7 @@ export enum ActionID {
   RenewUserList = 'RenewUserList',
   AddUser = 'AddUser',
   RemoveUser = 'RemoveUser',
+  SelectUser = 'SelectUser',
 }
 
 export interface Store {

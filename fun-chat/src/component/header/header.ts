@@ -29,7 +29,7 @@ export default class Header extends BaseComponent {
     const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
     const elementDataType = element.getAttribute('data-type');
     if (elementDataType === 'logoutButton') {
-      const { login, password } = this.store.getState().userData;
+      const { login, password } = this.store.getState().loginedUser;
 
       const wsState = this.wsController.wsState;
       if (login !== null && password !== null && wsState === ServerReadyState.OPEN) {
@@ -44,7 +44,7 @@ export default class Header extends BaseComponent {
   };
 
   private toHTML(): string {
-    const { userData } = this.store.getState();
+    const { loginedUser } = this.store.getState();
 
     return `
     <div class="container header__container">
@@ -52,9 +52,9 @@ export default class Header extends BaseComponent {
       <div class="header__login-data">
         <div class="header__login-info">
           <label  class="header__login-label">Пользователь:</label>
-          <output  class="header__login-name">${userData.isLogin ? userData.login : 'не авторизован'}</output>
+          <output  class="header__login-name">${loginedUser.isLogin ? loginedUser.login : 'не авторизован'}</output>
         </div>
-        <button class="header__logout-button" data-type="logoutButton" ${userData.isLogin ? '' : 'disabled'}>Выход</button>
+        <button class="header__logout-button" data-type="logoutButton" ${loginedUser.isLogin ? '' : 'disabled'}>Выход</button>
       </div>
     </div>
     `;

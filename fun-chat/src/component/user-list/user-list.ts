@@ -1,5 +1,5 @@
 import WebSocketController from '../../modules/ws-api';
-import { Store } from '../../types/redux-type';
+import { ActionID, Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 
 export default class UserList extends BaseComponent {
@@ -31,8 +31,15 @@ export default class UserList extends BaseComponent {
     if (elementDataType === 'clearButton') {
       this.clearFindInput();
     } else if (elementDataType === 'user') {
-      console.log('user');
+      this.selectUser(element.getAttribute('data-user-name') as string);
     }
+  };
+
+  private selectUser = (login: string): void => {
+    this.store.dispatch({
+      type: ActionID.SelectUser,
+      login,
+    });
   };
 
   private inputHandler = (event: Event): void => {

@@ -75,7 +75,7 @@ export default class App {
       if (!hasPage) {
         window.location.hash = Page.Error;
       } else {
-        const { isLogin } = this.store.getState().userData;
+        const { isLogin } = this.store.getState().loginedUser;
         let page: Page = pageHash.toLocaleLowerCase() as Page;
 
         if (page === Page.Chat && !isLogin) {

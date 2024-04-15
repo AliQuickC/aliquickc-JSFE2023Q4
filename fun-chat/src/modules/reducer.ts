@@ -11,17 +11,17 @@ export default function reducer(stateData: State, action: Action): State {
       return state;
     }
     case ActionID.Authentication: {
-      state.userData = { ...state.userData, login: action.login, password: action.password, isLogin: true };
+      state.loginedUser = { ...state.loginedUser, login: action.login, password: action.password, isLogin: true };
       state.appData = { ...state.appData, currentPage: Page.Chat };
       return state;
     }
     case ActionID.Logout: {
-      state.userData = { ...state.userData, login: null, password: null, isLogin: false };
-      state.appData = { ...state.appData, currentPage: Page.Login };
+      state.loginedUser = { ...state.loginedUser, login: null, password: null, isLogin: false };
+      state.appData = { ...state.appData, currentPage: Page.Login, selectedUser: null };
       return state;
     }
     case ActionID.RenewUserList: {
-      const userList: UserInfo[] = action.userList.filter((item) => item.login !== state.userData.login);
+      const userList: UserInfo[] = action.userList.filter((item) => item.login !== state.loginedUser.login);
       state.appData = { ...state.appData, userList };
       return state;
     }
@@ -43,6 +43,10 @@ export default function reducer(stateData: State, action: Action): State {
       userList[userIndex].isLogined = false;
 
       state.appData = { ...state.appData, userList };
+      return state;
+    }
+    case ActionID.SelectUser: {
+      state.appData = { ...state.appData, selectedUser: action.login };
       return state;
     }
     default:

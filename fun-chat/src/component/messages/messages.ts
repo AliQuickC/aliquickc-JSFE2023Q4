@@ -20,11 +20,23 @@ export default class Messages extends BaseComponent {
 
   // eslint-disable-next-line max-lines-per-function
   private toHTML(): string {
+    const { selectedUser, userList } = this.store.getState().appData;
+
+    let selectUserLayout = '';
+    if (selectedUser !== null) {
+      const userIndex = userList.findIndex((item) => item.login === selectedUser);
+
+      const isLogined = userList[userIndex].isLogined;
+
+      selectUserLayout = `
+      <span class="select-user__name">${selectedUser}</span>
+      <span class="select-user__status select-user__status_${isLogined ? 'green' : 'red'}">- ${isLogined ? 'online' : 'offline'}</span>`;
+    }
+
     return `
     <legend class="correspondence__capture">Чат</legend>
         <div class="correspondence__select-user select-user">
-          <span class="select-user__name">Вася</span>
-          <span class="select-user__status select-user__status_green">- online</span>
+          ${selectUserLayout}
         </div>
 
         <div class="correspondence__messages messages">
@@ -143,8 +155,8 @@ export default class Messages extends BaseComponent {
         </div>
 
         <div class="correspondence__send send">
-          <input class="send__input" type="text" data-type="sendInput" placeholder="сообщение" autocomplete="off" name="sendInput"/>
-          <button class="send__button">Отправить</button>
+          <input class="send__input" type="text" data-type="sendInput" placeholder="сообщение" autocomplete="off" name="sendInput" ${selectedUser ? '' : 'disabled'}/>
+          <button class="send__button" ${selectedUser ? '' : 'disabled'}>Отправить</button>
         </div>
     `;
   }
@@ -157,8 +169,9 @@ export default class Messages extends BaseComponent {
       item.style.height = `${item.scrollHeight + 2}px`;
     });
 
-    const elemHeight = this.container.getBoundingClientRect().height;
-    this.container.scrollBy(0, elemHeight);
+    const messagesContainer = containerElem.querySelector('.messages') as HTMLElement;
+    const elemHeight = messagesContainer.getBoundingClientRect().height;
+    messagesContainer.scrollBy(0, elemHeight);
   };
 
   public render = (): HTMLElement => {

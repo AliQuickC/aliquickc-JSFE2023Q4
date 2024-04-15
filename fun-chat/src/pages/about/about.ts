@@ -14,13 +14,13 @@ export default class About extends BaseComponent {
   }
 
   private clickHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 
-    const element = event.target as HTMLInputElement;
-    const elementName = element.dataset.type;
-    if (elementName === 'returnButton') {
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'returnButton') {
       const { isLogin } = this.store.getState().userData;
       const page = isLogin ? Page.Chat : Page.Login;
 

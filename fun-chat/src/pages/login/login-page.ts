@@ -68,12 +68,12 @@ export default class LoginPage extends BaseComponent {
   }
 
   private clickHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 
-    const element = event.target as HTMLInputElement;
-    const elementName = element.dataset.type;
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementName = element.getAttribute('data-type');
     if (elementName === 'aboutButton') {
       this.store.dispatch({
         type: ActionID.SetPage,

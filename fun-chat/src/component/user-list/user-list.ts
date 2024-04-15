@@ -17,31 +17,32 @@ export default class UserList extends BaseComponent {
   }
 
   public init(): void {
-    this.container.onclick = (event: Event): void => {
-      if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
-        return;
-      }
-
-      if (
-        (event.target as HTMLElement).hasAttribute('data-type') &&
-        (event.target as HTMLElement).getAttribute('data-type') === 'clearButton'
-      ) {
-        this.clearFindInput();
-      }
-    };
-
+    this.container.onclick = this.clickHandler;
     this.container.oninput = this.inputHandler;
   }
 
-  private inputHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
+  private clickHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 
-    if (
-      (event.target as HTMLElement).hasAttribute('data-type') &&
-      (event.target as HTMLElement).getAttribute('data-type') === 'findInput'
-    ) {
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'clearButton') {
+      this.clearFindInput();
+    } else if (elementDataType === 'user') {
+      console.log('user');
+    }
+  };
+
+  private inputHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+      return;
+    }
+
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'findInput') {
       const inputValue: string = (event.target as HTMLInputElement).value.toLowerCase();
 
       this.hideShowUsers(inputValue);
@@ -78,7 +79,7 @@ export default class UserList extends BaseComponent {
       .map(
         (
           item
-        ) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-user-name="${item.login}">
+        ) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-type="user" data-user-name="${item.login}">
                   <span class="user-list__item-name" >${item.login}</span>
                 </li>`
       )

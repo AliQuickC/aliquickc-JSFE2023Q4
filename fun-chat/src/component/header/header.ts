@@ -22,13 +22,13 @@ export default class Header extends BaseComponent {
   }
 
   private clickHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).hasAttribute('data-type')) {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 
-    const element = event.target as HTMLInputElement;
-    const elementName = element.dataset.type;
-    if (elementName === 'logoutButton') {
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'logoutButton') {
       const { login, password } = this.store.getState().userData;
 
       const wsState = this.wsController.wsState;

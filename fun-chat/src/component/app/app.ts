@@ -41,6 +41,7 @@ export default class App {
       this.store.dispatch({
         type: ActionID.RenewUserList,
         userList: (event as UserLisReadyEvent).userList,
+        loginParams: (event as UserLisReadyEvent).LoginParams,
       });
     });
 

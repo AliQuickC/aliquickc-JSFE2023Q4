@@ -21,9 +21,12 @@ export default function reducer(stateData: State, action: Action): State {
       return state;
     }
     case ActionID.RenewUserList: {
-      const userList: UserInfo[] = action.userList.filter((item) => item.login !== state.loginedUser.login);
+      const { login, password } = action.loginParams;
+
+      const userList: UserInfo[] = action.userList.filter((item) => item.login !== login);
       state.appData = { ...state.appData, userList };
-      return state;
+
+      return reducer(state, { type: ActionID.Authentication, login, password });
     }
     case ActionID.AddUser: {
       const userList: UserInfo[] = state.appData.userList.slice(0);

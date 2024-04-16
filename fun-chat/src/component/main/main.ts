@@ -31,13 +31,14 @@ export default class Main extends BaseComponent {
   };
 
   public render = (): HTMLElement => {
+    const { currentPage } = this.store.getState().appData;
+
     if (this.page) {
       this.page.destroy();
     }
 
     this.container.innerHTML = '';
 
-    const { currentPage } = this.store.getState().appData;
     switch (currentPage) {
       case Page.Login:
         this.page = new LoginPage({ store: this.store, wsController: this.wsController }, 'div', 'login');

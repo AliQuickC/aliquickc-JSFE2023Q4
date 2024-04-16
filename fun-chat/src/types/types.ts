@@ -1,8 +1,13 @@
 import { AuthenticationErrorMessage, messageId, messageType } from './enum';
 
-export type UserLoginData = {
+export type UserLoginParams = {
   login: string;
   password: string;
+};
+
+export type UserParams = {
+  login: string | null;
+  password: string | null;
 };
 
 export type UserInfo = {
@@ -89,7 +94,7 @@ export type AuthenticationMsg = GeneralRequestMsg<
   typeof messageId.Authentication,
   typeof messageType.UserLogin,
   {
-    user: UserLoginData;
+    user: UserLoginParams;
   }
 >;
 
@@ -97,6 +102,6 @@ export type LogoutMsg = GeneralRequestMsg<
   typeof messageId.LogOut,
   typeof messageType.Userlogout,
   {
-    user: UserLoginData;
+    user: UserLoginParams;
   }
 >;

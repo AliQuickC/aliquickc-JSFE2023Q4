@@ -1,7 +1,7 @@
-import { UserInfo, UserLoginData } from './types';
+import { UserInfo, UserLoginParams } from './types';
 
-export type AuthenticationEvent = UserLoginData;
-export type UserLisReadyEvent = { userList: UserInfo[] };
+export type AuthenticationEvent = UserLoginParams;
+export type UserLisReadyEvent = { userList: UserInfo[]; LoginParams: UserLoginParams };
 export type UserEvent = { user: UserInfo };
 
 export type publisherEvent = object | AuthenticationEvent | UserLisReadyEvent | UserEvent;

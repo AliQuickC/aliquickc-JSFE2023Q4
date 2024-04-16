@@ -8,7 +8,14 @@ import {
   messageType,
   publisherActionType,
 } from '../types/enum';
-import { AuthenticationMsg, LogoutMsg, ResponseAuthentication, ServerResponse, UserInfo } from '../types/types';
+import {
+  AuthenticationMsg,
+  LogoutMsg,
+  ResponseAuthentication,
+  ServerResponse,
+  UserInfo,
+  UserParams,
+} from '../types/types';
 
 const baseURL = 'ws://localhost:4000';
 
@@ -57,10 +64,13 @@ function authenticationMsgCreator(name: string, userPassword: string): Authentic
 export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
-  private passwordCache!: string;
   private modalDialog: ModalDialog;
   private authenticatedUsers: UserInfo[] | null = null;
   private unauthorizedUsers: UserInfo[] | null = null;
+  private userParamsCache: UserParams = {
+    login: null,
+    password: null,
+  };
 
   constructor(modalDialog: ModalDialog) {
     super();
@@ -88,10 +98,10 @@ export default class WebSocketController extends Publisher {
 
   private responseAuthentication = (eventData: ResponseAuthentication): void => {
     if (eventData.type === messageType.UserLogin) {
-      this._triggerEvent(publisherActionType.AuthenticationSuccess, {
-        login: eventData.payload.user.login,
-        password: this.passwordCache,
-      });
+      // this._triggerEvent(publisherActionType.AuthenticationSuccess, {
+      //   login: eventData.payload.user.login,
+      //   password: this.userParamsCache.password,
+      // });
 
       this.getUserList();
     } else if (eventData.type === messageType.Error) {
@@ -120,6 +130,10 @@ export default class WebSocketController extends Publisher {
       if (eventData.type === messageType.Userlogout && !eventData.payload.user.isLogined) {
         this._triggerEvent(publisherActionType.LogoutSuccess);
         this.closeServer();
+        this.userParamsCache = {
+          login: null,
+          password: null,
+        };
         this.ws = null;
       }
     } else if (eventData.id === messageId.UsersList) {
@@ -133,7 +147,7 @@ export default class WebSocketController extends Publisher {
       if (this.authenticatedUsers && this.unauthorizedUsers) {
         const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
 
-        this._triggerEvent(publisherActionType.UserLisReady, { userList });
+        this._triggerEvent(publisherActionType.UserLisReady, { userList, LoginParams: this.userParamsCache });
       }
     } else if (eventData.id === null) {
       if (eventData.type === messageType.UserExternalLogin) {
@@ -151,7 +165,8 @@ export default class WebSocketController extends Publisher {
   };
 
   public connectToServer = (name: string, password: string): void => {
-    this.passwordCache = password;
+    this.userParamsCache = { login: name, password: password };
+
     this.msgAuthentication = authenticationMsgCreator(name, password);
 
     this.ws = new WebSocket(baseURL);

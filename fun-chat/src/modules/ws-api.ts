@@ -15,6 +15,7 @@ import {
   ServerResponse,
   UserInfo,
   UserParams,
+  sendingMessageToUserMsg,
 } from '../types/types';
 
 const baseURL = 'ws://localhost:4000';
@@ -56,6 +57,19 @@ function authenticationMsgCreator(name: string, userPassword: string): Authentic
       user: {
         login,
         password,
+      },
+    },
+  };
+}
+
+function sendingMessageToUserMsgCreater(user: string, message: string): sendingMessageToUserMsg {
+  return {
+    id: messageId.SendMessage,
+    type: messageType.MsgSend,
+    payload: {
+      message: {
+        to: user,
+        text: message,
       },
     },
   };
@@ -187,5 +201,9 @@ export default class WebSocketController extends Publisher {
       this.ws.removeEventListener('open', this.wsOpenHandler);
       this.ws.close();
     }
+  };
+
+  public send = (user: string, message: string): void => {
+    this.ws?.send(JSON.stringify(sendingMessageToUserMsgCreater(user, message)));
   };
 }

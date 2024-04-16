@@ -30,12 +30,13 @@ export default class UserList extends BaseComponent {
     const elementDataType = element.getAttribute('data-type');
     if (elementDataType === 'clearButton') {
       this.clearFindInput();
-    } else if (elementDataType === 'user') {
+    } else if (elementDataType === 'chatUser') {
       this.selectUser(element.getAttribute('data-user-name') as string);
     }
   };
 
   private selectUser = (login: string): void => {
+    //this.wsController.getMessages();
     this.store.dispatch({
       type: ActionID.SelectUser,
       login,
@@ -86,7 +87,7 @@ export default class UserList extends BaseComponent {
       .map(
         (
           item
-        ) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-type="user" data-user-name="${item.login}">
+        ) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-type="chatUser" data-user-name="${item.login}">
                   <span class="user-list__item-name" >${item.login}</span>
                 </li>`
       )

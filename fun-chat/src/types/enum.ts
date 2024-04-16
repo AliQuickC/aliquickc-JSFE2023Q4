@@ -22,6 +22,7 @@ export enum messageId {
   Authentication = 'Authentication',
   LogOut = 'logOut',
   UsersList = 'UsersList',
+  SendMessage = 'sendMessage',
 }
 
 export enum messageType {
@@ -32,6 +33,7 @@ export enum messageType {
   UserInactive = 'USER_INACTIVE',
   UserExternalLogin = 'USER_EXTERNAL_LOGIN',
   UserExternalLogout = 'USER_EXTERNAL_LOGOUT',
+  MsgSend = 'MSG_SEND',
 }
 
 export enum AuthenticationErrorMessage {

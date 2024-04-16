@@ -111,7 +111,8 @@ export default class App {
     // this.modalDialog.showModal('adfhfgdh');
 
     this.container.onkeydown = (event: KeyboardEvent): void => {
-      if (event.code === 'Enter' || event.code === 'NumpadEnter') {
+      const { currentPage } = this.store.getState().appData;
+      if (currentPage === Page.Login && (event.code === 'Enter' || event.code === 'NumpadEnter')) {
         if (!this.modalDialog.isShowModal) {
           this.main.enterKeyDown();
         }

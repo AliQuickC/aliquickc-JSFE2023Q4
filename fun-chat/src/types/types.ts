@@ -15,6 +15,13 @@ export type UserInfo = {
   isLogined: boolean;
 };
 
+type Message = {
+  message: {
+    to: string;
+    text: string;
+  };
+};
+
 type GeneralRequestMsg<I, T, P> = {
   id: I; //string | null;
   type: T; //string;
@@ -96,6 +103,12 @@ export type AuthenticationMsg = GeneralRequestMsg<
   {
     user: UserLoginParams;
   }
+>;
+
+export type sendingMessageToUserMsg = GeneralRequestMsg<
+  typeof messageId.SendMessage,
+  typeof messageType.MsgSend,
+  Message
 >;
 
 export type LogoutMsg = GeneralRequestMsg<

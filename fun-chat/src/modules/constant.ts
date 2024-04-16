@@ -7,7 +7,7 @@ export const defaultUserData: UserData = {
   isLogin: false,
 };
 
-export const defaultState: State = {
+export const initialState: State = {
   appData: {
     currentPage: Page.Login,
     userList: [],

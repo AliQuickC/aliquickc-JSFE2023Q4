@@ -16,7 +16,45 @@ export default class Messages extends BaseComponent {
     this.init();
   }
 
-  public init(): void {}
+  public init(): void {
+    this.container.onclick = this.clickHandler;
+    this.container.onkeydown = this.keydownHandler;
+  }
+
+  private keydownHandler = (event: KeyboardEvent): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+      return;
+    }
+
+    const sendInput = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = sendInput.getAttribute('data-type');
+    if ((elementDataType === 'sendInput' && event.code === 'Enter') || event.code === 'NumpadEnter') {
+      const selectedUser = this.store.getState().appData.selectedUser as string;
+      this.sendMessage(selectedUser, sendInput as HTMLInputElement);
+    }
+  };
+
+  private clickHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+      return;
+    }
+
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'sendButton') {
+      const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLInputElement;
+
+      const selectedUser = this.store.getState().appData.selectedUser as string;
+      this.sendMessage(selectedUser, sendInput);
+    }
+  };
+
+  private sendMessage = (selectedUser: string, sendInput: HTMLInputElement): void => {
+    if (sendInput.value !== '' && selectedUser) {
+      this.wsController.send(selectedUser, sendInput.value);
+      sendInput.value = '';
+    }
+  };
 
   // eslint-disable-next-line max-lines-per-function
   private toHTML(): string {
@@ -156,7 +194,7 @@ export default class Messages extends BaseComponent {
 
         <div class="correspondence__send send">
           <input class="send__input" type="text" data-type="sendInput" placeholder="сообщение" autocomplete="off" name="sendInput" ${selectedUser ? '' : 'disabled'}/>
-          <button class="send__button" ${selectedUser ? '' : 'disabled'}>Отправить</button>
+          <button class="send__button" ${selectedUser ? '' : 'disabled'} data-type="sendButton">Отправить</button>
         </div>
     `;
   }

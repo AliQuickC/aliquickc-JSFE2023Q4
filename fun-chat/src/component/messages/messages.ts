@@ -1,117 +1,8 @@
 import WebSocketController from '../../modules/ws-api';
 import { Page } from '../../types/enum';
 import { Store } from '../../types/redux-type';
+import { MessageHistoryInfo, MessageHistoryItem, MessageStatus } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
-
-const messageItens = `
-<div class="messages__item message">
-              <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">не доставлено</div>
-            </div>
-
-            <div class="messages__item message">
-              <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">не доставлено</div>
-            </div>
-
-            <div class="messages__item message message_own">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">не доставлено</div>
-            </div>
-
-            <div class="messages__item message">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">не доставлено</div>
-            </div>
-
-            <div class="messages__item message">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">не доставлено</div>
-            </div>
-
-            <div class="messages__item message message_own">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">
-                <div class="message__control">
-                  <button  class="message__control-edit" title="редактировать сообщение"></button>
-                  <button  class="message__control-delete" title="удалить сообщение"></button>
-                </div>
-                <span class="message__info">отправлено / доставлено / прочитано</span>
-              </div>
-            </div>
-
-            <div class="messages__item message message_own">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">
-                <div class="message__control">
-                  <button  class="message__control-edit" title="редактировать сообщение"></button>
-                  <button  class="message__control-delete" title="удалить сообщение"></button>
-                </div>
-                <span class="message__info">отправлено / доставлено / прочитано</span>
-              </div>
-            </div>
-
-            <div class="messages__item message message_own">
-              <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertdsfhrtjertyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-              <div class="message__status">
-                <div class="message__control">
-                  <button  class="message__control-edit" title="редактировать сообщение"></button>
-                  <button  class="message__control-delete" title="удалить сообщение"></button>
-                </div>
-                <span class="message__info">отправлено / доставлено / прочитано</span>
-              </div>
-            </div>
-
-            <div class="messages__demarcation-line">непрочитанные сообщения</div>
-
-            <div class="messages__item message">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-            </div>
-
-            <div class="messages__item message">
-                          <div class="message__header">
-                <span class="message__user">Вася</span>
-                <span class="message__time">01.04.2024 10:10</span>
-              </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
-            </div>
-`;
 
 export default class Messages extends BaseComponent {
   private wsController: WebSocketController;
@@ -167,7 +58,56 @@ export default class Messages extends BaseComponent {
     }
   };
 
-  private getMessagesHistory(): string {
+  private getMessageStatus(messageStatus: MessageStatus): string {
+    const delivered = messageStatus.isDelivered ? 'доставлено' : 'отправлено';
+    const readed = messageStatus.isReaded ? 'прочитано' : 'не прочитано';
+    const edited = messageStatus.isEdited ? 'отредактировано / ' : '';
+
+    return `
+      <div class="message__status">
+        <div class="message__control">
+          <button  class="message__control-edit" title="редактировать сообщение"></button>
+          <button  class="message__control-delete" title="удалить сообщение"></button>
+        </div>
+        <span class="message__info">${edited}${readed} / ${delivered}</span>
+      </div>`;
+  }
+
+  private getMessageItem(message: MessageHistoryItem, isPrevReaded: boolean): string {
+    const loginUser = this.store.getState().loginedUser.login;
+    const isOwnMessage = message.from === loginUser;
+    const messageStatus = message.status;
+    const noReadLine =
+      isPrevReaded && !message.status.isReaded
+        ? '<div class="messages__demarcation-line">непрочитанные сообщения</div>'
+        : '';
+
+    return `
+            ${noReadLine}
+            <div class="messages__item message ${isOwnMessage ? 'message_own' : ''}">
+              <div class="message__header">
+                <span class="message__user">${message.from}</span>
+                <span class="message__time">${new Date(message.datetime).toLocaleString()}</span>
+              </div>
+                <textarea class="message__text" contenteditable="true" readonly disabled>${message.text}</textarea>
+
+              ${isOwnMessage ? this.getMessageStatus(messageStatus) : ''}
+            </div>
+    `;
+  }
+
+  private getMessageHistory(): string {
+    const { messages } = this.store.getState().currentMessageHistory as MessageHistoryInfo;
+    return messages
+      .sort((a, b) => a.datetime - b.datetime)
+      .map((item, index, array) => {
+        const isPrevReaded: boolean = index !== 0 ? array[index - 1].status.isReaded : true;
+        return this.getMessageItem(item, isPrevReaded);
+      })
+      .join('');
+  }
+
+  private getMessages(): string {
     const { currentPage, selectedUser } = this.store.getState().appData;
     const { login } = this.store.getState().loginedUser;
     const { currentMessageHistory } = this.store.getState();
@@ -179,7 +119,7 @@ export default class Messages extends BaseComponent {
         if (currentMessageHistory.messages.length === 0) {
           return '<p>Сообщений еще нет, это начало вашего общения</p>';
         } else {
-          return messageItens;
+          return this.getMessageHistory();
         }
       }
     }
@@ -201,8 +141,6 @@ export default class Messages extends BaseComponent {
       <span class="select-user__status select-user__status_${isLogined ? 'green' : 'red'}">- ${isLogined ? 'online' : 'offline'}</span>`;
     }
 
-    const messagesHistory = this.getMessagesHistory();
-
     return `
     <legend class="correspondence__capture">Чат</legend>
         <div class="correspondence__select-user select-user">
@@ -211,7 +149,7 @@ export default class Messages extends BaseComponent {
 
         <div class="correspondence__messages messages">
           <div class="messages__wrap">
-            ${messagesHistory}
+            ${this.getMessages()}
           </div>
         </div>
 

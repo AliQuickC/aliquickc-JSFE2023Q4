@@ -22,7 +22,7 @@ type Message = {
   };
 };
 
-type MessageStatus = {
+export type MessageStatus = {
   isDelivered: boolean;
   isReaded: boolean;
   isEdited: boolean;

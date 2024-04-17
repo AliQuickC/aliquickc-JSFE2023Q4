@@ -1,5 +1,5 @@
 import { Page } from '../types/enum';
-import { State, UserData } from '../types/redux-type';
+import { AppData, State, UserData } from '../types/redux-type';
 
 export const defaultUserData: UserData = {
   login: null,
@@ -7,11 +7,14 @@ export const defaultUserData: UserData = {
   isLogin: false,
 };
 
+export const defaultappData: AppData = {
+  currentPage: Page.Login,
+  userList: [],
+  selectedUser: null,
+};
+
 export const initialState: State = {
-  appData: {
-    currentPage: Page.Login,
-    userList: [],
-    selectedUser: null,
-  },
   loginedUser: defaultUserData,
+  appData: defaultappData,
+  currentMessageHistory: null,
 };

@@ -22,6 +22,29 @@ type Message = {
   };
 };
 
+type MessageStatus = {
+  isDelivered: boolean;
+  isReaded: boolean;
+  isEdited: boolean;
+};
+
+export type MessageHistoryItem = {
+  id: string;
+  from: string;
+  to: string;
+  datetime: number;
+  text: string;
+  status: MessageStatus;
+};
+
+export type MessageHistoryInfo = { loginUser: string; chatUser: string; messages: MessageHistoryItem[] };
+
+type userLogin = {
+  user: {
+    login: string;
+  };
+};
+
 type GeneralRequestMsg<I, T, P> = {
   id: I; //string | null;
   type: T; //string;
@@ -91,10 +114,24 @@ export type UserExternalLogout = {
   };
 };
 
+export type MessageHistory = {
+  id: string;
+  type: typeof messageType.MsgHistory;
+  payload: {
+    messages: MessageHistoryItem[];
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
-export type ServerResponse = ResponseAuthentication | LogoutUser | UsersList | UserExternalLogin | UserExternalLogout;
+export type ServerResponse =
+  | ResponseAuthentication
+  | LogoutUser
+  | UsersList
+  | UserExternalLogin
+  | UserExternalLogout
+  | MessageHistory;
 // Response
 
 export type AuthenticationMsg = GeneralRequestMsg<
@@ -110,6 +147,8 @@ export type sendingMessageToUserMsg = GeneralRequestMsg<
   typeof messageType.MsgSend,
   Message
 >;
+
+export type messageHistoryWithTheUser = GeneralRequestMsg<string, typeof messageType.MsgHistory, userLogin>;
 
 export type LogoutMsg = GeneralRequestMsg<
   typeof messageId.LogOut,

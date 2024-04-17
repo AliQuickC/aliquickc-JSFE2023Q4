@@ -23,6 +23,7 @@ export enum messageId {
   LogOut = 'logOut',
   UsersList = 'UsersList',
   SendMessage = 'sendMessage',
+  MessageHistory = 'MessageHistory',
 }
 
 export enum messageType {
@@ -34,6 +35,7 @@ export enum messageType {
   UserExternalLogin = 'USER_EXTERNAL_LOGIN',
   UserExternalLogout = 'USER_EXTERNAL_LOGOUT',
   MsgSend = 'MSG_SEND',
+  MsgHistory = 'MSG_FROM_USER',
 }
 
 export enum AuthenticationErrorMessage {
@@ -47,4 +49,5 @@ export enum publisherActionType {
   UserLisReady = 'UserLisReady',
   AddUser = 'AddUser',
   RemoveUser = 'RemoveUser',
+  UpdateMessageHistory = 'UpdateMessageHistory',
 }

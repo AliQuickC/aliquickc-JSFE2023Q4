@@ -1,88 +1,10 @@
 import WebSocketController from '../../modules/ws-api';
+import { Page } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 
-export default class Messages extends BaseComponent {
-  private wsController: WebSocketController;
-
-  constructor(
-    props: { store: Store; wsController: WebSocketController },
-    tagName: keyof HTMLElementTagNameMap,
-    className: string
-  ) {
-    super(props.store, tagName, className);
-    this.store = props.store;
-    this.wsController = props.wsController;
-    this.init();
-  }
-
-  public init(): void {
-    this.container.onclick = this.clickHandler;
-    this.container.onkeydown = this.keydownHandler;
-  }
-
-  private keydownHandler = (event: KeyboardEvent): void => {
-    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
-      return;
-    }
-
-    const sendInput = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
-    const elementDataType = sendInput.getAttribute('data-type');
-    if ((elementDataType === 'sendInput' && event.code === 'Enter') || event.code === 'NumpadEnter') {
-      const selectedUser = this.store.getState().appData.selectedUser as string;
-      this.sendMessage(selectedUser, sendInput as HTMLInputElement);
-    }
-  };
-
-  private clickHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
-      return;
-    }
-
-    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
-    const elementDataType = element.getAttribute('data-type');
-    if (elementDataType === 'sendButton') {
-      const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLInputElement;
-
-      const selectedUser = this.store.getState().appData.selectedUser as string;
-      this.sendMessage(selectedUser, sendInput);
-    }
-  };
-
-  private sendMessage = (selectedUser: string, sendInput: HTMLInputElement): void => {
-    if (sendInput.value !== '' && selectedUser) {
-      this.wsController.send(selectedUser, sendInput.value);
-      sendInput.value = '';
-    }
-  };
-
-  // eslint-disable-next-line max-lines-per-function
-  private toHTML(): string {
-    const { selectedUser, userList } = this.store.getState().appData;
-
-    let selectUserLayout = '';
-    if (selectedUser !== null) {
-      const userIndex = userList.findIndex((item) => item.login === selectedUser);
-
-      const isLogined = userList[userIndex].isLogined;
-
-      selectUserLayout = `
-      <span class="select-user__name">${selectedUser}</span>
-      <span class="select-user__status select-user__status_${isLogined ? 'green' : 'red'}">- ${isLogined ? 'online' : 'offline'}</span>`;
-    }
-
-    return `
-    <legend class="correspondence__capture">Чат</legend>
-        <div class="correspondence__select-user select-user">
-          ${selectUserLayout}
-        </div>
-
-        <div class="correspondence__messages messages">
-          <div class="messages__wrap">
-
-            <span>Сообщений еще нет, это начало вашего общения</span>
-
-            <div class="messages__item message">
+const messageItens = `
+<div class="messages__item message">
               <div class="message__header">
                 <span class="message__user">Вася</span>
                 <span class="message__time">01.04.2024 10:10</span>
@@ -189,6 +111,107 @@ export default class Messages extends BaseComponent {
               </div>
                 <textarea class="message__text" contenteditable="true" readonly disabled>dsfhrtjertyjktrykrtyjktryketukrutkltuylddsfhrtjertyjktryketukru</textarea>
             </div>
+`;
+
+export default class Messages extends BaseComponent {
+  private wsController: WebSocketController;
+
+  constructor(
+    props: { store: Store; wsController: WebSocketController },
+    tagName: keyof HTMLElementTagNameMap,
+    className: string
+  ) {
+    super(props.store, tagName, className);
+    this.store = props.store;
+    this.wsController = props.wsController;
+    this.init();
+  }
+
+  public init(): void {
+    this.container.onclick = this.clickHandler;
+    this.container.onkeydown = this.keydownHandler;
+  }
+
+  private keydownHandler = (event: KeyboardEvent): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+      return;
+    }
+
+    const sendInput = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = sendInput.getAttribute('data-type');
+    if ((elementDataType === 'sendInput' && event.code === 'Enter') || event.code === 'NumpadEnter') {
+      const selectedUser = this.store.getState().appData.selectedUser as string;
+      this.sendMessage(selectedUser, sendInput as HTMLInputElement);
+    }
+  };
+
+  private clickHandler = (event: Event): void => {
+    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+      return;
+    }
+
+    const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
+    const elementDataType = element.getAttribute('data-type');
+    if (elementDataType === 'sendButton') {
+      const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLInputElement;
+
+      const selectedUser = this.store.getState().appData.selectedUser as string;
+      this.sendMessage(selectedUser, sendInput);
+    }
+  };
+
+  private sendMessage = (selectedUser: string, sendInput: HTMLInputElement): void => {
+    if (sendInput.value !== '' && selectedUser) {
+      this.wsController.sendMessageToUser(selectedUser, sendInput.value);
+      sendInput.value = '';
+    }
+  };
+
+  private getMessagesHistory(): string {
+    const { currentPage, selectedUser } = this.store.getState().appData;
+    const { login } = this.store.getState().loginedUser;
+    const { currentMessageHistory } = this.store.getState();
+
+    if (currentPage === Page.Chat) {
+      if (selectedUser === null) {
+        return '<p>Что бы увидеть историю переписки, выберите пользователя</p>';
+      } else if (currentMessageHistory && login === currentMessageHistory.loginUser) {
+        if (currentMessageHistory.messages.length === 0) {
+          return '<p>Сообщений еще нет, это начало вашего общения</p>';
+        } else {
+          return messageItens;
+        }
+      }
+    }
+    return 'Error';
+  }
+
+  // eslint-disable-next-line max-lines-per-function
+  private toHTML(): string {
+    const { selectedUser, userList } = this.store.getState().appData;
+
+    let selectUserLayout = '';
+    if (selectedUser !== null) {
+      const userIndex = userList.findIndex((item) => item.login === selectedUser);
+
+      const isLogined = userList[userIndex].isLogined;
+
+      selectUserLayout = `
+      <span class="select-user__name">${selectedUser}</span>
+      <span class="select-user__status select-user__status_${isLogined ? 'green' : 'red'}">- ${isLogined ? 'online' : 'offline'}</span>`;
+    }
+
+    const messagesHistory = this.getMessagesHistory();
+
+    return `
+    <legend class="correspondence__capture">Чат</legend>
+        <div class="correspondence__select-user select-user">
+          ${selectUserLayout}
+        </div>
+
+        <div class="correspondence__messages messages">
+          <div class="messages__wrap">
+            ${messagesHistory}
           </div>
         </div>
 

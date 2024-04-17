@@ -9,12 +9,16 @@ import {
   publisherActionType,
 } from '../types/enum';
 import {
+  AuthenticatedUsers,
+  AuthenticationLogin,
   AuthenticationMsg,
   LogoutMsg,
   ResponseAuthentication,
   ServerResponse,
+  UnauthorizedUsers,
   UserInfo,
   UserParams,
+  messageHistoryWithTheUser,
   sendingMessageToUserMsg,
 } from '../types/types';
 
@@ -70,6 +74,18 @@ function sendingMessageToUserMsgCreater(user: string, message: string): sendingM
       message: {
         to: user,
         text: message,
+      },
+    },
+  };
+}
+
+function messageHistoryWithTheUserMsgCreater(loginUser: string, selectUser: string): messageHistoryWithTheUser {
+  return {
+    id: messageId.MessageHistory + '-' + loginUser + '-' + selectUser,
+    type: messageType.MsgHistory,
+    payload: {
+      user: {
+        login: selectUser,
       },
     },
   };
@@ -138,39 +154,61 @@ export default class WebSocketController extends Publisher {
     const eventData: ServerResponse = JSON.parse(event.data);
     console.log(eventData);
 
-    if (eventData.id === messageId.Authentication) {
-      this.responseAuthentication(eventData);
-    } else if (eventData.id === messageId.LogOut) {
-      if (eventData.type === messageType.Userlogout && !eventData.payload.user.isLogined) {
-        this._triggerEvent(publisherActionType.LogoutSuccess);
-        this.closeServer();
-        this.userParamsCache = {
-          login: null,
-          password: null,
-        };
-        this.ws = null;
+    switch (eventData.id) {
+      case messageId.Authentication: {
+        this.responseAuthentication(eventData as AuthenticationLogin);
+        break;
       }
-    } else if (eventData.id === messageId.UsersList) {
-      const { users } = eventData.payload;
-      if (eventData.type === messageType.UserActive) {
-        this.authenticatedUsers = users;
-      } else if (eventData.type === messageType.UserInactive) {
-        this.unauthorizedUsers = users;
+      case messageId.LogOut: {
+        if (eventData.type === messageType.Userlogout && !eventData.payload.user.isLogined) {
+          this._triggerEvent(publisherActionType.LogoutSuccess);
+          this.closeServer();
+          this.userParamsCache = {
+            login: null,
+            password: null,
+          };
+          this.ws = null;
+        }
+        break;
+      }
+      case messageId.UsersList: {
+        const users = (eventData as AuthenticatedUsers | UnauthorizedUsers).payload.users;
+        if (eventData.type === messageType.UserActive) {
+          this.authenticatedUsers = users;
+        } else if (eventData.type === messageType.UserInactive) {
+          this.unauthorizedUsers = users;
+        }
+
+        if (this.authenticatedUsers && this.unauthorizedUsers) {
+          const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
+
+          this._triggerEvent(publisherActionType.UserLisReady, { userList, LoginParams: this.userParamsCache });
+        }
+        break;
       }
 
-      if (this.authenticatedUsers && this.unauthorizedUsers) {
-        const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
-
-        this._triggerEvent(publisherActionType.UserLisReady, { userList, LoginParams: this.userParamsCache });
+      case null: {
+        if (eventData.type === messageType.UserExternalLogin) {
+          const user: UserInfo = eventData.payload.user;
+          this._triggerEvent(publisherActionType.AddUser, { user });
+        } else if (eventData.type === messageType.UserExternalLogout) {
+          const user: UserInfo = eventData.payload.user;
+          this._triggerEvent(publisherActionType.RemoveUser, { user });
+        }
+        break;
       }
-    } else if (eventData.id === null) {
-      if (eventData.type === messageType.UserExternalLogin) {
-        const user: UserInfo = eventData.payload.user;
-        this._triggerEvent(publisherActionType.AddUser, { user });
-      } else if (eventData.type === messageType.UserExternalLogout) {
-        const user: UserInfo = eventData.payload.user;
-        this._triggerEvent(publisherActionType.RemoveUser, { user });
-      }
+      default:
+        {
+          if (eventData.type === messageType.MsgHistory) {
+            const [, loginUser, chatUser] = eventData.id.split('-');
+            this._triggerEvent(publisherActionType.UpdateMessageHistory, {
+              loginUser,
+              chatUser,
+              messages: eventData.payload.messages,
+            });
+          }
+        }
+        break;
     }
   };
 
@@ -203,7 +241,11 @@ export default class WebSocketController extends Publisher {
     }
   };
 
-  public send = (user: string, message: string): void => {
+  public sendMessageToUser = (user: string, message: string): void => {
     this.ws?.send(JSON.stringify(sendingMessageToUserMsgCreater(user, message)));
+  };
+
+  public sendRequestMessageHistory = (loginUser: string, selectUser: string): void => {
+    this.ws?.send(JSON.stringify(messageHistoryWithTheUserMsgCreater(loginUser, selectUser)));
   };
 }

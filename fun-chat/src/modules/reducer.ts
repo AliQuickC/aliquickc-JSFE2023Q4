@@ -1,6 +1,7 @@
 import { Page } from '../types/enum';
 import { State, Action, ActionID } from '../types/redux-type';
 import { UserInfo } from '../types/types';
+import { defaultUserData, defaultappData } from './constant';
 
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
@@ -12,19 +13,21 @@ export default function reducer(stateData: State, action: Action): State {
     }
     case ActionID.Authentication: {
       state.loginedUser = { ...state.loginedUser, login: action.login, password: action.password, isLogin: true };
-      state.appData = { ...state.appData, currentPage: Page.Chat };
+      state.appData = { ...state.appData, currentPage: Page.Chat, selectedUser: null };
       return state;
     }
     case ActionID.Logout: {
-      state.loginedUser = { ...state.loginedUser, login: null, password: null, isLogin: false };
-      state.appData = { ...state.appData, currentPage: Page.Login, selectedUser: null };
+      state.loginedUser = JSON.parse(JSON.stringify(defaultUserData));
+      state.appData = JSON.parse(JSON.stringify(defaultappData));
+      state.currentMessageHistory = null;
       return state;
     }
     case ActionID.RenewUserList: {
       const { login, password } = action.loginParams;
 
       const userList: UserInfo[] = action.userList.filter((item) => item.login !== login);
-      state.appData = { ...state.appData, userList };
+      state.appData = { ...state.appData, userList, selectedUser: null };
+      state.currentMessageHistory = null;
 
       return reducer(state, { type: ActionID.Authentication, login, password });
     }
@@ -50,6 +53,21 @@ export default function reducer(stateData: State, action: Action): State {
     }
     case ActionID.SelectUser: {
       state.appData = { ...state.appData, selectedUser: action.login };
+      return state;
+    }
+    case ActionID.UpdateMessageHistory: {
+      const { messageHistoryInfo } = action;
+      const { loginUser } = action.messageHistoryInfo;
+
+      if (
+        state.appData.currentPage === Page.Chat &&
+        state.appData.selectedUser !== null &&
+        state.loginedUser.login === loginUser
+      ) {
+        state.currentMessageHistory = JSON.parse(JSON.stringify(messageHistoryInfo));
+      } else {
+        state.currentMessageHistory = null;
+      }
       return state;
     }
     default:

@@ -1,7 +1,13 @@
 import WebSocketController from '../../modules/ws-api';
 import { Page, publisherActionType } from '../../types/enum';
-import { AuthenticationEvent, UserEvent, UserLisReadyEvent, publisherEvent } from '../../types/publisher-type';
+import {
+  AuthenticationEvent,
+  UserLoginLogoutEvent,
+  UserLisReadyEvent,
+  publisherEvent,
+} from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
+import { MessageHistoryInfo } from '../../types/types';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Main from '../main/main';
@@ -50,19 +56,19 @@ export default class App {
     });
 
     this.wsController.addEventListener(publisherActionType.AddUser, (event: publisherEvent): void => {
-      this.store.dispatch({ type: ActionID.AddUser, user: (event as UserEvent).user });
+      this.store.dispatch({ type: ActionID.AddUser, user: (event as UserLoginLogoutEvent).user });
     });
 
     this.wsController.addEventListener(publisherActionType.RemoveUser, (event: publisherEvent): void => {
-      this.store.dispatch({ type: ActionID.RemoveUser, user: (event as UserEvent).user });
+      this.store.dispatch({ type: ActionID.RemoveUser, user: (event as UserLoginLogoutEvent).user });
+    });
+
+    this.wsController.addEventListener(publisherActionType.UpdateMessageHistory, (event: publisherEvent): void => {
+      this.store.dispatch({ type: ActionID.UpdateMessageHistory, messageHistoryInfo: event as MessageHistoryInfo });
     });
   }
 
   public destroy(): void {}
-
-  // private showModal = (message: string): void => {
-  //   this.modalDialog.showModal(message);
-  // };
 
   private enableRouterChange(): void {
     window.addEventListener('hashchange', () => {
@@ -107,8 +113,6 @@ export default class App {
     this.container.append(this.main.render());
     this.container.append(this.footer.render());
     this.container.append(this.modalDialog.render());
-
-    // this.modalDialog.showModal('adfhfgdh');
 
     this.container.onkeydown = (event: KeyboardEvent): void => {
       const { currentPage } = this.store.getState().appData;

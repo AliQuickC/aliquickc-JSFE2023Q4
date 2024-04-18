@@ -24,7 +24,8 @@ export default class Messages extends BaseComponent {
   }
 
   private keydownHandler = (event: KeyboardEvent): void => {
-    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+    const { isLogin } = this.store.getState().loginedUser;
+    if (!event.target || !isLogin || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 
@@ -37,7 +38,8 @@ export default class Messages extends BaseComponent {
   };
 
   private clickHandler = (event: Event): void => {
-    if (!event.target || !(event.target as HTMLElement).closest('[data-type]')) {
+    const { isLogin } = this.store.getState().loginedUser;
+    if (!event.target || !isLogin || !(event.target as HTMLElement).closest('[data-type]')) {
       return;
     }
 

@@ -60,6 +60,11 @@ type ActionUpdateMessageHistory = {
   messageHistoryInfo: MessageHistoryInfo;
 };
 
+type ActionDisconnectSetPage = {
+  type: typeof ActionID.DisconnectSetPage;
+  page: Page;
+};
+
 export type Action =
   | ActionSetPage
   | ActionAuthentication
@@ -68,7 +73,8 @@ export type Action =
   | ActionAddUser
   | ActionRemoveUser
   | ActionSelectUser
-  | ActionUpdateMessageHistory;
+  | ActionUpdateMessageHistory
+  | ActionDisconnectSetPage;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -79,6 +85,7 @@ export enum ActionID {
   RemoveUser = 'RemoveUser',
   SelectUser = 'SelectUser',
   UpdateMessageHistory = 'UpdateMessageHistory',
+  DisconnectSetPage = 'DisconnectSetPage',
 }
 
 export interface Store {

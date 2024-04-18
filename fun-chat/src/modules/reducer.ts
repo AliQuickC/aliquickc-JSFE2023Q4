@@ -11,6 +11,11 @@ export default function reducer(stateData: State, action: Action): State {
       state.appData = { ...state.appData, currentPage: action.page };
       return state;
     }
+    case ActionID.DisconnectSetPage: {
+      state.appData = { ...state.appData, currentPage: action.page };
+      state.loginedUser = { ...state.loginedUser, isLogin: false };
+      return state;
+    }
     case ActionID.Authentication: {
       state.loginedUser = { ...state.loginedUser, login: action.login, password: action.password, isLogin: true };
       state.appData = { ...state.appData, currentPage: Page.Chat, selectedUser: null };

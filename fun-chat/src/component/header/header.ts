@@ -35,10 +35,8 @@ export default class Header extends BaseComponent {
       if (login !== null && password !== null && wsState === ServerReadyState.OPEN) {
         this.wsController.userLogout(login, password);
       } else {
-        this.store.dispatch({
-          type: ActionID.SetPage,
-          page: Page.Login,
-        });
+        this.wsController.closeServer();
+        this.store.dispatch({ type: ActionID.DisconnectSetPage, page: Page.Login });
       }
     }
   };

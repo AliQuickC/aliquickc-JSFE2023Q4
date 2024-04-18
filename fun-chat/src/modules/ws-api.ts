@@ -223,8 +223,20 @@ export default class WebSocketController extends Publisher {
 
     this.ws = new WebSocket(baseURL);
     this.ws.addEventListener('error', this.errorHandler);
+    this.ws.addEventListener('close', this.closeHandler);
     this.ws.addEventListener('message', this.messageHandler);
     this.ws.addEventListener('open', this.wsOpenHandler);
+  };
+
+  public closeHandler = (event: CloseEvent): void => {
+    // console.log('event: ', event.code);
+    // console.log('close: ', this.ws?.readyState);
+    this._triggerEvent(publisherActionType.Disconnect);
+
+    this.closeServer();
+    this.ws = null;
+
+    this.connectToServer(this.userParamsCache.login as string, this.userParamsCache.password as string);
   };
 
   public userLogout = (name: string, password: string): void => {
@@ -235,9 +247,10 @@ export default class WebSocketController extends Publisher {
   public closeServer = (): void => {
     if (this.ws) {
       this.ws.removeEventListener('error', this.errorHandler);
+      this.ws.removeEventListener('close', this.closeHandler);
       this.ws.removeEventListener('message', this.messageHandler);
       this.ws.removeEventListener('open', this.wsOpenHandler);
-      this.ws.close();
+      this.ws.close(1000, 'user logout');
     }
   };
 

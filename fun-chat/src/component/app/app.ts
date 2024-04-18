@@ -1,11 +1,6 @@
 import WebSocketController from '../../modules/ws-api';
 import { Page, publisherActionType } from '../../types/enum';
-import {
-  AuthenticationEvent,
-  UserLoginLogoutEvent,
-  UserLisReadyEvent,
-  publisherEvent,
-} from '../../types/publisher-type';
+import { UserLoginLogoutEvent, UserLisReadyEvent, publisherEvent } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
 import Footer from '../footer/footer';
@@ -35,13 +30,13 @@ export default class App {
     this.modalDialog = new ModalDialog(this.store);
     this.wsController = new WebSocketController(this.modalDialog);
 
-    this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
-      this.store.dispatch({
-        type: ActionID.Authentication,
-        login: (event as AuthenticationEvent).login,
-        password: (event as AuthenticationEvent).password,
-      });
-    });
+    // this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
+    //   this.store.dispatch({
+    //     type: ActionID.Authentication,
+    //     login: (event as AuthenticationEvent).login,
+    //     password: (event as AuthenticationEvent).password,
+    //   });
+    // });
 
     this.wsController.addEventListener(publisherActionType.UserLisReady, (event: publisherEvent): void => {
       this.store.dispatch({
@@ -66,6 +61,13 @@ export default class App {
     this.wsController.addEventListener(publisherActionType.UpdateMessageHistory, (event: publisherEvent): void => {
       this.store.dispatch({ type: ActionID.UpdateMessageHistory, messageHistoryInfo: event as MessageHistoryInfo });
     });
+
+    this.wsController.addEventListener(publisherActionType.Disconnect, (): void => {
+      const { isLogin } = this.store.getState().loginedUser;
+      if (isLogin) {
+        this.store.dispatch({ type: ActionID.DisconnectSetPage, page: Page.Chat });
+      }
+    });
   }
 
   public destroy(): void {}
@@ -89,6 +91,8 @@ export default class App {
           page = Page.Login;
         } else if (page === Page.Login && isLogin) {
           page = Page.Chat;
+        } else if (page === Page.Login && !isLogin) {
+          page = Page.Login;
         }
 
         this.store.dispatch({

@@ -1,6 +1,11 @@
 import WebSocketController from '../../modules/ws-api';
 import { Page, publisherActionType } from '../../types/enum';
-import { UserLoginLogoutEvent, UserLisReadyEvent, publisherEvent } from '../../types/publisher-type';
+import {
+  UserLoginLogoutEvent,
+  UserLisReadyEvent,
+  publisherEvent,
+  MessageReceiveEvent,
+} from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
 import Footer from '../footer/footer';
@@ -66,6 +71,14 @@ export default class App {
       const { isLogin } = this.store.getState().loginedUser;
       if (isLogin) {
         this.store.dispatch({ type: ActionID.DisconnectSetPage, page: Page.Chat });
+      }
+    });
+
+    this.wsController.addEventListener(publisherActionType.newMessageReceive, (event: publisherEvent): void => {
+      const { selectedUser } = this.store.getState().appData;
+      const message = (event as MessageReceiveEvent).message;
+      if (selectedUser && selectedUser === message.from) {
+        this.store.dispatch({ type: ActionID.NewMessageReceive, message: message });
       }
     });
   }

@@ -51,4 +51,5 @@ export enum publisherActionType {
   RemoveUser = 'RemoveUser',
   UpdateMessageHistory = 'UpdateMessageHistory',
   Disconnect = 'Disconnect',
+  newMessageReceive = 'newMessageReceive',
 }

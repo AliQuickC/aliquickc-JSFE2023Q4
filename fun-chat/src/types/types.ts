@@ -22,14 +22,21 @@ type Message = {
   };
 };
 
+type userLogin = {
+  user: {
+    login: string;
+  };
+};
+
 export type MessageStatus = {
   isDelivered: boolean;
   isReaded: boolean;
   isEdited: boolean;
 };
 
-export type MessageHistoryItem = {
-  id: string;
+// MessageInfo - start
+export type MessageInfo<I extends string | null> = {
+  id: I; // string | null
   from: string;
   to: string;
   datetime: number;
@@ -37,29 +44,56 @@ export type MessageHistoryItem = {
   status: MessageStatus;
 };
 
+export type MessageReceive = MessageInfo<null>;
+export type MessageHistoryItem = MessageInfo<string>;
 export type MessageHistoryInfo = { loginUser: string; chatUser: string; messages: MessageHistoryItem[] };
+// MessageInfo - end
 
-type userLogin = {
-  user: {
-    login: string;
-  };
-};
-
-type GeneralRequestMsg<I, T, P> = {
-  id: I; //string | null;
-  type: T; //string;
+// Request - start
+type GeneralRequestMsg<I extends messageId | null | string, T extends messageType, P> = {
+  id: I; // messageId | null | string;
+  type: T; // messageType;
   payload: P;
 };
 
-// Response
+export type AuthenticationMsg = GeneralRequestMsg<
+  typeof messageId.Authentication,
+  typeof messageType.UserLogin,
+  {
+    user: UserLoginParams;
+  }
+>;
+
+export type sendingMessageToUserMsg = GeneralRequestMsg<
+  typeof messageId.SendMessage,
+  typeof messageType.MsgSend,
+  Message
+>;
+
+export type messageHistoryWithTheUser = GeneralRequestMsg<string, typeof messageType.MsgHistory, userLogin>;
+
+export type LogoutMsg = GeneralRequestMsg<
+  typeof messageId.LogOut,
+  typeof messageType.Userlogout,
+  {
+    user: UserLoginParams;
+  }
+>;
+// Request - end
+
+// Response - start
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type GeneralResponseMsg<I extends messageId | null | string, T extends messageType, P> = {
+  id: I; // messageId | null | string,
+  type: T; // messageType
+  payload: P;
+};
+
 export type AuthenticationLogin = {
   id: typeof messageId.Authentication;
   type: typeof messageType.UserLogin;
   payload: {
-    user: {
-      login: string;
-      isLogined: boolean;
-    };
+    user: UserInfo;
   };
 };
 
@@ -67,10 +101,7 @@ export type LogoutUser = {
   id: typeof messageId.LogOut;
   type: typeof messageType.Userlogout;
   payload: {
-    user: {
-      login: string;
-      isLogined: boolean;
-    };
+    user: UserInfo;
   };
 };
 
@@ -122,6 +153,14 @@ export type MessageHistory = {
   };
 };
 
+export type MessageReceiveFromUser = {
+  id: null;
+  type: typeof messageType.MsgSend;
+  payload: {
+    message: MessageReceive;
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
@@ -131,29 +170,6 @@ export type ServerResponse =
   | UsersList
   | UserExternalLogin
   | UserExternalLogout
-  | MessageHistory;
-// Response
-
-export type AuthenticationMsg = GeneralRequestMsg<
-  typeof messageId.Authentication,
-  typeof messageType.UserLogin,
-  {
-    user: UserLoginParams;
-  }
->;
-
-export type sendingMessageToUserMsg = GeneralRequestMsg<
-  typeof messageId.SendMessage,
-  typeof messageType.MsgSend,
-  Message
->;
-
-export type messageHistoryWithTheUser = GeneralRequestMsg<string, typeof messageType.MsgHistory, userLogin>;
-
-export type LogoutMsg = GeneralRequestMsg<
-  typeof messageId.LogOut,
-  typeof messageType.Userlogout,
-  {
-    user: UserLoginParams;
-  }
->;
+  | MessageHistory
+  | MessageReceiveFromUser;
+// Response - end

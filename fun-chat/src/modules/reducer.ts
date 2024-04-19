@@ -1,6 +1,6 @@
 import { Page } from '../types/enum';
 import { State, Action, ActionID } from '../types/redux-type';
-import { UserInfo } from '../types/types';
+import { MessageHistoryInfo, MessageHistoryItem, UserInfo } from '../types/types';
 import { defaultUserData, defaultappData } from './constant';
 
 export default function reducer(stateData: State, action: Action): State {
@@ -73,6 +73,23 @@ export default function reducer(stateData: State, action: Action): State {
       } else {
         state.currentMessageHistory = null;
       }
+      return state;
+    }
+    case ActionID.NewMessageReceive: {
+      const loginUser = state.loginedUser.login as string;
+      const selectedUser = state.appData.selectedUser as string;
+      const message: MessageHistoryItem = { ...action.message, id: '???' };
+
+      if (state.currentMessageHistory === null) {
+        const newMessageHistory: MessageHistoryInfo = { loginUser, chatUser: selectedUser, messages: [message] };
+
+        state.currentMessageHistory = newMessageHistory;
+      } else {
+        const messages = state.currentMessageHistory.messages.slice(0);
+        messages.push(message);
+        state.currentMessageHistory = { ...state.currentMessageHistory, messages };
+      }
+
       return state;
     }
     default:

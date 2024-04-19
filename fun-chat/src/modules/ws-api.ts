@@ -195,8 +195,13 @@ export default class WebSocketController extends Publisher {
           const user: UserInfo = eventData.payload.user;
           this._triggerEvent(publisherActionType.RemoveUser, { user });
         }
+        // Receive message from user
+        else if (eventData.type === messageType.MsgSend) {
+          this._triggerEvent(publisherActionType.newMessageReceive, { message: eventData.payload.message });
+        }
         break;
       }
+      // typeof eventData.id === 'string'
       default:
         {
           if (eventData.type === messageType.MsgHistory) {

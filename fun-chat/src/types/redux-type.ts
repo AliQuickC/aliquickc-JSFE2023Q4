@@ -1,5 +1,5 @@
 import { Page } from './enum';
-import { MessageHistoryInfo, UserInfo, UserLoginParams, UserParams } from './types';
+import { MessageHistoryInfo, MessageReceive, UserInfo, UserLoginParams, UserParams } from './types';
 
 export type Reducer = (state: State, action: Action) => State;
 export type Listiner = (state: State) => void;
@@ -65,6 +65,11 @@ type ActionDisconnectSetPage = {
   page: Page;
 };
 
+type ActionNewMessageReceive = {
+  type: typeof ActionID.NewMessageReceive;
+  message: MessageReceive;
+};
+
 export type Action =
   | ActionSetPage
   | ActionAuthentication
@@ -74,7 +79,8 @@ export type Action =
   | ActionRemoveUser
   | ActionSelectUser
   | ActionUpdateMessageHistory
-  | ActionDisconnectSetPage;
+  | ActionDisconnectSetPage
+  | ActionNewMessageReceive;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -86,6 +92,7 @@ export enum ActionID {
   SelectUser = 'SelectUser',
   UpdateMessageHistory = 'UpdateMessageHistory',
   DisconnectSetPage = 'DisconnectSetPage',
+  NewMessageReceive = 'NewMessageReceive',
 }
 
 export interface Store {

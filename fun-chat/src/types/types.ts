@@ -36,7 +36,7 @@ export type MessageStatus = {
 
 // MessageInfo - start
 export type MessageInfo<I extends string | null> = {
-  id: I; // string | null
+  id: I;
   from: string;
   to: string;
   datetime: number;
@@ -50,9 +50,9 @@ export type MessageHistoryInfo = { loginUser: string; chatUser: string; messages
 // MessageInfo - end
 
 // Request - start
-type GeneralRequestMsg<I extends messageId | null | string, T extends messageType, P> = {
-  id: I; // messageId | null | string;
-  type: T; // messageType;
+type GeneralRequestMsg<I extends null | messageId | string, T extends messageType, P> = {
+  id: I;
+  type: T;
   payload: P;
 };
 
@@ -82,10 +82,9 @@ export type LogoutMsg = GeneralRequestMsg<
 // Request - end
 
 // Response - start
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type GeneralResponseMsg<I extends messageId | null | string, T extends messageType, P> = {
-  id: I; // messageId | null | string,
-  type: T; // messageType
+  id: I;
+  type: T;
   payload: P;
 };
 
@@ -145,7 +144,7 @@ export type UserExternalLogout = {
   };
 };
 
-export type MessageHistory = {
+export type MessageHistoryResponse = {
   id: string;
   type: typeof messageType.MsgHistory;
   payload: {
@@ -161,6 +160,14 @@ export type MessageReceiveFromUser = {
   };
 };
 
+export type MessageSendToUser = {
+  id: typeof messageId.SendMessage;
+  type: typeof messageType.MsgSend;
+  payload: {
+    message: MessageHistoryItem;
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
@@ -170,6 +177,7 @@ export type ServerResponse =
   | UsersList
   | UserExternalLogin
   | UserExternalLogout
-  | MessageHistory
-  | MessageReceiveFromUser;
+  | MessageHistoryResponse
+  | MessageReceiveFromUser
+  | MessageSendToUser;
 // Response - end

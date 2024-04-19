@@ -128,7 +128,6 @@ export default class Messages extends BaseComponent {
     return 'Error';
   }
 
-  // eslint-disable-next-line max-lines-per-function
   private toHTML(): string {
     const { selectedUser, userList } = this.store.getState().appData;
 
@@ -172,6 +171,8 @@ export default class Messages extends BaseComponent {
 
     const messagesFrame = containerElem.querySelector('.messages') as HTMLElement;
     const messagesContainer = containerElem.querySelector('.messages__wrap') as HTMLElement;
+    const sendInput = containerElem.querySelector('[data-type="sendInput"]') as HTMLElement;
+    sendInput.focus();
 
     const msgContainerHeight = messagesContainer.getBoundingClientRect().height;
     const msgFrameHeight = messagesFrame.getBoundingClientRect().height;
@@ -187,7 +188,7 @@ export default class Messages extends BaseComponent {
 
     setTimeout(() => {
       this.textAreaPrepare(this.container);
-    }, 1);
+    }, 0);
 
     return this.container;
   };

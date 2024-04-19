@@ -52,4 +52,5 @@ export enum publisherActionType {
   UpdateMessageHistory = 'UpdateMessageHistory',
   Disconnect = 'Disconnect',
   newMessageReceive = 'newMessageReceive',
+  newMessageSend = 'newMessageSend',
 }

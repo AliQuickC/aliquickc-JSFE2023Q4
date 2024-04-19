@@ -5,6 +5,7 @@ import {
   UserLisReadyEvent,
   publisherEvent,
   MessageReceiveEvent,
+  MessageSendEvent,
 } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
@@ -79,6 +80,14 @@ export default class App {
       const message = (event as MessageReceiveEvent).message;
       if (selectedUser && selectedUser === message.from) {
         this.store.dispatch({ type: ActionID.NewMessageReceive, message: message });
+      }
+    });
+
+    this.wsController.addEventListener(publisherActionType.newMessageSend, (event: publisherEvent): void => {
+      const { selectedUser } = this.store.getState().appData;
+      const message = (event as MessageSendEvent).message;
+      if (selectedUser && selectedUser === message.to) {
+        this.store.dispatch({ type: ActionID.NewMessageSend, message: message });
       }
     });
   }

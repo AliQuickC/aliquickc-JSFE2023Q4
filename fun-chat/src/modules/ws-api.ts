@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Publisher from '../component/base-component/publisher';
 import ModalDialog from '../component/modal-dialog/modal-dialog';
 import {
@@ -186,7 +185,12 @@ export default class WebSocketController extends Publisher {
         }
         break;
       }
-
+      case messageId.SendMessage: {
+        if (eventData.type === messageType.MsgSend) {
+          this._triggerEvent(publisherActionType.newMessageSend, { message: eventData.payload.message });
+        }
+        break;
+      }
       case null: {
         if (eventData.type === messageType.UserExternalLogin) {
           const user: UserInfo = eventData.payload.user;
@@ -233,6 +237,7 @@ export default class WebSocketController extends Publisher {
     this.ws.addEventListener('open', this.wsOpenHandler);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public closeHandler = (event: CloseEvent): void => {
     // console.log('event: ', event.code);
     // console.log('close: ', this.ws?.readyState);

@@ -2,10 +2,13 @@
   padding: 0
   width: 65%
   height: 100%
+  min-height: 300px
   display: flex
   flex-direction: column
   justify-content: space-between
   border-color: var(--border-color)
+  @media(max-width: 600px)
+    width: 100%
   &__capture
     text-align: center
   &__select-user
@@ -50,7 +53,12 @@
     align-items: center
   &__control
     display: flex
-    column-gap: 10px
+    column-gap: 8px
+    @media(max-width: 600px)
+      column-gap: 5px
+  &__info
+    @media(max-width: 600px)
+      font-size: 11px
   &__control-edit, &__control-delete
     width: 20px
     height: 20px

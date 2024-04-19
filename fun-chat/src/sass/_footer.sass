@@ -11,13 +11,17 @@
     padding-top: 15px
     padding-bottom: 15px
 
-.footer-data
+.footer-date
   display: flex
   align-items: center
   font-weight: bold
   font-size: 24px
+  @media(max-width: 600px)
+    font-size: 18px
+  @media(max-width: 600px)
+    display: none
 
-.footer-data p
+.footer-date p
   margin: 0
 
 .copyright
@@ -46,6 +50,8 @@
   background-color: greenyellow
 
 .github-username
+  display: flex
+  align-items: center
   color: var(--footer-text-color)
   text-decoration: none
   transition: 0.3s
@@ -67,3 +73,6 @@
 
 .github-data
   font-size: 20px
+  @media(max-width: 600px)
+    font-size: 18px
+

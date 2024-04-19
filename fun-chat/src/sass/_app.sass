@@ -1,14 +1,18 @@
 body
   display: flex
   flex-direction: column
-  min-height: 100%
 
 .main
   flex: 1 1 auto
+  height: fit-content
   background-color: #63e8ec
-  height: calc(100vh - 92px)
-  min-height: 300px
-
+  overflow: hidden
+  // height: calc(100vh - 105px)
   @media(max-width: 1180px)
     padding-right: 20px
     padding-left: 20px
+  @media(max-width: 600px)
+    padding-right: 10px
+    padding-left: 10px
+  @media(max-height: 600px)
+    overflow: auto

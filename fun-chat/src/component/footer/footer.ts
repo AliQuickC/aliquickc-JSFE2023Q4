@@ -28,7 +28,7 @@ export default class Footer extends BaseComponent {
         <span class="github-data">Aleksandr Alekhin</span>
       </a>
 
-      <div class="footer-data">
+      <div class="footer-date">
         <p class="copyright">©</p>
         <p class="year">2024</p>
       </div>

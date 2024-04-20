@@ -1,5 +1,10 @@
+import { publisherActionType } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
+
+const AlreadyAuthorized = 'пользователь с таким именем, уже вошол в чат!';
+const IncorrectPassword = 'Введен неверный пароль!';
+const Disconnect = 'Потеряно соединение с сервером';
 
 export default class ModalDialog extends BaseComponent {
   private message: string = 'test';
@@ -48,7 +53,23 @@ export default class ModalDialog extends BaseComponent {
   };
 
   public showModal = (message: string): void => {
-    this.message = message;
+    switch (message) {
+      case publisherActionType.AlreadyAuthorized: {
+        this.message = AlreadyAuthorized;
+        break;
+      }
+      case publisherActionType.IncorrectPassword: {
+        this.message = IncorrectPassword;
+        break;
+      }
+      case publisherActionType.Disconnect: {
+        this.message = Disconnect;
+        break;
+      }
+      default:
+        this.message = message;
+        break;
+    }
     this.render();
 
     setTimeout(() => {

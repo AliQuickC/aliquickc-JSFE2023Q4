@@ -55,4 +55,6 @@ export enum publisherActionType {
   newMessageReceive = 'newMessageReceive',
   newMessageSend = 'newMessageSend',
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
+  AlreadyAuthorized = 'AlreadyAuthorized',
+  IncorrectPassword = 'IncorrectPassword',
 }

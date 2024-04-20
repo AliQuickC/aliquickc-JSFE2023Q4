@@ -34,7 +34,7 @@ export default class App {
     this.store.subscribe(this.render);
 
     this.modalDialog = new ModalDialog(this.store);
-    this.wsController = new WebSocketController(this.modalDialog);
+    this.wsController = new WebSocketController();
 
     // this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
     //   this.store.dispatch({
@@ -43,8 +43,15 @@ export default class App {
     //     password: (event as AuthenticationEvent).password,
     //   });
     // });
+    this.wsController.addEventListener(publisherActionType.AlreadyAuthorized, (): void => {
+      this.modalDialog.showModal(publisherActionType.AlreadyAuthorized);
+    });
+    this.wsController.addEventListener(publisherActionType.IncorrectPassword, (): void => {
+      this.modalDialog.showModal(publisherActionType.IncorrectPassword);
+    });
 
     this.wsController.addEventListener(publisherActionType.UserLisReady, (event: publisherEvent): void => {
+      this.modalDialog.closeModal();
       this.store.dispatch({
         type: ActionID.RenewUserList,
         userList: (event as UserLisReadyEvent).userList,
@@ -72,6 +79,10 @@ export default class App {
       const { isLogin } = this.store.getState().loginedUser;
       if (isLogin) {
         this.store.dispatch({ type: ActionID.DisconnectSetPage, page: Page.Chat });
+      } else {
+        if (!this.modalDialog.isShowModal) {
+          this.modalDialog.showModal(publisherActionType.Disconnect);
+        }
       }
     });
 

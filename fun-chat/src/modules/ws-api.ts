@@ -1,5 +1,4 @@
 import Publisher from '../component/base-component/publisher';
-import ModalDialog from '../component/modal-dialog/modal-dialog';
 import {
   AuthenticationErrorMessage,
   ServerReadyState,
@@ -94,7 +93,6 @@ function messageHistoryWithTheUserMsgCreater(loginUser: string, selectUser: stri
 export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
-  private modalDialog: ModalDialog;
   private authenticatedUsers: UserInfo[] | null = null;
   private unauthorizedUsers: UserInfo[] | null = null;
   private userParamsCache: UserParams = {
@@ -103,9 +101,8 @@ export default class WebSocketController extends Publisher {
   };
   debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
 
-  constructor(modalDialog: ModalDialog) {
+  constructor() {
     super();
-    this.modalDialog = modalDialog;
 
     this.debounceMsgDeliver = debounce((action: typeof publisherActionType.DeliveryStatusChange) => {
       this._triggerEvent(action);
@@ -141,9 +138,9 @@ export default class WebSocketController extends Publisher {
       this.getUserList();
     } else if (eventData.type === messageType.Error) {
       if (eventData.payload.error === AuthenticationErrorMessage.AlreadyAuthorized) {
-        this.modalDialog.showModal('пользователь с таким именем, уже вошол в чат!');
+        this._triggerEvent(publisherActionType.AlreadyAuthorized);
       } else if (eventData.payload.error === AuthenticationErrorMessage.IncorrectPassword) {
-        this.modalDialog.showModal('Введен неверный пароль!');
+        this._triggerEvent(publisherActionType.IncorrectPassword);
       }
     }
   };

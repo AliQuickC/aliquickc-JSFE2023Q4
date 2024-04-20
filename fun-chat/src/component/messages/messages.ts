@@ -86,7 +86,7 @@ export default class Messages extends BaseComponent {
 
     return `
             ${noReadLine}
-            <div class="messages__item message ${isOwnMessage ? 'message_own' : ''}">
+            <div class="messages__item message ${isOwnMessage ? 'message_own' : ''}" data-message-id="${message.id}">
               <div class="message__header">
                 <span class="message__user">${message.from}</span>
                 <span class="message__time">${new Date(message.datetime).toLocaleString()}</span>

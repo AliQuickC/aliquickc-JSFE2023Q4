@@ -78,7 +78,7 @@ export default function reducer(stateData: State, action: Action): State {
     case ActionID.NewMessageReceive: {
       const loginUser = state.loginedUser.login as string;
       const selectedUser = state.appData.selectedUser as string;
-      const message: MessageHistoryItem = { ...action.message, id: '???' };
+      const message: MessageHistoryItem = { ...action.message, id: 'newReceiveMessage' };
 
       if (state.currentMessageHistory === null) {
         const newMessageHistory: MessageHistoryInfo = { loginUser, chatUser: selectedUser, messages: [message] };

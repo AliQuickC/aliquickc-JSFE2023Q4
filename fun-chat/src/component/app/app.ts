@@ -90,6 +90,14 @@ export default class App {
         this.store.dispatch({ type: ActionID.NewMessageSend, message: message });
       }
     });
+
+    this.wsController.addEventListener(publisherActionType.DeliveryStatusChange, (): void => {
+      const { selectedUser } = this.store.getState().appData;
+      const loginUser = this.store.getState().loginedUser.login as string;
+      if (selectedUser) {
+        this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
+      }
+    });
   }
 
   public destroy(): void {}

@@ -1,10 +1,18 @@
-import { MessageHistoryInfo, MessageHistoryItem, MessageReceive, UserInfo, UserLoginParams } from './types';
+import {
+  MessageDeliveryStatus,
+  MessageHistoryInfo,
+  MessageHistoryItem,
+  MessageReceive,
+  UserInfo,
+  UserLoginParams,
+} from './types';
 
 export type AuthenticationEvent = UserLoginParams;
 export type UserLisReadyEvent = { userList: UserInfo[]; LoginParams: UserLoginParams };
 export type UserLoginLogoutEvent = { user: UserInfo };
 export type MessageReceiveEvent = { message: MessageReceive };
 export type MessageSendEvent = { message: MessageHistoryItem };
+export type DeliveryStatusEvent = { userStatusList: MessageDeliveryStatus[] };
 
 export type publisherEvent =
   | object
@@ -13,4 +21,5 @@ export type publisherEvent =
   | UserLoginLogoutEvent
   | MessageHistoryInfo
   | MessageReceiveEvent
-  | MessageSendEvent;
+  | MessageSendEvent
+  | DeliveryStatusEvent;

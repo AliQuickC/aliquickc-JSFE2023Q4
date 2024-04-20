@@ -20,6 +20,7 @@ import {
   messageHistoryWithTheUser,
   sendingMessageToUserMsg,
 } from '../types/types';
+import { debounce } from './utils';
 
 const baseURL = 'ws://localhost:4000';
 
@@ -100,10 +101,15 @@ export default class WebSocketController extends Publisher {
     login: null,
     password: null,
   };
+  debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
 
   constructor(modalDialog: ModalDialog) {
     super();
     this.modalDialog = modalDialog;
+
+    this.debounceMsgDeliver = debounce((action: typeof publisherActionType.DeliveryStatusChange) => {
+      this._triggerEvent(action);
+    }, 500);
   }
 
   public init(): void {}
@@ -202,6 +208,12 @@ export default class WebSocketController extends Publisher {
         // Receive message from user
         else if (eventData.type === messageType.MsgSend) {
           this._triggerEvent(publisherActionType.newMessageReceive, { message: eventData.payload.message });
+        }
+        // Singl message, delivery status change
+        else if (eventData.type === messageType.MsgDeliver) {
+          // within 500ms, waiting for new server events about changes in message delivery status.
+          // if there are no new server events, the action is to request the history of all messages
+          this.debounceMsgDeliver(publisherActionType.DeliveryStatusChange);
         }
         break;
       }

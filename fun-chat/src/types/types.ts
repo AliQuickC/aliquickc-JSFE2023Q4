@@ -34,6 +34,13 @@ export type MessageStatus = {
   isEdited: boolean;
 };
 
+export type MessageDeliveryStatus = {
+  id: string;
+  status: {
+    isDelivered: boolean;
+  };
+};
+
 // MessageInfo - start
 export type MessageInfo<I extends string | null> = {
   id: I;
@@ -82,6 +89,7 @@ export type LogoutMsg = GeneralRequestMsg<
 // Request - end
 
 // Response - start
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 type GeneralResponseMsg<I extends messageId | null | string, T extends messageType, P> = {
   id: I;
   type: T;
@@ -168,6 +176,14 @@ export type MessageSendToUser = {
   };
 };
 
+export type DeliveryStatusInfo = {
+  id: null;
+  type: typeof messageType.MsgDeliver;
+  payload: {
+    message: MessageDeliveryStatus;
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
@@ -179,5 +195,6 @@ export type ServerResponse =
   | UserExternalLogout
   | MessageHistoryResponse
   | MessageReceiveFromUser
-  | MessageSendToUser;
+  | MessageSendToUser
+  | DeliveryStatusInfo;
 // Response - end

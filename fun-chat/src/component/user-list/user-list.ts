@@ -36,13 +36,13 @@ export default class UserList extends BaseComponent {
     }
   };
 
-  private selectUser = (selectUser: string): void => {
+  private selectUser = (selectedUser: string): void => {
     const loginUser = this.store.getState().loginedUser.login as string;
-    this.wsController.sendRequestMessageHistory(loginUser, selectUser);
+    this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
 
     this.store.dispatch({
       type: ActionID.SelectUser,
-      login: selectUser,
+      login: selectedUser,
     });
   };
 

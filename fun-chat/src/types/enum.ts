@@ -36,6 +36,7 @@ export enum messageType {
   UserExternalLogout = 'USER_EXTERNAL_LOGOUT',
   MsgSend = 'MSG_SEND',
   MsgHistory = 'MSG_FROM_USER',
+  MsgDeliver = 'MSG_DELIVER',
 }
 
 export enum AuthenticationErrorMessage {
@@ -53,4 +54,5 @@ export enum publisherActionType {
   Disconnect = 'Disconnect',
   newMessageReceive = 'newMessageReceive',
   newMessageSend = 'newMessageSend',
+  DeliveryStatusChange = 'MessageDeliveryStatusChange',
 }

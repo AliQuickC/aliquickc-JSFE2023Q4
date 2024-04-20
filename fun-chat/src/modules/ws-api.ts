@@ -11,6 +11,8 @@ import {
   AuthenticationLogin,
   AuthenticationMsg,
   LogoutMsg,
+  MessageDeletMsg,
+  MessageDeletedStatus,
   ResponseAuthentication,
   ServerResponse,
   UnauthorizedUsers,
@@ -90,6 +92,18 @@ function messageHistoryWithTheUserMsgCreater(loginUser: string, selectUser: stri
   };
 }
 
+function DeleteMessageMsgCreater(id: string): MessageDeletMsg {
+  return {
+    id: messageId.DeleteMessage,
+    type: messageType.MsgDelete,
+    payload: {
+      message: {
+        id,
+      },
+    },
+  };
+}
+
 export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
@@ -100,7 +114,7 @@ export default class WebSocketController extends Publisher {
     password: null,
   };
   private isDisconnect: boolean = false;
-  debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
+  private debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
 
   constructor() {
     super();
@@ -157,6 +171,10 @@ export default class WebSocketController extends Publisher {
     (this.ws as WebSocket).send(JSON.stringify(allUnauthorizedUsersMsg));
   };
 
+  private responseDeleteMessage = (deleteStatus: MessageDeletedStatus): void => {
+    this._triggerEvent(publisherActionType.MessageDeleted, { deleteStatus });
+  };
+
   private messageHandler = (event: MessageEvent): void => {
     const eventData: ServerResponse = JSON.parse(event.data);
     console.log(eventData);
@@ -199,6 +217,12 @@ export default class WebSocketController extends Publisher {
         }
         break;
       }
+      case messageId.DeleteMessage: {
+        if (eventData.type === messageType.MsgDelete) {
+          this.responseDeleteMessage(eventData.payload.message);
+        }
+        break;
+      }
       case null: {
         if (eventData.type === messageType.UserExternalLogin) {
           const user: UserInfo = eventData.payload.user;
@@ -216,22 +240,23 @@ export default class WebSocketController extends Publisher {
           // within 500ms, waiting for new server events about changes in message delivery status.
           // if there are no new server events, the action is to request the history of all messages
           this.debounceMsgDeliver(publisherActionType.DeliveryStatusChange);
+        } else if (eventData.type === messageType.MsgDelete) {
+          this.responseDeleteMessage(eventData.payload.message);
         }
         break;
       }
       // typeof eventData.id === 'string'
-      default:
-        {
-          if (eventData.type === messageType.MsgHistory) {
-            const [, loginUser, chatUser] = eventData.id.split('-');
-            this._triggerEvent(publisherActionType.UpdateMessageHistory, {
-              loginUser,
-              chatUser,
-              messages: eventData.payload.messages,
-            });
-          }
+      default: {
+        if (eventData.type === messageType.MsgHistory) {
+          const [, loginUser, chatUser] = eventData.id.split('-');
+          this._triggerEvent(publisherActionType.UpdateMessageHistory, {
+            loginUser,
+            chatUser,
+            messages: eventData.payload.messages,
+          });
         }
         break;
+      }
     }
   };
 
@@ -300,5 +325,9 @@ export default class WebSocketController extends Publisher {
 
   public sendRequestMessageHistory = (loginUser: string, selectUser: string): void => {
     this.ws?.send(JSON.stringify(messageHistoryWithTheUserMsgCreater(loginUser, selectUser)));
+  };
+
+  public deleteMessage = (messageId: string): void => {
+    this.ws?.send(JSON.stringify(DeleteMessageMsgCreater(messageId)));
   };
 }

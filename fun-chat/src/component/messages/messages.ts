@@ -1,5 +1,5 @@
 import WebSocketController from '../../modules/ws-api';
-import { Page } from '../../types/enum';
+import { Page, messagesElement } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import { MessageHistoryInfo, MessageHistoryItem, MessageStatus } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
@@ -21,7 +21,17 @@ export default class Messages extends BaseComponent {
   public init(): void {
     this.container.onclick = this.clickHandler;
     this.container.onkeydown = this.keydownHandler;
+
+    // this.wsController.addEventListener(publisherActionType.MessageDeleted, this.deleteMessageHandler);
   }
+
+  // private deleteMessageHandler = (event: publisherEvent): void => {
+  //   const messageId = (event as MessageDeletedEvent).deleteStatus.id;
+
+  //   const messagesElement = this.container.querySelector('[data-type="messages"]');
+  //   const message = messagesElement?.querySelector(`[data-message-id="${messageId}"]`);
+  //   message?.remove();
+  // };
 
   private keydownHandler = (event: KeyboardEvent): void => {
     const { isLogin } = this.store.getState().loginedUser;
@@ -45,11 +55,35 @@ export default class Messages extends BaseComponent {
 
     const element = (event.target as HTMLElement).closest('[data-type]') as HTMLElement;
     const elementDataType = element.getAttribute('data-type');
-    if (elementDataType === 'sendButton') {
-      const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLInputElement;
 
-      const selectedUser = this.store.getState().appData.selectedUser as string;
-      this.sendMessage(selectedUser, sendInput);
+    switch (elementDataType) {
+      case messagesElement.SendButton: {
+        const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLInputElement;
+
+        const selectedUser = this.store.getState().appData.selectedUser as string;
+        this.sendMessage(selectedUser, sendInput);
+        break;
+      }
+      case messagesElement.messageEditButton: {
+        const messageId = (element.closest('[data-message-id]') as HTMLElement).getAttribute('data-message-id');
+        console.log('messageEditButton: ', messageId);
+        break;
+      }
+      case messagesElement.messageDeleteButton: {
+        const messageId = (element.closest('[data-message-id]') as HTMLElement).getAttribute(
+          'data-message-id'
+        ) as string;
+
+        this.wsController.deleteMessage(messageId);
+        break;
+      }
+      case messagesElement.messages: {
+        console.log('messages: ');
+        break;
+      }
+      default: {
+        break;
+      }
     }
   };
 
@@ -68,8 +102,8 @@ export default class Messages extends BaseComponent {
     return `
       <div class="message__status">
         <div class="message__control">
-          <button  class="message__control-edit" title="редактировать сообщение"></button>
-          <button  class="message__control-delete" title="удалить сообщение"></button>
+          <button  class="message__control-edit" title="редактировать сообщение" data-type="messageEditButton"></button>
+          <button  class="message__control-delete" title="удалить сообщение" data-type="messageDeleteButton"></button>
         </div>
         <span class="message__info">${edited}${readed} / ${delivered}</span>
       </div>`;
@@ -91,7 +125,7 @@ export default class Messages extends BaseComponent {
                 <span class="message__user">${message.from}</span>
                 <span class="message__time">${new Date(message.datetime).toLocaleString()}</span>
               </div>
-                <textarea class="message__text" contenteditable="true" readonly disabled>${message.text}</textarea>
+                <textarea class="message__text" contenteditable="true" readonly >${message.text}</textarea>
 
               ${isOwnMessage ? this.getMessageStatus(messageStatus) : ''}
             </div>
@@ -148,7 +182,7 @@ export default class Messages extends BaseComponent {
           ${selectUserLayout}
         </div>
 
-        <div class="correspondence__messages messages">
+        <div class="correspondence__messages messages" data-type="messages">
           <div class="messages__wrap">
             ${this.getMessages()}
           </div>

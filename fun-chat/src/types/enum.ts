@@ -24,6 +24,7 @@ export enum messageId {
   UsersList = 'UsersList',
   SendMessage = 'sendMessage',
   MessageHistory = 'MessageHistory',
+  DeleteMessage = 'DeleteMessage',
 }
 
 export enum messageType {
@@ -37,6 +38,7 @@ export enum messageType {
   MsgSend = 'MSG_SEND',
   MsgHistory = 'MSG_FROM_USER',
   MsgDeliver = 'MSG_DELIVER',
+  MsgDelete = 'MSG_DELETE',
 }
 
 export enum AuthenticationErrorMessage {
@@ -58,4 +60,12 @@ export enum publisherActionType {
   AlreadyAuthorized = 'AlreadyAuthorized',
   IncorrectPassword = 'IncorrectPassword',
   ServerIsNotAvailable = 'ServerIsNotAvailable',
+  MessageDeleted = 'MessageDeleted',
+}
+
+export enum messagesElement {
+  SendButton = 'sendButton',
+  messageEditButton = 'messageEditButton',
+  messageDeleteButton = 'messageDeleteButton',
+  messages = 'messages',
 }

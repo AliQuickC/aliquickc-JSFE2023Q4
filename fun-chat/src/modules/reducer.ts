@@ -78,7 +78,7 @@ export default function reducer(stateData: State, action: Action): State {
     case ActionID.NewMessageReceive: {
       const loginUser = state.loginedUser.login as string;
       const selectedUser = state.appData.selectedUser as string;
-      const message: MessageHistoryItem = { ...action.message, id: 'newReceiveMessage' };
+      const message: MessageHistoryItem = { ...action.message };
 
       if (state.currentMessageHistory === null) {
         const newMessageHistory: MessageHistoryInfo = { loginUser, chatUser: selectedUser, messages: [message] };
@@ -102,6 +102,20 @@ export default function reducer(stateData: State, action: Action): State {
         messages.push(message);
         state.currentMessageHistory = { ...state.currentMessageHistory, messages };
       }
+      return state;
+    }
+    case ActionID.DeleteMessage: {
+      if (state.currentMessageHistory === null) {
+        return state;
+      }
+      const messages: MessageHistoryItem[] = state.currentMessageHistory.messages;
+      const findIndex = messages.findIndex((item) => item.id === action.messageId);
+      if (findIndex !== -1) {
+        const newMessages = messages.slice(0);
+        newMessages.splice(findIndex, 1);
+        state.currentMessageHistory = { ...state.currentMessageHistory, messages: newMessages };
+      }
+
       return state;
     }
     default:

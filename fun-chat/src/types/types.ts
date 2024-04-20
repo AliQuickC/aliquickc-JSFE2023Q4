@@ -22,6 +22,19 @@ type Message = {
   };
 };
 
+type MessageId = {
+  message: {
+    id: string;
+  };
+};
+
+export type MessageDeletedStatus = {
+  id: string; // message id
+  status: {
+    isDeleted: boolean;
+  };
+};
+
 type userLogin = {
   user: {
     login: string;
@@ -42,8 +55,8 @@ export type MessageDeliveryStatus = {
 };
 
 // MessageInfo - start
-export type MessageInfo<I extends string | null> = {
-  id: I;
+export type MessageHistoryItem = {
+  id: string;
   from: string;
   to: string;
   datetime: number;
@@ -51,8 +64,6 @@ export type MessageInfo<I extends string | null> = {
   status: MessageStatus;
 };
 
-export type MessageReceive = MessageInfo<null>;
-export type MessageHistoryItem = MessageInfo<string>;
 export type MessageHistoryInfo = { loginUser: string; chatUser: string; messages: MessageHistoryItem[] };
 // MessageInfo - end
 
@@ -86,6 +97,13 @@ export type LogoutMsg = GeneralRequestMsg<
     user: UserLoginParams;
   }
 >;
+
+export type MessageDeletMsg = GeneralRequestMsg<
+  typeof messageId.DeleteMessage,
+  typeof messageType.MsgDelete,
+  MessageId
+>;
+
 // Request - end
 
 // Response - start
@@ -164,11 +182,11 @@ export type MessageReceiveFromUser = {
   id: null;
   type: typeof messageType.MsgSend;
   payload: {
-    message: MessageReceive;
+    message: MessageHistoryItem;
   };
 };
 
-export type MessageSendToUser = {
+export type MessageSendToUserResp = {
   id: typeof messageId.SendMessage;
   type: typeof messageType.MsgSend;
   payload: {
@@ -184,6 +202,18 @@ export type DeliveryStatusInfo = {
   };
 };
 
+export type MessageDeletOwnerResp = {
+  id: typeof messageId.DeleteMessage;
+  type: typeof messageType.MsgDelete;
+  payload: { message: MessageDeletedStatus };
+};
+
+export type NotificationOfMessageDelet = {
+  id: null;
+  type: typeof messageType.MsgDelete;
+  payload: { message: MessageDeletedStatus };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
@@ -195,6 +225,8 @@ export type ServerResponse =
   | UserExternalLogout
   | MessageHistoryResponse
   | MessageReceiveFromUser
-  | MessageSendToUser
-  | DeliveryStatusInfo;
+  | MessageSendToUserResp
+  | DeliveryStatusInfo
+  | MessageDeletOwnerResp
+  | NotificationOfMessageDelet;
 // Response - end

@@ -99,6 +99,7 @@ export default class WebSocketController extends Publisher {
     login: null,
     password: null,
   };
+  private isDisconnect: boolean = false;
   debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
 
   constructor() {
@@ -122,11 +123,11 @@ export default class WebSocketController extends Publisher {
     return ServerReadyState.CLOSED;
   }
 
-  private errorHandler(error: Event): void {
+  private errorHandler = (error: Event): void => {
     if ((error.currentTarget as WebSocket).readyState === ServerReadyState.CLOSED) {
-      console.log('Не удалось установить соединение с сервером!');
+      this._triggerEvent(publisherActionType.ServerIsNotAvailable);
     }
-  }
+  };
 
   private responseAuthentication = (eventData: ResponseAuthentication): void => {
     if (eventData.type === messageType.UserLogin) {
@@ -135,13 +136,17 @@ export default class WebSocketController extends Publisher {
       //   password: this.userParamsCache.password,
       // });
 
+      this.isDisconnect = true;
+
       this.getUserList();
+      return;
     } else if (eventData.type === messageType.Error) {
       if (eventData.payload.error === AuthenticationErrorMessage.AlreadyAuthorized) {
         this._triggerEvent(publisherActionType.AlreadyAuthorized);
       } else if (eventData.payload.error === AuthenticationErrorMessage.IncorrectPassword) {
         this._triggerEvent(publisherActionType.IncorrectPassword);
       }
+      this.closeServer();
     }
   };
 
@@ -235,27 +240,28 @@ export default class WebSocketController extends Publisher {
   };
 
   public connectToServer = (name: string, password: string): void => {
+    if (this.ws) {
+      this.closeServer();
+    }
     this.userParamsCache = { login: name, password: password };
-
     this.msgAuthentication = authenticationMsgCreator(name, password);
 
     this.ws = new WebSocket(baseURL);
-    this.ws.addEventListener('error', this.errorHandler);
-    this.ws.addEventListener('close', this.closeHandler);
-    this.ws.addEventListener('message', this.messageHandler);
-    this.ws.addEventListener('open', this.wsOpenHandler);
+    this.addEvents();
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public closeHandler = (event: CloseEvent): void => {
     // console.log('event: ', event.code);
     // console.log('close: ', this.ws?.readyState);
-    this._triggerEvent(publisherActionType.Disconnect);
 
-    this.closeServer();
-    this.ws = null;
+    if (this.isDisconnect) {
+      this._triggerEvent(publisherActionType.Disconnect);
+      this.removeEvents();
+      this.ws = null;
 
-    this.connectToServer(this.userParamsCache.login as string, this.userParamsCache.password as string);
+      this.connectToServer(this.userParamsCache.login as string, this.userParamsCache.password as string);
+    }
   };
 
   public userLogout = (name: string, password: string): void => {
@@ -263,12 +269,27 @@ export default class WebSocketController extends Publisher {
     this.ws?.send(JSON.stringify(logoutMsg));
   };
 
-  public closeServer = (): void => {
+  private addEvents = (): void => {
+    if (this.ws) {
+      this.ws.addEventListener('open', this.wsOpenHandler);
+      this.ws.addEventListener('close', this.closeHandler);
+      this.ws.addEventListener('error', this.errorHandler);
+      this.ws.addEventListener('message', this.messageHandler);
+    }
+  };
+  private removeEvents = (): void => {
     if (this.ws) {
       this.ws.removeEventListener('error', this.errorHandler);
       this.ws.removeEventListener('close', this.closeHandler);
       this.ws.removeEventListener('message', this.messageHandler);
       this.ws.removeEventListener('open', this.wsOpenHandler);
+    }
+  };
+
+  public closeServer = (): void => {
+    this.isDisconnect = false;
+    if (this.ws) {
+      this.removeEvents();
       this.ws.close(1000, 'user logout');
     }
   };

@@ -57,4 +57,5 @@ export enum publisherActionType {
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
   AlreadyAuthorized = 'AlreadyAuthorized',
   IncorrectPassword = 'IncorrectPassword',
+  ServerIsNotAvailable = 'ServerIsNotAvailable',
 }

@@ -5,6 +5,7 @@ import BaseComponent from '../base-component/base-component';
 const AlreadyAuthorized = 'пользователь с таким именем, уже вошол в чат!';
 const IncorrectPassword = 'Введен неверный пароль!';
 const Disconnect = 'Потеряно соединение с сервером';
+const ServerIsNotAvailable = 'Не удалось установить соединение с сервером!';
 
 export default class ModalDialog extends BaseComponent {
   private message: string = 'test';
@@ -64,6 +65,10 @@ export default class ModalDialog extends BaseComponent {
       }
       case publisherActionType.Disconnect: {
         this.message = Disconnect;
+        break;
+      }
+      case publisherActionType.ServerIsNotAvailable: {
+        this.message = ServerIsNotAvailable;
         break;
       }
       default:

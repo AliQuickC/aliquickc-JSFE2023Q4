@@ -46,7 +46,7 @@ export default class Header extends BaseComponent {
 
     return `
     <div class="container header__container">
-      <span>Веселый чатик</span>
+      <a class="header__app-name" href="#about">Веселый чатик</a>
       <div class="header__login-data">
         <div class="header__login-info">
           <label  class="header__login-label">Пользователь:</label>

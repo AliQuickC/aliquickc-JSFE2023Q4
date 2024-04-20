@@ -50,6 +50,10 @@ export default class App {
       this.modalDialog.showModal(publisherActionType.IncorrectPassword);
     });
 
+    this.wsController.addEventListener(publisherActionType.ServerIsNotAvailable, (): void => {
+      this.modalDialog.showModal(publisherActionType.ServerIsNotAvailable);
+    });
+
     this.wsController.addEventListener(publisherActionType.UserLisReady, (event: publisherEvent): void => {
       this.modalDialog.closeModal();
       this.store.dispatch({

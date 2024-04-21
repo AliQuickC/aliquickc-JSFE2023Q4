@@ -13,6 +13,8 @@ import {
   LogoutMsg,
   MessageDeletMsg,
   MessageDeletedStatus,
+  MessageEditRequest,
+  MessageEditStatus,
   MessageReadStatusChange,
   ResponseAuthentication,
   ServerResponse,
@@ -117,6 +119,19 @@ function MessageReadStatusChangeMsgCreater(id: string): MessageReadStatusChange 
   };
 }
 
+function MessageEditMsgCreater(id: string, text: string): MessageEditRequest {
+  return {
+    id: messageId.MessageEdit,
+    type: messageType.MsgEdit,
+    payload: {
+      message: {
+        id,
+        text,
+      },
+    },
+  };
+}
+
 export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
@@ -191,6 +206,10 @@ export default class WebSocketController extends Publisher {
     this._triggerEvent(publisherActionType.MessageDeleted, { deleteStatus });
   };
 
+  private responseEditMessage = (editStatus: MessageEditStatus): void => {
+    this._triggerEvent(publisherActionType.EditStatusChange, { editStatus });
+  };
+
   private messageHandler = (event: MessageEvent): void => {
     const eventData: ServerResponse = JSON.parse(event.data);
     console.log(eventData);
@@ -246,6 +265,12 @@ export default class WebSocketController extends Publisher {
         }
         break;
       }
+      case messageId.MessageEdit: {
+        if (eventData.type === messageType.MsgEdit) {
+          this.responseEditMessage(eventData.payload.message);
+        }
+        break;
+      }
       case null: {
         if (eventData.type === messageType.UserExternalLogin) {
           const user: UserInfo = eventData.payload.user;
@@ -267,6 +292,8 @@ export default class WebSocketController extends Publisher {
           this.responseDeleteMessage(eventData.payload.message);
         } else if (eventData.type === messageType.MsgRead) {
           this.debounceMsgRead(publisherActionType.ReadStatusChange);
+        } else if (eventData.type === messageType.MsgEdit) {
+          this.responseEditMessage(eventData.payload.message);
         }
         break;
       }
@@ -358,5 +385,9 @@ export default class WebSocketController extends Publisher {
 
   public changeMessageStatusRead = (messageId: string): void => {
     this.ws?.send(JSON.stringify(MessageReadStatusChangeMsgCreater(messageId)));
+  };
+
+  public messageEdit = (messageId: string, text: string): void => {
+    this.ws?.send(JSON.stringify(MessageEditMsgCreater(messageId, text)));
   };
 }

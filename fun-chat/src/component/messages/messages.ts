@@ -95,8 +95,31 @@ export default class Messages extends BaseComponent {
         break;
       }
       case messagesElement.messageEditButton: {
-        const messageId = (element.closest('[data-message-id]') as HTMLElement).getAttribute('data-message-id');
-        console.log('messageEditButton: ', messageId);
+        const messageElement = element.closest('[data-message-id]') as HTMLElement;
+        const messageId = messageElement.getAttribute('data-message-id') as string;
+        const textArea = messageElement.querySelector('textarea') as HTMLTextAreaElement;
+
+        const messages = this.store.getState().currentMessageHistory?.messages as MessageHistoryItem[];
+        const messageIndex = messages.findIndex((item) => item.id === messageId);
+        if (messageIndex === -1) {
+          return;
+        }
+
+        if (textArea.readOnly) {
+          element.classList.add('message__control-edit_save');
+          element.title = 'сохранить изменения';
+          textArea.readOnly = false;
+        } else {
+          textArea.readOnly = true;
+          element.classList.remove('message__control-edit_save');
+          element.title = 'редактировать сообщение';
+
+          if (textArea.value === '' || textArea.value === messages[messageIndex].text) {
+            textArea.value = messages[messageIndex].text;
+          } else {
+            this.wsController.messageEdit(messageId, textArea.value);
+          }
+        }
         break;
       }
       case messagesElement.messageDeleteButton: {
@@ -107,6 +130,7 @@ export default class Messages extends BaseComponent {
         this.wsController.deleteMessage(messageId);
         break;
       }
+      case messagesElement.messagesWrap:
       case messagesElement.messages: {
         const { selectedUser } = this.store.getState().appData;
         if (selectedUser) {
@@ -129,8 +153,9 @@ export default class Messages extends BaseComponent {
 
   private getMessageStatus(messageStatus: MessageStatus): string {
     const delivered = messageStatus.isDelivered ? 'доставлено' : 'отправлено';
-    const readed = messageStatus.isReaded ? 'прочитано' : 'не прочитано';
+    // const readed = messageStatus.isReaded ? 'прочитано' : 'не прочитано';
     const edited = messageStatus.isEdited ? 'отредактировано / ' : '';
+    const deliveredStatus = messageStatus.isReaded ? 'прочитано' : delivered;
 
     return `
       <div class="message__status">
@@ -138,7 +163,7 @@ export default class Messages extends BaseComponent {
           <button  class="message__control-edit" title="редактировать сообщение" data-type="messageEditButton"></button>
           <button  class="message__control-delete" title="удалить сообщение" data-type="messageDeleteButton"></button>
         </div>
-        <span class="message__info">${edited}${readed} / ${delivered}</span>
+        <span class="message__info">${edited}${deliveredStatus}</span>
       </div>`;
   }
 
@@ -214,7 +239,7 @@ export default class Messages extends BaseComponent {
         </div>
 
         <div class="correspondence__messages messages" data-type="messages">
-          <div class="messages__wrap" data-type="messagesWwrap">
+          <div class="messages__wrap" data-type="messagesWrap">
             ${this.getMessages()}
           </div>
         </div>
@@ -241,7 +266,7 @@ export default class Messages extends BaseComponent {
     const containerElem = this.container;
 
     const messagesFrame = containerElem.querySelector('[data-type="messages"]') as HTMLElement;
-    const messagesContainer = containerElem.querySelector('[data-type="messagesWwrap"]') as HTMLElement;
+    const messagesContainer = containerElem.querySelector('[data-type="messagesWrap"]') as HTMLElement;
     const sendInput = containerElem.querySelector('[data-type="sendInput"]') as HTMLElement;
     sendInput.focus();
 

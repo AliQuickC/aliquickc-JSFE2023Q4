@@ -22,6 +22,13 @@ type Message = {
   };
 };
 
+export type MessageBody = {
+  message: {
+    id: string;
+    text: string;
+  };
+};
+
 type MessageId = {
   message: {
     id: string; // message id
@@ -61,6 +68,14 @@ export type MessageDeletedStatus = {
   };
 };
 
+export type MessageEditStatus = {
+  id: string; // message id
+  text: string;
+  status: {
+    isEdited: boolean;
+  };
+};
+
 // MessageInfo - start
 export type MessageHistoryItem = {
   id: string; // message id
@@ -76,6 +91,7 @@ export type MessageHistoryInfo = {
   chatUser: string;
   messages: MessageHistoryItem[];
 };
+
 // MessageInfo - end
 
 // Request - start
@@ -115,12 +131,17 @@ export type MessageDeletMsg = GeneralRequestMsg<
   MessageId
 >;
 
-export type MessageReadStatusChange = {
-  id: typeof messageId.MsgReadStatus;
-  type: typeof messageType.MsgRead;
-  payload: MessageId;
-};
+export type MessageReadStatusChange = GeneralRequestMsg<
+  typeof messageId.MsgReadStatus,
+  typeof messageType.MsgRead,
+  MessageId
+>;
 
+export type MessageEditRequest = GeneralRequestMsg<
+  typeof messageId.MessageEdit,
+  typeof messageType.MsgEdit,
+  MessageBody
+>;
 // Request - end
 
 // Response - start
@@ -238,6 +259,22 @@ export type NotificationOfMessageReadStatusChangeResp = {
   };
 };
 
+export type MessageEditResponse = {
+  id: typeof messageId.MessageEdit;
+  type: typeof messageType.MsgEdit;
+  payload: {
+    message: MessageEditStatus;
+  };
+};
+
+export type NotificationMessageEditResponse = {
+  id: null;
+  type: typeof messageType.MsgEdit;
+  payload: {
+    message: MessageEditStatus;
+  };
+};
+
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
 export type UsersList = AuthenticatedUsers | UnauthorizedUsers;
 
@@ -254,5 +291,7 @@ export type ServerResponse =
   | MessageDeletOwnerResp
   | NotificationOfMessageDelet
   | MessageReadStatusChangeResp
-  | NotificationOfMessageReadStatusChangeResp;
+  | NotificationOfMessageReadStatusChangeResp
+  | MessageEditResponse
+  | NotificationMessageEditResponse;
 // Response - end

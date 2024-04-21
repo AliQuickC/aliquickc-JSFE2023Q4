@@ -26,6 +26,7 @@ export enum messageId {
   MessageHistory = 'MessageHistory',
   DeleteMessage = 'DeleteMessage',
   MsgReadStatus = 'MsgReadStatus',
+  MessageEdit = 'MessageEdit',
 }
 
 export enum messageType {
@@ -41,6 +42,7 @@ export enum messageType {
   MsgDeliver = 'MSG_DELIVER',
   MsgDelete = 'MSG_DELETE',
   MsgRead = 'MSG_READ',
+  MsgEdit = 'MSG_EDIT',
 }
 
 export enum AuthenticationErrorMessage {
@@ -71,4 +73,5 @@ export enum messagesElement {
   messageEditButton = 'messageEditButton',
   messageDeleteButton = 'messageDeleteButton',
   messages = 'messages',
+  messagesWrap = 'messagesWrap',
 }

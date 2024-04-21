@@ -51,12 +51,14 @@
     display: flex
     justify-content: space-between
     align-items: center
+    column-gap: 15px
   &__control
     display: flex
-    column-gap: 8px
+    column-gap: 6px
     @media(max-width: 600px)
-      column-gap: 5px
+      column-gap: 4px
   &__info
+    text-align: right
     @media(max-width: 600px)
       font-size: 11px
   &__control-edit, &__control-delete
@@ -66,6 +68,9 @@
   &__control-edit
     background: url("../assets/image/pencil.svg") no-repeat center
     background-size: cover
+    &_save
+      background: url("../assets/image/floppy.png") no-repeat center
+      background-size: cover
   &__control-delete
     background: url("../assets/image/trash.svg") no-repeat center
     background-size: 80%

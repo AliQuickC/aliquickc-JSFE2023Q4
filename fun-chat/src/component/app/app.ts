@@ -5,6 +5,7 @@ import {
   UserLisReadyEvent,
   publisherEvent,
   MessageDeletedEvent,
+  MessageEditEvent,
 } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
@@ -98,6 +99,10 @@ export default class App {
         const messageId = (event as MessageDeletedEvent).deleteStatus.id;
         this.store.dispatch({ type: ActionID.DeleteMessage, messageId });
       }
+    });
+
+    this.wsController.addEventListener(publisherActionType.EditStatusChange, (event: publisherEvent) => {
+      this.store.dispatch({ type: ActionID.EditMessage, editStatus: (event as MessageEditEvent).editStatus });
     });
   }
 

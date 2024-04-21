@@ -1,8 +1,9 @@
 import { Page } from '../types/enum';
 import { State, Action, ActionID } from '../types/redux-type';
-import { MessageHistoryInfo, MessageHistoryItem, UserInfo } from '../types/types';
+import { MessageEditStatus, MessageHistoryInfo, MessageHistoryItem, UserInfo } from '../types/types';
 import { defaultUserData, defaultappData } from './constant';
 
+// eslint-disable-next-line max-lines-per-function
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
 
@@ -103,6 +104,26 @@ export default function reducer(stateData: State, action: Action): State {
         state.currentMessageHistory = { ...state.currentMessageHistory, messages: newMessages };
       }
 
+      return state;
+    }
+    case ActionID.EditMessage: {
+      if (state.currentMessageHistory === null) {
+        return state;
+      }
+      const messages: MessageHistoryItem[] = state.currentMessageHistory.messages;
+      const editStatus: MessageEditStatus = action.editStatus;
+      const findIndex = messages.findIndex((item) => item.id === editStatus.id);
+
+      if (findIndex !== -1) {
+        const newMessages = messages.slice(0);
+
+        newMessages[findIndex] = {
+          ...newMessages[findIndex],
+          text: editStatus.text,
+          status: { ...newMessages[findIndex].status, isEdited: editStatus.status.isEdited },
+        };
+        state.currentMessageHistory = { ...state.currentMessageHistory, messages: newMessages };
+      }
       return state;
     }
     default:

@@ -1,6 +1,7 @@
 import {
   MessageDeletedStatus,
   MessageDeliveryStatus,
+  MessageEditStatus,
   MessageHistoryInfo,
   MessageHistoryItem,
   UserInfo,
@@ -13,6 +14,7 @@ export type UserLoginLogoutEvent = { user: UserInfo };
 export type AddNewMessageEvent = { message: MessageHistoryItem };
 export type DeliveryStatusEvent = { userStatusList: MessageDeliveryStatus[] };
 export type MessageDeletedEvent = { deleteStatus: MessageDeletedStatus };
+export type MessageEditEvent = { editStatus: MessageEditStatus };
 
 export type publisherEvent =
   | object
@@ -21,4 +23,5 @@ export type publisherEvent =
   | UserLoginLogoutEvent
   | MessageHistoryInfo
   | AddNewMessageEvent
-  | DeliveryStatusEvent;
+  | DeliveryStatusEvent
+  | MessageEditEvent;

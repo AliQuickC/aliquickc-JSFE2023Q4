@@ -109,14 +109,11 @@ export default class Messages extends BaseComponent {
       </div>`;
   }
 
-  private getMessageItem(message: MessageHistoryItem, isPrevReaded: boolean): string {
+  private getMessageItem(message: MessageHistoryItem, haveReadLine: boolean): string {
     const loginUser = this.store.getState().loginedUser.login;
     const isOwnMessage = message.from === loginUser;
     const messageStatus = message.status;
-    const noReadLine =
-      isPrevReaded && !message.status.isReaded
-        ? '<div class="messages__demarcation-line">непрочитанные сообщения</div>'
-        : '';
+    const noReadLine = haveReadLine ? '<div class="messages__demarcation-line">непрочитанные сообщения</div>' : '';
 
     return `
             ${noReadLine}
@@ -133,12 +130,13 @@ export default class Messages extends BaseComponent {
   }
 
   private getMessageHistory(): string {
-    const { messages } = this.store.getState().currentMessageHistory as MessageHistoryInfo;
+    const { chatUser, messages } = this.store.getState().currentMessageHistory as MessageHistoryInfo;
+
+    const firstNoReadMessageIndex = messages.findIndex((item) => item.from === chatUser && !item.status.isReaded);
     return messages
       .sort((a, b) => a.datetime - b.datetime)
-      .map((item, index, array) => {
-        const isPrevReaded: boolean = index !== 0 ? array[index - 1].status.isReaded : true;
-        return this.getMessageItem(item, isPrevReaded);
+      .map((item, index) => {
+        return this.getMessageItem(item, index === firstNoReadMessageIndex);
       })
       .join('');
   }

@@ -57,6 +57,8 @@ export enum publisherActionType {
   UpdateMessageHistory = 'UpdateMessageHistory',
   Disconnect = 'Disconnect',
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
+  ReadStatusChange = 'MessageReadStatusChange',
+  EditStatusChange = 'MessageEditStatusChange',
   AlreadyAuthorized = 'AlreadyAuthorized',
   IncorrectPassword = 'IncorrectPassword',
   ServerIsNotAvailable = 'ServerIsNotAvailable',

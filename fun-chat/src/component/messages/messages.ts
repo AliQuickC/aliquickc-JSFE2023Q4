@@ -1,6 +1,7 @@
 import WebSocketController from '../../modules/ws-api';
-import { Page, messagesElement } from '../../types/enum';
-import { Store } from '../../types/redux-type';
+import { Page, messagesElement, publisherActionType } from '../../types/enum';
+import { AddNewMessageEvent, publisherEvent } from '../../types/publisher-type';
+import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo, MessageHistoryItem, MessageStatus } from '../../types/types';
 import BaseComponent from '../base-component/base-component';
 
@@ -22,7 +23,13 @@ export default class Messages extends BaseComponent {
     this.container.onclick = this.clickHandler;
     this.container.onkeydown = this.keydownHandler;
 
+    this.wsController.addEventListener(publisherActionType.AddNewMessage, this.AddNewMessageHandler);
     // this.wsController.addEventListener(publisherActionType.MessageDeleted, this.deleteMessageHandler);
+  }
+
+  public destroy(): void {
+    this.wsController.removeEventListener(publisherActionType.AddNewMessage, this.AddNewMessageHandler);
+    super.destroy();
   }
 
   // private deleteMessageHandler = (event: publisherEvent): void => {
@@ -32,6 +39,29 @@ export default class Messages extends BaseComponent {
   //   const message = messagesElement?.querySelector(`[data-message-id="${messageId}"]`);
   //   message?.remove();
   // };
+
+  private AddNewMessageHandler = (event: publisherEvent): void => {
+    const { selectedUser } = this.store.getState().appData;
+    const message = (event as AddNewMessageEvent).message;
+    if (selectedUser && (selectedUser === message.from || selectedUser === message.to)) {
+      this.store.dispatch({ type: ActionID.AddNewMessage, message });
+    }
+    if (selectedUser === message.to) {
+      this.readAllMesagesStatusFromUser(selectedUser);
+    }
+  };
+
+  private readAllMesagesStatusFromUser = (user: string | null): void => {
+    const messageHistory = this.store.getState().currentMessageHistory;
+    if (!user || !messageHistory) {
+      return;
+    }
+    const messages: MessageHistoryItem[] = messageHistory.messages;
+    const messagesFromSelectedUser = messages.filter((item) => item.from === user && !item.status.isReaded);
+    messagesFromSelectedUser.forEach((item) => {
+      this.wsController.changeMessageStatusRead(item.id);
+    });
+  };
 
   private keydownHandler = (event: KeyboardEvent): void => {
     const { isLogin } = this.store.getState().loginedUser;
@@ -46,8 +76,6 @@ export default class Messages extends BaseComponent {
       this.sendMessage(selectedUser, sendInput as HTMLInputElement);
     }
   };
-
-  private readAllMessagesHandler = (): void => {};
 
   private clickHandler = (event: Event): void => {
     const { isLogin } = this.store.getState().loginedUser;
@@ -80,6 +108,10 @@ export default class Messages extends BaseComponent {
         break;
       }
       case messagesElement.messages: {
+        const { selectedUser } = this.store.getState().appData;
+        if (selectedUser) {
+          this.readAllMesagesStatusFromUser(selectedUser);
+        }
         break;
       }
       default: {
@@ -182,7 +214,7 @@ export default class Messages extends BaseComponent {
         </div>
 
         <div class="correspondence__messages messages" data-type="messages">
-          <div class="messages__wrap">
+          <div class="messages__wrap" data-type="messagesWwrap">
             ${this.getMessages()}
           </div>
         </div>
@@ -194,16 +226,22 @@ export default class Messages extends BaseComponent {
     `;
   }
 
-  private textAreaPrepare = (containerElem: HTMLElement): void => {
+  private textAreaPrepare = (): void => {
+    const containerElem = this.container;
+
     const textArea: NodeListOf<HTMLTextAreaElement> = containerElem.querySelectorAll('textarea');
 
     textArea.forEach((item) => {
       item.style.height = '';
       item.style.height = `${item.scrollHeight + 2}px`;
     });
+  };
 
-    const messagesFrame = containerElem.querySelector('.messages') as HTMLElement;
-    const messagesContainer = containerElem.querySelector('.messages__wrap') as HTMLElement;
+  private scrollMessagePrepare = (): void => {
+    const containerElem = this.container;
+
+    const messagesFrame = containerElem.querySelector('[data-type="messages"]') as HTMLElement;
+    const messagesContainer = containerElem.querySelector('[data-type="messagesWwrap"]') as HTMLElement;
     const sendInput = containerElem.querySelector('[data-type="sendInput"]') as HTMLElement;
     sendInput.focus();
 
@@ -214,13 +252,21 @@ export default class Messages extends BaseComponent {
     if (hideScroll > 0) {
       messagesFrame.scrollBy(0, hideScroll);
     }
+
+    messagesFrame.addEventListener('wheel', (): void => {
+      const { selectedUser } = this.store.getState().appData;
+      if (selectedUser) {
+        this.readAllMesagesStatusFromUser(selectedUser);
+      }
+    });
   };
 
   public render = (): HTMLElement => {
     this.container.innerHTML = this.toHTML();
 
     setTimeout(() => {
-      this.textAreaPrepare(this.container);
+      this.textAreaPrepare();
+      this.scrollMessagePrepare();
     }, 0);
 
     return this.container;

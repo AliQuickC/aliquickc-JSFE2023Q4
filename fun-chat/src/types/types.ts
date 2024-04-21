@@ -231,7 +231,7 @@ export type MessageReadStatusChangeResp = {
   };
 };
 export type NotificationOfMessageReadStatusChangeResp = {
-  id: typeof messageId.MsgReadStatus;
+  id: null;
   type: typeof messageType.MsgRead;
   payload: {
     message: MessageReadStatus;

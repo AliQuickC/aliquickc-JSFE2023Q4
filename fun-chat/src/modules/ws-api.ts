@@ -13,6 +13,7 @@ import {
   LogoutMsg,
   MessageDeletMsg,
   MessageDeletedStatus,
+  MessageReadStatusChange,
   ResponseAuthentication,
   ServerResponse,
   UnauthorizedUsers,
@@ -104,6 +105,18 @@ function DeleteMessageMsgCreater(id: string): MessageDeletMsg {
   };
 }
 
+function MessageReadStatusChangeMsgCreater(id: string): MessageReadStatusChange {
+  return {
+    id: messageId.MsgReadStatus,
+    type: messageType.MsgRead,
+    payload: {
+      message: {
+        id,
+      },
+    },
+  };
+}
+
 export default class WebSocketController extends Publisher {
   private ws: WebSocket | null = null;
   private msgAuthentication: AuthenticationMsg = {} as AuthenticationMsg;
@@ -114,14 +127,17 @@ export default class WebSocketController extends Publisher {
     password: null,
   };
   private isDisconnect: boolean = false;
-  private debounceMsgDeliver: (args: publisherActionType.DeliveryStatusChange) => void;
+  private debounceMsgDeliver: (args: typeof publisherActionType.DeliveryStatusChange) => void;
+  private debounceMsgRead: (args: typeof publisherActionType.ReadStatusChange) => void;
 
   constructor() {
     super();
 
-    this.debounceMsgDeliver = debounce((action: typeof publisherActionType.DeliveryStatusChange) => {
-      this._triggerEvent(action);
-    }, 500);
+    // this.debounceMsgDeliver = debounce((action: typeof publisherActionType.DeliveryStatusChange) => {
+    //   this._triggerEvent(action);
+    // }, 500);
+    this.debounceMsgDeliver = debounce(this._triggerEvent.bind(this), 500);
+    this.debounceMsgRead = debounce(this._triggerEvent.bind(this), 500);
   }
 
   public init(): void {}
@@ -213,13 +229,20 @@ export default class WebSocketController extends Publisher {
       }
       case messageId.SendMessage: {
         if (eventData.type === messageType.MsgSend) {
-          this._triggerEvent(publisherActionType.AddNewMessage, { message: eventData.payload.message });
+          const message = eventData.payload.message;
+          this._triggerEvent(publisherActionType.AddNewMessage, { message });
         }
         break;
       }
       case messageId.DeleteMessage: {
         if (eventData.type === messageType.MsgDelete) {
           this.responseDeleteMessage(eventData.payload.message);
+        }
+        break;
+      }
+      case messageId.MsgReadStatus: {
+        if (eventData.type === messageType.MsgRead) {
+          this.debounceMsgRead(publisherActionType.ReadStatusChange);
         }
         break;
       }
@@ -242,6 +265,8 @@ export default class WebSocketController extends Publisher {
           this.debounceMsgDeliver(publisherActionType.DeliveryStatusChange);
         } else if (eventData.type === messageType.MsgDelete) {
           this.responseDeleteMessage(eventData.payload.message);
+        } else if (eventData.type === messageType.MsgRead) {
+          this.debounceMsgRead(publisherActionType.ReadStatusChange);
         }
         break;
       }
@@ -329,5 +354,9 @@ export default class WebSocketController extends Publisher {
 
   public deleteMessage = (messageId: string): void => {
     this.ws?.send(JSON.stringify(DeleteMessageMsgCreater(messageId)));
+  };
+
+  public changeMessageStatusRead = (messageId: string): void => {
+    this.ws?.send(JSON.stringify(MessageReadStatusChangeMsgCreater(messageId)));
   };
 }

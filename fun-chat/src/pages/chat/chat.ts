@@ -22,20 +22,22 @@ export default class Chat extends BaseComponent {
 
   public init(): void {}
 
+  public destroy(): void {
+    this.messages?.destroy();
+    this.userList?.destroy();
+    super.destroy();
+  }
+
   private toHTML(): string {
     return '<div class="container chat__container" id="chat-container"></div>';
   }
 
   public render = (): HTMLElement => {
+    this.messages?.destroy();
+    this.userList?.destroy();
+
     this.container.innerHTML = this.toHTML();
     const chatContainer = this.container.querySelector('#chat-container') as HTMLElement;
-
-    if (this.userList) {
-      this.userList.destroy();
-    }
-    if (this.userList) {
-      this.userList.destroy();
-    }
 
     this.userList = new UserList(
       { store: this.store, wsController: this.wsController },

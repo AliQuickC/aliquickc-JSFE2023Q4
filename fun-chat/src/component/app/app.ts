@@ -5,7 +5,6 @@ import {
   UserLisReadyEvent,
   publisherEvent,
   MessageDeletedEvent,
-  AddNewMessageEvent,
 } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
@@ -90,21 +89,9 @@ export default class App {
       }
     });
 
-    this.wsController.addEventListener(publisherActionType.AddNewMessage, (event: publisherEvent): void => {
-      const { selectedUser } = this.store.getState().appData;
-      const message = (event as AddNewMessageEvent).message;
-      if (selectedUser && (selectedUser === message.from || selectedUser === message.to)) {
-        this.store.dispatch({ type: ActionID.AddNewMessage, message });
-      }
-    });
+    this.wsController.addEventListener(publisherActionType.DeliveryStatusChange, this.getMessageHistory);
 
-    this.wsController.addEventListener(publisherActionType.DeliveryStatusChange, (): void => {
-      const { selectedUser } = this.store.getState().appData;
-      const loginUser = this.store.getState().loginedUser.login as string;
-      if (selectedUser) {
-        this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
-      }
-    });
+    this.wsController.addEventListener(publisherActionType.ReadStatusChange, this.getMessageHistory);
 
     this.wsController.addEventListener(publisherActionType.MessageDeleted, (event: publisherEvent) => {
       if (this.store.getState().currentMessageHistory) {
@@ -113,6 +100,14 @@ export default class App {
       }
     });
   }
+
+  private getMessageHistory = (): void => {
+    const { selectedUser } = this.store.getState().appData;
+    const loginUser = this.store.getState().loginedUser.login as string;
+    if (selectedUser) {
+      this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
+    }
+  };
 
   public destroy(): void {}
 
@@ -139,10 +134,13 @@ export default class App {
           page = Page.Login;
         }
 
-        this.store.dispatch({
-          type: ActionID.SetPage,
-          page: page,
-        });
+        const currentPage = this.store.getState().appData.currentPage;
+        if (page !== currentPage) {
+          this.store.dispatch({
+            type: ActionID.SetPage,
+            page: page,
+          });
+        }
       }
     });
   }

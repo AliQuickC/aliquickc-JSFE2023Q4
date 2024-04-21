@@ -62,7 +62,7 @@ export default function reducer(stateData: State, action: Action): State {
     }
     case ActionID.UpdateMessageHistory: {
       const { messageHistoryInfo } = action;
-      const { loginUser } = action.messageHistoryInfo;
+      const { loginUser } = messageHistoryInfo;
 
       if (
         state.appData.currentPage === Page.Chat &&

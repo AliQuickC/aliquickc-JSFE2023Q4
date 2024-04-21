@@ -24,6 +24,10 @@ export default class Main extends BaseComponent {
 
   public init(): void {}
 
+  public destroy(): void {
+    this.page?.destroy();
+  }
+
   public enterKeyDown = (): void => {
     if (this.store.getState().appData.currentPage === Page.Login) {
       (this.page as LoginPage).enterKeyDown();
@@ -33,9 +37,7 @@ export default class Main extends BaseComponent {
   public render = (): HTMLElement => {
     const { currentPage } = this.store.getState().appData;
 
-    if (this.page) {
-      this.page.destroy();
-    }
+    this.page?.destroy();
 
     this.container.innerHTML = '';
 

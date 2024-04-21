@@ -53,10 +53,10 @@ export enum AuthenticationErrorMessage {
 export enum publisherActionType {
   AuthenticationSuccess = 'Authentication-Success',
   LogoutSuccess = 'LogoutSuccess',
-  UserLisReady = 'UserLisReady',
+  UserListReady = 'UserListReady',
   AddUser = 'AddUser',
   RemoveUser = 'RemoveUser',
-  UpdateMessageHistory = 'UpdateMessageHistory',
+  UpdateMessageHistorySelectUser = 'UpdateMessageHistorySelectUser',
   Disconnect = 'Disconnect',
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
   ReadStatusChange = 'MessageReadStatusChange',

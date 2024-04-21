@@ -15,6 +15,12 @@ export type UserInfo = {
   isLogined: boolean;
 };
 
+export type ChatUserInfo = {
+  login: string;
+  isLogined: boolean;
+  unreadMessagesCount?: number;
+};
+
 type Message = {
   message: {
     to: string;

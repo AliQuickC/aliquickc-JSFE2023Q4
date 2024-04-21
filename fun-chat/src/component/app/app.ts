@@ -36,13 +36,6 @@ export default class App {
     this.modalDialog = new ModalDialog(this.store);
     this.wsController = new WebSocketController();
 
-    // this.wsController.addEventListener(publisherActionType.AuthenticationSuccess, (event: publisherEvent): void => {
-    //   this.store.dispatch({
-    //     type: ActionID.Authentication,
-    //     login: (event as AuthenticationEvent).login,
-    //     password: (event as AuthenticationEvent).password,
-    //   });
-    // });
     this.wsController.addEventListener(publisherActionType.AlreadyAuthorized, (): void => {
       this.modalDialog.showModal(publisherActionType.AlreadyAuthorized);
     });
@@ -54,7 +47,7 @@ export default class App {
       this.modalDialog.showModal(publisherActionType.ServerIsNotAvailable);
     });
 
-    this.wsController.addEventListener(publisherActionType.UserLisReady, (event: publisherEvent): void => {
+    this.wsController.addEventListener(publisherActionType.UserListReady, (event: publisherEvent): void => {
       this.modalDialog.closeModal();
       this.store.dispatch({
         type: ActionID.RenewUserList,
@@ -75,9 +68,15 @@ export default class App {
       this.store.dispatch({ type: ActionID.RemoveUser, user: (event as UserLoginLogoutEvent).user });
     });
 
-    this.wsController.addEventListener(publisherActionType.UpdateMessageHistory, (event: publisherEvent): void => {
-      this.store.dispatch({ type: ActionID.UpdateMessageHistory, messageHistoryInfo: event as MessageHistoryInfo });
-    });
+    this.wsController.addEventListener(
+      publisherActionType.UpdateMessageHistorySelectUser,
+      (event: publisherEvent): void => {
+        this.store.dispatch({
+          type: ActionID.UpdateMessageHistorySelectUser,
+          messageHistoryInfo: event as MessageHistoryInfo,
+        });
+      }
+    );
 
     this.wsController.addEventListener(publisherActionType.Disconnect, (): void => {
       const { isLogin } = this.store.getState().loginedUser;

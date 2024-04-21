@@ -10,6 +10,7 @@ export const defaultUserData: UserData = {
 export const defaultappData: AppData = {
   currentPage: Page.Login,
   userList: [],
+  userFindField: '',
   selectedUser: null,
 };
 

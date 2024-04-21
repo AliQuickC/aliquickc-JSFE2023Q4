@@ -148,9 +148,6 @@ export default class WebSocketController extends Publisher {
   constructor() {
     super();
 
-    // this.debounceMsgDeliver = debounce((action: typeof publisherActionType.DeliveryStatusChange) => {
-    //   this._triggerEvent(action);
-    // }, 500);
     this.debounceMsgDeliver = debounce(this._triggerEvent.bind(this), 500);
     this.debounceMsgRead = debounce(this._triggerEvent.bind(this), 500);
   }
@@ -176,14 +173,9 @@ export default class WebSocketController extends Publisher {
 
   private responseAuthentication = (eventData: ResponseAuthentication): void => {
     if (eventData.type === messageType.UserLogin) {
-      // this._triggerEvent(publisherActionType.AuthenticationSuccess, {
-      //   login: eventData.payload.user.login,
-      //   password: this.userParamsCache.password,
-      // });
-
       this.isDisconnect = true;
+      this.getUserList(); // Authentication, getUsers
 
-      this.getUserList();
       return;
     } else if (eventData.type === messageType.Error) {
       if (eventData.payload.error === AuthenticationErrorMessage.AlreadyAuthorized) {
@@ -242,7 +234,7 @@ export default class WebSocketController extends Publisher {
         if (this.authenticatedUsers && this.unauthorizedUsers) {
           const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
 
-          this._triggerEvent(publisherActionType.UserLisReady, { userList, LoginParams: this.userParamsCache });
+          this._triggerEvent(publisherActionType.UserListReady, { userList, LoginParams: this.userParamsCache }); // !!!
         }
         break;
       }
@@ -299,9 +291,11 @@ export default class WebSocketController extends Publisher {
       }
       // typeof eventData.id === 'string'
       default: {
+        // !!!
         if (eventData.type === messageType.MsgHistory) {
+          // messageId.MessageHistory + '-' + loginUser + '-' + selectUser
           const [, loginUser, chatUser] = eventData.id.split('-');
-          this._triggerEvent(publisherActionType.UpdateMessageHistory, {
+          this._triggerEvent(publisherActionType.UpdateMessageHistorySelectUser, {
             loginUser,
             chatUser,
             messages: eventData.payload.messages,

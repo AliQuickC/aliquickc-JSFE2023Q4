@@ -252,9 +252,7 @@ export default class Messages extends BaseComponent {
   }
 
   private textAreaPrepare = (): void => {
-    const containerElem = this.container;
-
-    const textArea: NodeListOf<HTMLTextAreaElement> = containerElem.querySelectorAll('textarea');
+    const textArea: NodeListOf<HTMLTextAreaElement> = this.container.querySelectorAll('textarea');
 
     textArea.forEach((item) => {
       item.style.height = '';
@@ -263,12 +261,17 @@ export default class Messages extends BaseComponent {
   };
 
   private scrollMessagePrepare = (): void => {
-    const containerElem = this.container;
+    const messagesFrame = this.container.querySelector('[data-type="messages"]') as HTMLElement;
+    const messagesContainer = messagesFrame.querySelector('[data-type="messagesWrap"]') as HTMLElement;
+    const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLElement;
+    sendInput?.focus();
 
-    const messagesFrame = containerElem.querySelector('[data-type="messages"]') as HTMLElement;
-    const messagesContainer = containerElem.querySelector('[data-type="messagesWrap"]') as HTMLElement;
-    const sendInput = containerElem.querySelector('[data-type="sendInput"]') as HTMLElement;
-    sendInput.focus();
+    messagesFrame.addEventListener('wheel', (): void => {
+      const { selectedUser } = this.store.getState().appData;
+      if (selectedUser) {
+        this.readAllMesagesStatusFromUser(selectedUser);
+      }
+    });
 
     const msgContainerHeight = messagesContainer.getBoundingClientRect().height;
     const msgFrameHeight = messagesFrame.getBoundingClientRect().height;
@@ -277,13 +280,6 @@ export default class Messages extends BaseComponent {
     if (hideScroll > 0) {
       messagesFrame.scrollBy(0, hideScroll);
     }
-
-    messagesFrame.addEventListener('wheel', (): void => {
-      const { selectedUser } = this.store.getState().appData;
-      if (selectedUser) {
-        this.readAllMesagesStatusFromUser(selectedUser);
-      }
-    });
   };
 
   public render = (): HTMLElement => {

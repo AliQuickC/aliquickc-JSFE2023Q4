@@ -1,5 +1,6 @@
 import { Page } from './enum';
 import {
+  ChatUserInfo,
   MessageEditStatus,
   MessageHistoryInfo,
   MessageHistoryItem,
@@ -16,7 +17,8 @@ export type UserData = UserParams & { isLogin: boolean };
 
 export type AppData = {
   currentPage: Page;
-  userList: UserInfo[];
+  userList: ChatUserInfo[];
+  userFindField: string;
   selectedUser: string | null;
 };
 
@@ -62,8 +64,8 @@ type ActionSelectUser = {
   login: string;
 };
 
-type ActionUpdateMessageHistory = {
-  type: typeof ActionID.UpdateMessageHistory;
+type ActionUpdateMessageHistorySelectUser = {
+  type: typeof ActionID.UpdateMessageHistorySelectUser;
   messageHistoryInfo: MessageHistoryInfo;
 };
 
@@ -95,7 +97,7 @@ export type Action =
   | ActionAddUser
   | ActionRemoveUser
   | ActionSelectUser
-  | ActionUpdateMessageHistory
+  | ActionUpdateMessageHistorySelectUser
   | ActionDisconnectSetPage
   | ActionAddNewMessage
   | ActionDeleteMessage
@@ -109,7 +111,7 @@ export enum ActionID {
   AddUser = 'AddUser',
   RemoveUser = 'RemoveUser',
   SelectUser = 'SelectUser',
-  UpdateMessageHistory = 'UpdateMessageHistory',
+  UpdateMessageHistorySelectUser = 'UpdateMessageHistorySelectUser',
   DisconnectSetPage = 'DisconnectSetPage',
   NewMessageReceive = 'NewMessageReceive',
   NewMessageSend = 'sendMessage',

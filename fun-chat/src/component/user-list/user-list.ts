@@ -1,5 +1,5 @@
 import WebSocketController from '../../modules/ws-api';
-import { ActionID, Store } from '../../types/redux-type';
+import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 
 export default class UserList extends BaseComponent {
@@ -39,11 +39,6 @@ export default class UserList extends BaseComponent {
   private selectUser = (selectedUser: string): void => {
     const loginUser = this.store.getState().loginedUser.login as string;
     this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
-
-    this.store.dispatch({
-      type: ActionID.SelectUser,
-      login: selectedUser,
-    });
   };
 
   private inputHandler = (event: Event): void => {

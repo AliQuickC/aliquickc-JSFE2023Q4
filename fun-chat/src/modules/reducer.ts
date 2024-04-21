@@ -32,6 +32,7 @@ export default function reducer(stateData: State, action: Action): State {
       const { login, password } = action.loginParams;
 
       const userList: UserInfo[] = action.userList.filter((item) => item.login !== login);
+      // const chatUserList: ChatUserInfo[] = userList.map(item => item.);
       state.appData = { ...state.appData, userList, selectedUser: null };
       state.currentMessageHistory = null;
 
@@ -61,16 +62,13 @@ export default function reducer(stateData: State, action: Action): State {
       state.appData = { ...state.appData, selectedUser: action.login };
       return state;
     }
-    case ActionID.UpdateMessageHistory: {
+    case ActionID.UpdateMessageHistorySelectUser: {
       const { messageHistoryInfo } = action;
-      const { loginUser } = messageHistoryInfo;
+      const { loginUser, chatUser } = messageHistoryInfo;
 
-      if (
-        state.appData.currentPage === Page.Chat &&
-        state.appData.selectedUser !== null &&
-        state.loginedUser.login === loginUser
-      ) {
+      if (state.appData.currentPage === Page.Chat && state.loginedUser.login === loginUser) {
         state.currentMessageHistory = JSON.parse(JSON.stringify(messageHistoryInfo));
+        state.appData = { ...state.appData, selectedUser: chatUser };
       } else {
         state.currentMessageHistory = null;
       }

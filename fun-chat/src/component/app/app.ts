@@ -4,9 +4,8 @@ import {
   UserLoginLogoutEvent,
   UserLisReadyEvent,
   publisherEvent,
-  MessageReceiveEvent,
   MessageDeletedEvent,
-  MessageSendToUserRespEvent,
+  AddNewMessageEvent,
 } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
 import { MessageHistoryInfo } from '../../types/types';
@@ -91,19 +90,11 @@ export default class App {
       }
     });
 
-    this.wsController.addEventListener(publisherActionType.newMessageReceive, (event: publisherEvent): void => {
+    this.wsController.addEventListener(publisherActionType.AddNewMessage, (event: publisherEvent): void => {
       const { selectedUser } = this.store.getState().appData;
-      const message = (event as MessageReceiveEvent).message;
-      if (selectedUser && selectedUser === message.from) {
-        this.store.dispatch({ type: ActionID.NewMessageReceive, message: message });
-      }
-    });
-
-    this.wsController.addEventListener(publisherActionType.newMessageSend, (event: publisherEvent): void => {
-      const { selectedUser } = this.store.getState().appData;
-      const message = (event as MessageSendToUserRespEvent).message;
-      if (selectedUser && selectedUser === message.to) {
-        this.store.dispatch({ type: ActionID.NewMessageSend, message: message });
+      const message = (event as AddNewMessageEvent).message;
+      if (selectedUser && (selectedUser === message.from || selectedUser === message.to)) {
+        this.store.dispatch({ type: ActionID.AddNewMessage, message });
       }
     });
 

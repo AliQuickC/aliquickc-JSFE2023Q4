@@ -24,14 +24,7 @@ type Message = {
 
 type MessageId = {
   message: {
-    id: string;
-  };
-};
-
-export type MessageDeletedStatus = {
-  id: string; // message id
-  status: {
-    isDeleted: boolean;
+    id: string; // message id
   };
 };
 
@@ -48,15 +41,29 @@ export type MessageStatus = {
 };
 
 export type MessageDeliveryStatus = {
-  id: string;
+  id: string; // message id
   status: {
     isDelivered: boolean;
   };
 };
 
+export type MessageReadStatus = {
+  id: string; // message id
+  status: {
+    isReaded: boolean;
+  };
+};
+
+export type MessageDeletedStatus = {
+  id: string; // message id
+  status: {
+    isDeleted: boolean;
+  };
+};
+
 // MessageInfo - start
 export type MessageHistoryItem = {
-  id: string;
+  id: string; // message id
   from: string;
   to: string;
   datetime: number;
@@ -64,7 +71,11 @@ export type MessageHistoryItem = {
   status: MessageStatus;
 };
 
-export type MessageHistoryInfo = { loginUser: string; chatUser: string; messages: MessageHistoryItem[] };
+export type MessageHistoryInfo = {
+  loginUser: string;
+  chatUser: string;
+  messages: MessageHistoryItem[];
+};
 // MessageInfo - end
 
 // Request - start
@@ -103,6 +114,12 @@ export type MessageDeletMsg = GeneralRequestMsg<
   typeof messageType.MsgDelete,
   MessageId
 >;
+
+export type MessageReadStatusChange = {
+  id: typeof messageId.MsgReadStatus;
+  type: typeof messageType.MsgRead;
+  payload: MessageId;
+};
 
 // Request - end
 
@@ -145,7 +162,6 @@ export type AuthenticatedUsers = {
     users: UserInfo[];
   };
 };
-
 export type UnauthorizedUsers = {
   id: typeof messageId.UsersList;
   type: typeof messageType.UserInactive;
@@ -178,21 +194,15 @@ export type MessageHistoryResponse = {
   };
 };
 
-export type MessageReceiveFromUser = {
-  id: null;
+type MessageSendResponse<I extends null | typeof messageId.SendMessage> = {
+  id: I;
   type: typeof messageType.MsgSend;
   payload: {
     message: MessageHistoryItem;
   };
 };
-
-export type MessageSendToUserResp = {
-  id: typeof messageId.SendMessage;
-  type: typeof messageType.MsgSend;
-  payload: {
-    message: MessageHistoryItem;
-  };
-};
+export type MessageReceiveFromUserResp = MessageSendResponse<null>;
+export type MessageSendToUserResp = MessageSendResponse<typeof messageId.SendMessage>;
 
 export type DeliveryStatusInfo = {
   id: null;
@@ -207,11 +217,25 @@ export type MessageDeletOwnerResp = {
   type: typeof messageType.MsgDelete;
   payload: { message: MessageDeletedStatus };
 };
-
 export type NotificationOfMessageDelet = {
   id: null;
   type: typeof messageType.MsgDelete;
   payload: { message: MessageDeletedStatus };
+};
+
+export type MessageReadStatusChangeResp = {
+  id: typeof messageId.MsgReadStatus;
+  type: typeof messageType.MsgRead;
+  payload: {
+    message: MessageReadStatus;
+  };
+};
+export type NotificationOfMessageReadStatusChangeResp = {
+  id: typeof messageId.MsgReadStatus;
+  type: typeof messageType.MsgRead;
+  payload: {
+    message: MessageReadStatus;
+  };
 };
 
 export type ResponseAuthentication = AuthenticationLogin | AuthenticationError;
@@ -224,9 +248,11 @@ export type ServerResponse =
   | UserExternalLogin
   | UserExternalLogout
   | MessageHistoryResponse
-  | MessageReceiveFromUser
+  | MessageReceiveFromUserResp
   | MessageSendToUserResp
   | DeliveryStatusInfo
   | MessageDeletOwnerResp
-  | NotificationOfMessageDelet;
+  | NotificationOfMessageDelet
+  | MessageReadStatusChangeResp
+  | NotificationOfMessageReadStatusChangeResp;
 // Response - end

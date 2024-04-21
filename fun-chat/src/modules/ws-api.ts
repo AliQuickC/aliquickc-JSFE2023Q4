@@ -213,7 +213,7 @@ export default class WebSocketController extends Publisher {
       }
       case messageId.SendMessage: {
         if (eventData.type === messageType.MsgSend) {
-          this._triggerEvent(publisherActionType.newMessageSend, { message: eventData.payload.message });
+          this._triggerEvent(publisherActionType.AddNewMessage, { message: eventData.payload.message });
         }
         break;
       }
@@ -233,7 +233,7 @@ export default class WebSocketController extends Publisher {
         }
         // Receive message from user
         else if (eventData.type === messageType.MsgSend) {
-          this._triggerEvent(publisherActionType.newMessageReceive, { message: eventData.payload.message });
+          this._triggerEvent(publisherActionType.AddNewMessage, { message: eventData.payload.message });
         }
         // Singl message, delivery status change
         else if (eventData.type === messageType.MsgDeliver) {

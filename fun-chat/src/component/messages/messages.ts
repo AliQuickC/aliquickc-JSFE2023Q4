@@ -47,6 +47,8 @@ export default class Messages extends BaseComponent {
     }
   };
 
+  private readAllMessagesHandler = (): void => {};
+
   private clickHandler = (event: Event): void => {
     const { isLogin } = this.store.getState().loginedUser;
     if (!event.target || !isLogin || !(event.target as HTMLElement).closest('[data-type]')) {
@@ -78,7 +80,6 @@ export default class Messages extends BaseComponent {
         break;
       }
       case messagesElement.messages: {
-        console.log('messages: ');
         break;
       }
       default: {

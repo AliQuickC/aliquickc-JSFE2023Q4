@@ -75,25 +75,12 @@ export default function reducer(stateData: State, action: Action): State {
       }
       return state;
     }
-    case ActionID.NewMessageReceive: {
+
+    case ActionID.AddNewMessage: {
       const loginUser = state.loginedUser.login as string;
       const selectedUser = state.appData.selectedUser as string;
       const message: MessageHistoryItem = { ...action.message };
 
-      if (state.currentMessageHistory === null) {
-        const newMessageHistory: MessageHistoryInfo = { loginUser, chatUser: selectedUser, messages: [message] };
-        state.currentMessageHistory = newMessageHistory;
-      } else {
-        const messages: MessageHistoryItem[] = state.currentMessageHistory.messages.slice(0);
-        messages.push(message);
-        state.currentMessageHistory = { ...state.currentMessageHistory, messages };
-      }
-      return state;
-    }
-    case ActionID.NewMessageSend: {
-      const loginUser = state.loginedUser.login as string;
-      const selectedUser = state.appData.selectedUser as string;
-      const message: MessageHistoryItem = { ...action.message };
       if (state.currentMessageHistory === null) {
         const newMessageHistory: MessageHistoryInfo = { loginUser, chatUser: selectedUser, messages: [message] };
         state.currentMessageHistory = newMessageHistory;

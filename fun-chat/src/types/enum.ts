@@ -25,6 +25,7 @@ export enum messageId {
   SendMessage = 'sendMessage',
   MessageHistory = 'MessageHistory',
   DeleteMessage = 'DeleteMessage',
+  MsgReadStatus = 'MsgReadStatus',
 }
 
 export enum messageType {
@@ -39,6 +40,7 @@ export enum messageType {
   MsgHistory = 'MSG_FROM_USER',
   MsgDeliver = 'MSG_DELIVER',
   MsgDelete = 'MSG_DELETE',
+  MsgRead = 'MSG_READ',
 }
 
 export enum AuthenticationErrorMessage {
@@ -54,13 +56,12 @@ export enum publisherActionType {
   RemoveUser = 'RemoveUser',
   UpdateMessageHistory = 'UpdateMessageHistory',
   Disconnect = 'Disconnect',
-  newMessageReceive = 'newMessageReceive',
-  newMessageSend = 'newMessageSend',
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
   AlreadyAuthorized = 'AlreadyAuthorized',
   IncorrectPassword = 'IncorrectPassword',
   ServerIsNotAvailable = 'ServerIsNotAvailable',
   MessageDeleted = 'MessageDeleted',
+  AddNewMessage = 'AddNewMessage',
 }
 
 export enum messagesElement {

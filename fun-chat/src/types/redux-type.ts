@@ -65,13 +65,8 @@ type ActionDisconnectSetPage = {
   page: Page;
 };
 
-type ActionNewMessageReceive = {
-  type: typeof ActionID.NewMessageReceive;
-  message: MessageHistoryItem;
-};
-
-type ActionNewMessageSend = {
-  type: typeof ActionID.NewMessageSend;
+type ActionAddNewMessage = {
+  type: typeof ActionID.AddNewMessage;
   message: MessageHistoryItem;
 };
 
@@ -90,8 +85,7 @@ export type Action =
   | ActionSelectUser
   | ActionUpdateMessageHistory
   | ActionDisconnectSetPage
-  | ActionNewMessageReceive
-  | ActionNewMessageSend
+  | ActionAddNewMessage
   | ActionDeleteMessage;
 
 export enum ActionID {
@@ -107,6 +101,7 @@ export enum ActionID {
   NewMessageReceive = 'NewMessageReceive',
   NewMessageSend = 'sendMessage',
   DeleteMessage = 'DeleteMessage',
+  AddNewMessage = 'AddNewMessage',
 }
 
 export interface Store {

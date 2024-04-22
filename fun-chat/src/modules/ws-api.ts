@@ -2,6 +2,7 @@ import Publisher from '../component/base-component/publisher';
 import {
   AuthenticationErrorMessage,
   ServerReadyState,
+  historyRequestParametr,
   messageId,
   messageType,
   publisherActionType,
@@ -24,7 +25,7 @@ import {
   messageHistoryWithTheUser,
   sendingMessageToUserMsg,
 } from '../types/types';
-import { debounce } from './utils';
+import { UnreadCount, debounce } from './utils';
 
 const baseURL = 'ws://localhost:4000';
 
@@ -83,9 +84,14 @@ function sendingMessageToUserMsgCreater(user: string, message: string): sendingM
   };
 }
 
-function messageHistoryWithTheUserMsgCreater(loginUser: string, selectUser: string): messageHistoryWithTheUser {
+function messageHistoryWithTheUserMsgCreater(
+  loginUser: string,
+  selectUser: string,
+  params: string[]
+): messageHistoryWithTheUser {
+  const addParams: string = params.join('-');
   return {
-    id: messageId.MessageHistory + '-' + loginUser + '-' + selectUser,
+    id: messageId.MessageHistory + '-' + loginUser + '-' + selectUser + '-' + addParams,
     type: messageType.MsgHistory,
     payload: {
       user: {
@@ -232,13 +238,16 @@ export default class WebSocketController extends Publisher {
         }
 
         if (this.authenticatedUsers && this.unauthorizedUsers) {
-          const userList: UserInfo[] = this.authenticatedUsers.concat(this.unauthorizedUsers);
+          const userList: UserInfo[] = this.authenticatedUsers
+            .concat(this.unauthorizedUsers)
+            .filter((item) => item.login !== this.userParamsCache.login);
 
-          this._triggerEvent(publisherActionType.UserListReady, { userList, LoginParams: this.userParamsCache }); // !!!
+          this._triggerEvent(publisherActionType.UserListReady, { userList, LoginParams: this.userParamsCache });
         }
         break;
       }
       case messageId.SendMessage: {
+        // !!!
         if (eventData.type === messageType.MsgSend) {
           const message = eventData.payload.message;
           this._triggerEvent(publisherActionType.AddNewMessage, { message });
@@ -291,15 +300,30 @@ export default class WebSocketController extends Publisher {
       }
       // typeof eventData.id === 'string'
       default: {
-        // !!!
         if (eventData.type === messageType.MsgHistory) {
-          // messageId.MessageHistory + '-' + loginUser + '-' + selectUser
-          const [, loginUser, chatUser] = eventData.id.split('-');
-          this._triggerEvent(publisherActionType.UpdateMessageHistorySelectUser, {
-            loginUser,
-            chatUser,
-            messages: eventData.payload.messages,
-          });
+          // user status online?
+          // messageId.MessageHistory + '-' + loginUser + '-' + selectUser + params[]
+          const [, loginUser, chatUser, paramOne] = eventData.id.split('-');
+          if (paramOne === historyRequestParametr.userUnselect) {
+            const unreadMessagesCount = UnreadCount(loginUser, chatUser, eventData.payload.messages);
+
+            this._triggerEvent(publisherActionType.UpdateUnreadMessageCount, {
+              chatUser,
+              unreadMessagesCount,
+            });
+          }
+
+          if (
+            paramOne === historyRequestParametr.userSelect ||
+            paramOne === historyRequestParametr.statusReadChange ||
+            paramOne === historyRequestParametr.statusDeliverChange
+          ) {
+            this._triggerEvent(publisherActionType.UpdateMessageHistory, {
+              loginUser,
+              chatUser,
+              messages: eventData.payload.messages,
+            });
+          }
         }
         break;
       }
@@ -321,11 +345,7 @@ export default class WebSocketController extends Publisher {
     this.addEvents();
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public closeHandler = (event: CloseEvent): void => {
-    // console.log('event: ', event.code);
-    // console.log('close: ', this.ws?.readyState);
-
+  public closeHandler = (): void => {
     if (this.isDisconnect) {
       this._triggerEvent(publisherActionType.Disconnect);
       this.removeEvents();
@@ -369,8 +389,11 @@ export default class WebSocketController extends Publisher {
     this.ws?.send(JSON.stringify(sendingMessageToUserMsgCreater(user, message)));
   };
 
-  public sendRequestMessageHistory = (loginUser: string, selectUser: string): void => {
-    this.ws?.send(JSON.stringify(messageHistoryWithTheUserMsgCreater(loginUser, selectUser)));
+  public sendRequestMessageHistory = (loginUser: string, selectUser: string, params: string[]): void => {
+    if (loginUser === selectUser) {
+      return;
+    }
+    this.ws?.send(JSON.stringify(messageHistoryWithTheUserMsgCreater(loginUser, selectUser, params)));
   };
 
   public deleteMessage = (messageId: string): void => {

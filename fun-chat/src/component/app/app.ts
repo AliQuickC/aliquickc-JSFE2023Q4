@@ -1,14 +1,15 @@
 import WebSocketController from '../../modules/ws-api';
-import { Page, publisherActionType } from '../../types/enum';
+import { Page, historyRequestParametr, publisherActionType } from '../../types/enum';
 import {
   UserLoginLogoutEvent,
   UserLisReadyEvent,
   publisherEvent,
   MessageDeletedEvent,
   MessageEditEvent,
+  MessageHistoryInfoEvent,
 } from '../../types/publisher-type';
 import { ActionID, Store } from '../../types/redux-type';
-import { MessageHistoryInfo } from '../../types/types';
+import { ChatUserInfo, UnreadUserCount } from '../../types/types';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Main from '../main/main';
@@ -54,6 +55,8 @@ export default class App {
         userList: (event as UserLisReadyEvent).userList,
         loginParams: (event as UserLisReadyEvent).LoginParams,
       });
+
+      this.allUsersHistoryRequest();
     });
 
     this.wsController.addEventListener(publisherActionType.LogoutSuccess, (): void => {
@@ -68,15 +71,12 @@ export default class App {
       this.store.dispatch({ type: ActionID.RemoveUser, user: (event as UserLoginLogoutEvent).user });
     });
 
-    this.wsController.addEventListener(
-      publisherActionType.UpdateMessageHistorySelectUser,
-      (event: publisherEvent): void => {
-        this.store.dispatch({
-          type: ActionID.UpdateMessageHistorySelectUser,
-          messageHistoryInfo: event as MessageHistoryInfo,
-        });
-      }
-    );
+    this.wsController.addEventListener(publisherActionType.UpdateMessageHistory, (event: publisherEvent): void => {
+      this.store.dispatch({
+        type: ActionID.UpdateMessageHistorySelectUser,
+        messageHistoryInfo: event as MessageHistoryInfoEvent,
+      });
+    });
 
     this.wsController.addEventListener(publisherActionType.Disconnect, (): void => {
       const { isLogin } = this.store.getState().loginedUser;
@@ -89,9 +89,13 @@ export default class App {
       }
     });
 
-    this.wsController.addEventListener(publisherActionType.DeliveryStatusChange, this.getMessageHistory);
+    this.wsController.addEventListener(publisherActionType.DeliveryStatusChange, () => {
+      this.getMessageHistory(historyRequestParametr.statusDeliverChange);
+    });
 
-    this.wsController.addEventListener(publisherActionType.ReadStatusChange, this.getMessageHistory);
+    this.wsController.addEventListener(publisherActionType.ReadStatusChange, () => {
+      this.getMessageHistory(historyRequestParametr.statusReadChange);
+    });
 
     this.wsController.addEventListener(publisherActionType.MessageDeleted, (event: publisherEvent) => {
       if (this.store.getState().currentMessageHistory) {
@@ -103,13 +107,28 @@ export default class App {
     this.wsController.addEventListener(publisherActionType.EditStatusChange, (event: publisherEvent) => {
       this.store.dispatch({ type: ActionID.EditMessage, editStatus: (event as MessageEditEvent).editStatus });
     });
+
+    this.wsController.addEventListener(publisherActionType.UpdateUnreadMessageCount, (event: publisherEvent) => {
+      this.store.dispatch({
+        type: ActionID.UpdateUnreadMessageCount,
+        UnreadCount: event as UnreadUserCount,
+      });
+    });
   }
 
-  private getMessageHistory = (): void => {
+  private allUsersHistoryRequest = (): void => {
+    const { userList } = this.store.getState().appData;
+    const { login } = this.store.getState().loginedUser;
+    userList.forEach((item: ChatUserInfo): void => {
+      this.wsController.sendRequestMessageHistory(login as string, item.login, [historyRequestParametr.userUnselect]);
+    });
+  };
+
+  private getMessageHistory = (status: historyRequestParametr): void => {
     const { selectedUser } = this.store.getState().appData;
     const loginUser = this.store.getState().loginedUser.login as string;
     if (selectedUser) {
-      this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
+      this.wsController.sendRequestMessageHistory(loginUser, selectedUser, [status]);
     }
   };
 

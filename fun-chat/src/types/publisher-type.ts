@@ -4,6 +4,7 @@ import {
   MessageEditStatus,
   MessageHistoryInfo,
   MessageHistoryItem,
+  UnreadUserCount,
   UserInfo,
   UserLoginParams,
 } from './types';
@@ -15,13 +16,16 @@ export type AddNewMessageEvent = { message: MessageHistoryItem };
 export type DeliveryStatusEvent = { userStatusList: MessageDeliveryStatus[] };
 export type MessageDeletedEvent = { deleteStatus: MessageDeletedStatus };
 export type MessageEditEvent = { editStatus: MessageEditStatus };
+export type MessageHistoryInfoEvent = MessageHistoryInfo;
+export type UnreadMessagesCountEvent = UnreadUserCount;
 
 export type publisherEvent =
   | object
   | AuthenticationEvent
   | UserLisReadyEvent
   | UserLoginLogoutEvent
-  | MessageHistoryInfo
+  | MessageHistoryInfoEvent
   | AddNewMessageEvent
   | DeliveryStatusEvent
-  | MessageEditEvent;
+  | MessageEditEvent
+  | UnreadMessagesCountEvent;

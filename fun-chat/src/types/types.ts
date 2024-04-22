@@ -15,6 +15,8 @@ export type UserInfo = {
   isLogined: boolean;
 };
 
+export type UnreadUserCount = { chatUser: string; unreadMessagesCount: number };
+
 export type ChatUserInfo = {
   login: string;
   isLogined: boolean;
@@ -151,13 +153,6 @@ export type MessageEditRequest = GeneralRequestMsg<
 // Request - end
 
 // Response - start
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-type GeneralResponseMsg<I extends messageId | null | string, T extends messageType, P> = {
-  id: I;
-  type: T;
-  payload: P;
-};
-
 export type AuthenticationLogin = {
   id: typeof messageId.Authentication;
   type: typeof messageType.UserLogin;

@@ -56,7 +56,7 @@ export enum publisherActionType {
   UserListReady = 'UserListReady',
   AddUser = 'AddUser',
   RemoveUser = 'RemoveUser',
-  UpdateMessageHistorySelectUser = 'UpdateMessageHistorySelectUser',
+  UpdateMessageHistory = 'UpdateMessageHistory',
   Disconnect = 'Disconnect',
   DeliveryStatusChange = 'MessageDeliveryStatusChange',
   ReadStatusChange = 'MessageReadStatusChange',
@@ -66,6 +66,7 @@ export enum publisherActionType {
   ServerIsNotAvailable = 'ServerIsNotAvailable',
   MessageDeleted = 'MessageDeleted',
   AddNewMessage = 'AddNewMessage',
+  UpdateUnreadMessageCount = 'UpdateUnreadMessageCount',
 }
 
 export enum messagesElement {
@@ -74,4 +75,11 @@ export enum messagesElement {
   messageDeleteButton = 'messageDeleteButton',
   messages = 'messages',
   messagesWrap = 'messagesWrap',
+}
+
+export enum historyRequestParametr {
+  userSelect = 'userSelect',
+  statusReadChange = 'statusReadChange',
+  statusDeliverChange = 'statusDeliverChange',
+  userUnselect = 'userUnselect',
 }

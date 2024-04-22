@@ -1,4 +1,5 @@
 import WebSocketController from '../../modules/ws-api';
+import { historyRequestParametr } from '../../types/enum';
 import { Store } from '../../types/redux-type';
 import BaseComponent from '../base-component/base-component';
 
@@ -38,7 +39,7 @@ export default class UserList extends BaseComponent {
 
   private selectUser = (selectedUser: string): void => {
     const loginUser = this.store.getState().loginedUser.login as string;
-    this.wsController.sendRequestMessageHistory(loginUser, selectedUser);
+    this.wsController.sendRequestMessageHistory(loginUser, selectedUser, [historyRequestParametr.userSelect]);
   };
 
   private inputHandler = (event: Event): void => {
@@ -83,13 +84,19 @@ export default class UserList extends BaseComponent {
     const users = this.store.getState().appData.userList;
 
     const usersLayout = users
-      .map(
-        (
-          item
-        ) => `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-type="chatUser" data-user-name="${item.login}">
+      .map((item) => {
+        let unreadCount: string = '';
+        if (item.unreadMessagesCount) {
+          unreadCount = `<span class="user-list__item-messages">
+                    <span class="user-list__item-icon"></span>
+                    <span class="user-list__item-count">${item.unreadMessagesCount}</span>
+                  </span>`;
+        }
+        return `<li class="user-list__item user-list__item_${item.isLogined ? 'green' : 'red'}" data-type="chatUser" data-user-name="${item.login}">
                   <span class="user-list__item-name" >${item.login}</span>
-                </li>`
-      )
+                  ${unreadCount}
+                </li>`;
+      })
       .join('');
     return `
         <legend class="users__capture">Пользователи</legend>

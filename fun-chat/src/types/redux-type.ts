@@ -4,6 +4,7 @@ import {
   MessageEditStatus,
   MessageHistoryInfo,
   MessageHistoryItem,
+  UnreadUserCount,
   UserInfo,
   UserLoginParams,
   UserParams,
@@ -69,6 +70,11 @@ type ActionUpdateMessageHistorySelectUser = {
   messageHistoryInfo: MessageHistoryInfo;
 };
 
+type ActionUpdateMessageHistoryUnselectedUser = {
+  type: typeof ActionID.UpdateMessageHistoryUnselectedUser;
+  messageHistoryInfo: MessageHistoryInfo;
+};
+
 type ActionDisconnectSetPage = {
   type: typeof ActionID.DisconnectSetPage;
   page: Page;
@@ -89,6 +95,11 @@ type ActionEditMessage = {
   editStatus: MessageEditStatus;
 };
 
+type ActionUpdateUnreadMessageCount = {
+  type: typeof ActionID.UpdateUnreadMessageCount;
+  UnreadCount: UnreadUserCount;
+};
+
 export type Action =
   | ActionSetPage
   | ActionAuthentication
@@ -98,10 +109,12 @@ export type Action =
   | ActionRemoveUser
   | ActionSelectUser
   | ActionUpdateMessageHistorySelectUser
+  | ActionUpdateMessageHistoryUnselectedUser
   | ActionDisconnectSetPage
   | ActionAddNewMessage
   | ActionDeleteMessage
-  | ActionEditMessage;
+  | ActionEditMessage
+  | ActionUpdateUnreadMessageCount;
 
 export enum ActionID {
   SetPage = 'SET-PAGE',
@@ -112,12 +125,14 @@ export enum ActionID {
   RemoveUser = 'RemoveUser',
   SelectUser = 'SelectUser',
   UpdateMessageHistorySelectUser = 'UpdateMessageHistorySelectUser',
+  UpdateMessageHistoryUnselectedUser = 'UpdateMessageHistoryUnselectedUser',
   DisconnectSetPage = 'DisconnectSetPage',
   NewMessageReceive = 'NewMessageReceive',
   NewMessageSend = 'sendMessage',
   DeleteMessage = 'DeleteMessage',
   AddNewMessage = 'AddNewMessage',
   EditMessage = 'EditMessage',
+  UpdateUnreadMessageCount = 'UpdateUnreadMessageCount',
 }
 
 export interface Store {

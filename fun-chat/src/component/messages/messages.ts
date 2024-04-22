@@ -24,7 +24,6 @@ export default class Messages extends BaseComponent {
     this.container.onkeydown = this.keydownHandler;
 
     this.wsController.addEventListener(publisherActionType.AddNewMessage, this.AddNewMessageHandler);
-    // this.wsController.addEventListener(publisherActionType.MessageDeleted, this.deleteMessageHandler);
   }
 
   public destroy(): void {
@@ -32,20 +31,14 @@ export default class Messages extends BaseComponent {
     super.destroy();
   }
 
-  // private deleteMessageHandler = (event: publisherEvent): void => {
-  //   const messageId = (event as MessageDeletedEvent).deleteStatus.id;
-
-  //   const messagesElement = this.container.querySelector('[data-type="messages"]');
-  //   const message = messagesElement?.querySelector(`[data-message-id="${messageId}"]`);
-  //   message?.remove();
-  // };
-
   private AddNewMessageHandler = (event: publisherEvent): void => {
     const { selectedUser } = this.store.getState().appData;
     const message = (event as AddNewMessageEvent).message;
+    // !!!
     if (selectedUser && (selectedUser === message.from || selectedUser === message.to)) {
       this.store.dispatch({ type: ActionID.AddNewMessage, message });
     }
+
     if (selectedUser === message.to) {
       this.readAllMesagesStatusFromUser(selectedUser);
     }
@@ -153,7 +146,6 @@ export default class Messages extends BaseComponent {
 
   private getMessageStatus(messageStatus: MessageStatus): string {
     const delivered = messageStatus.isDelivered ? 'доставлено' : 'отправлено';
-    // const readed = messageStatus.isReaded ? 'прочитано' : 'не прочитано';
     const edited = messageStatus.isEdited ? 'отредактировано / ' : '';
     const deliveredStatus = messageStatus.isReaded ? 'прочитано' : delivered;
 

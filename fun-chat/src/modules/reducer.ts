@@ -2,8 +2,8 @@ import { Page } from '../types/enum';
 import { State, Action, ActionID } from '../types/redux-type';
 import { MessageEditStatus, MessageHistoryInfo, MessageHistoryItem, UserInfo } from '../types/types';
 import { defaultUserData, defaultappData } from './constant';
+import { UnreadCount } from './utils';
 
-// eslint-disable-next-line max-lines-per-function
 export default function reducer(stateData: State, action: Action): State {
   const state = stateData;
 
@@ -32,7 +32,6 @@ export default function reducer(stateData: State, action: Action): State {
       const { login, password } = action.loginParams;
 
       const userList: UserInfo[] = action.userList.filter((item) => item.login !== login);
-      // const chatUserList: ChatUserInfo[] = userList.map(item => item.);
       state.appData = { ...state.appData, userList, selectedUser: null };
       state.currentMessageHistory = null;
 
@@ -46,7 +45,6 @@ export default function reducer(stateData: State, action: Action): State {
       } else {
         userList[userIndex].isLogined = true;
       }
-
       state.appData = { ...state.appData, userList };
       return state;
     }
@@ -58,23 +56,35 @@ export default function reducer(stateData: State, action: Action): State {
       state.appData = { ...state.appData, userList };
       return state;
     }
-    case ActionID.SelectUser: {
-      state.appData = { ...state.appData, selectedUser: action.login };
-      return state;
-    }
     case ActionID.UpdateMessageHistorySelectUser: {
       const { messageHistoryInfo } = action;
       const { loginUser, chatUser } = messageHistoryInfo;
 
       if (state.appData.currentPage === Page.Chat && state.loginedUser.login === loginUser) {
-        state.currentMessageHistory = JSON.parse(JSON.stringify(messageHistoryInfo));
+        state.currentMessageHistory = JSON.parse(JSON.stringify(messageHistoryInfo)) as MessageHistoryInfo;
+
         state.appData = { ...state.appData, selectedUser: chatUser };
+        const unreadMessagesCount = UnreadCount(loginUser, chatUser, state.currentMessageHistory.messages);
+
+        return reducer(state, {
+          type: ActionID.UpdateUnreadMessageCount,
+          UnreadCount: { chatUser, unreadMessagesCount },
+        });
       } else {
         state.currentMessageHistory = null;
+        return state;
+      }
+    }
+    case ActionID.UpdateUnreadMessageCount: {
+      const unreadMessagesCount = action.UnreadCount.unreadMessagesCount;
+      const userList = state.appData.userList;
+      const userIndex = userList.findIndex((item) => item.login === action.UnreadCount.chatUser);
+      if (userIndex !== -1) {
+        const user = { ...userList[userIndex], unreadMessagesCount };
+        userList[userIndex] = user;
       }
       return state;
     }
-
     case ActionID.AddNewMessage: {
       const loginUser = state.loginedUser.login as string;
       const selectedUser = state.appData.selectedUser as string;
@@ -87,6 +97,12 @@ export default function reducer(stateData: State, action: Action): State {
         const messages: MessageHistoryItem[] = state.currentMessageHistory.messages.slice(0);
         messages.push(message);
         state.currentMessageHistory = { ...state.currentMessageHistory, messages };
+
+        const unreadMessagesCount = UnreadCount(loginUser, selectedUser, state.currentMessageHistory.messages);
+        return reducer(state, {
+          type: ActionID.UpdateUnreadMessageCount,
+          UnreadCount: { chatUser: selectedUser, unreadMessagesCount },
+        });
       }
       return state;
     }
@@ -101,7 +117,6 @@ export default function reducer(stateData: State, action: Action): State {
         newMessages.splice(findIndex, 1);
         state.currentMessageHistory = { ...state.currentMessageHistory, messages: newMessages };
       }
-
       return state;
     }
     case ActionID.EditMessage: {

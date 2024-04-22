@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import BaseComponent from '../../component/base-component/base-component';
 import AValidate from '../../modules/validate';
 import WebSocketController from '../../modules/ws-api';
@@ -6,13 +5,9 @@ import { Page, ValidatorRule } from '../../types/enum';
 import { ActionID, Store } from '../../types/redux-type';
 
 const REQUIRED_REQUARED = 'The field is required';
-const FIRST_LETTER_ERROR = 'first letter must be capitalized, from "A" to "Z"';
 const ACCEPTABLE_LETTERS = 'Acceptable letters are from "a" to "z"';
 const ACCEPTABLE_LETTERS_PASSWORD =
   'Acceptable letters are from "a" to "z", digits "0-9" and contain one capital letter';
-const checkCapitalize = (value: string): boolean => {
-  return !!value.match(/^[A-Z]{1}/);
-};
 const minCharacterErrorMessage = (numb: number): string => `The field must contain a minimum of ${numb} characters`;
 const maxCharacterErrorMessage = (numb: number): string => `field cannot contain more than ${numb} characters`;
 

@@ -163,7 +163,9 @@ export default class Messages extends BaseComponent {
     const loginUser = this.store.getState().loginedUser.login;
     const isOwnMessage = message.from === loginUser;
     const messageStatus = message.status;
-    const noReadLine = haveReadLine ? '<div class="messages__demarcation-line">непрочитанные сообщения</div>' : '';
+    const noReadLine = haveReadLine
+      ? '<div class="messages__demarcation-line" data-type="noReadLine">непрочитанные сообщения</div>'
+      : '';
 
     return `
             ${noReadLine}
@@ -257,6 +259,7 @@ export default class Messages extends BaseComponent {
     const messagesContainer = messagesFrame.querySelector('[data-type="messagesWrap"]') as HTMLElement;
     const sendInput = this.container.querySelector('[data-type="sendInput"]') as HTMLElement;
     sendInput?.focus();
+    const noReadLine: Element | null = messagesContainer.querySelector('[data-type="noReadLine"]');
 
     messagesFrame.addEventListener('wheel', (): void => {
       const { selectedUser } = this.store.getState().appData;
@@ -267,7 +270,12 @@ export default class Messages extends BaseComponent {
 
     const msgContainerHeight = messagesContainer.getBoundingClientRect().height;
     const msgFrameHeight = messagesFrame.getBoundingClientRect().height;
-    const hideScroll = msgContainerHeight - msgFrameHeight;
+    let hideScroll = msgContainerHeight - msgFrameHeight;
+
+    if (noReadLine) {
+      const offsetTop = noReadLine.getBoundingClientRect().top - messagesContainer.getBoundingClientRect().top;
+      hideScroll = hideScroll > offsetTop ? offsetTop - 10 : hideScroll;
+    }
 
     if (hideScroll > 0) {
       messagesFrame.scrollBy(0, hideScroll);
